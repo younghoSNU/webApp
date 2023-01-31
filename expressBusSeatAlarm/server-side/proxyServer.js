@@ -14,14 +14,13 @@ app.post('/exprm', (req, res) => {
     //req가 올바는 형식인지 확인 아니면 res로 invalid 전송
 
     console.log(`request is accepted to server!`);
-    // const worker = new Worker(WORKERDIR);
-    // console.log(`made worker done`);
-    // worker.postMessage(req);
+    const worker = new Worker(WORKERDIR);
+    console.log(`made worker done`);
+    worker.postMessage(req);
 
-    // worker.on('message', msg => {
-    //     console.log(msg);
-    // })
-    res.send("it's from proxy server");
+    worker.on('message', msg => {
+        res.send(JSON.stringify(msg));
+    })
 });
 
 app.listen(PORT, () => {

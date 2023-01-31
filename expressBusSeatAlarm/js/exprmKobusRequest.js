@@ -59,9 +59,12 @@ export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
     xhr.onload = (e) => {
       if (xhr.readyState === 4) {
           if (xhr.status === 200) {
-              console.log(xhr.responseText);
-              console.dir(xhr);
+              const res = JSON.parse(xhr.responseText);
+              console.log(res);
               resolve(xhr.responseText);
+
+
+              //document를 건드려서 수정해주기
           } else {
               console.error(xhr.statusText);
               reject(xhr.statusText);
