@@ -45,7 +45,7 @@ export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
 
     let xhr = new XMLHttpRequest();
 
-    xhr.open('POST', `http://127.0.0.1/exprm`, true);
+    xhr.open('POST', `http://54.177.74.91/exprm`, true);
     setHeaderData(headers, xhr);
     //set port
     //set hearder
