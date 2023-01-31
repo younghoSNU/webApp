@@ -5,7 +5,7 @@ const { Worker } = require('worker_threads');
 
 const app = express();
 
-const PORT = 80;
+const PORT = 3000;
 const WORKERDIR = __dirname + "/request2kobus.js";
 
 app.use(cors());
