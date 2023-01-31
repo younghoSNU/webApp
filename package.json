@@ -4,12 +4,12 @@
   "description": "practice for build own website: expressBusSeatAlarm",
   "main": "index.js",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "https": "^1.0.0",
     "iconv-lite": "^0.6.3",
     "jsdom": "^20.0.3"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
