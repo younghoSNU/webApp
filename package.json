@@ -1,0 +1,26 @@
+{
+  "name": "webapp",
+  "version": "1.0.0",
+  "description": "practice for build own website: expressBusSeatAlarm",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "https": "^1.0.0",
+    "iconv-lite": "^0.6.3",
+    "jsdom": "^20.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/younghoSNU/webApp.git"
+  },
+  "author": "YOUNGHO KIM (hois1998@snu.ac.kr)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/younghoSNU/webApp/issues"
+  },
+  "homepage": "https://github.com/younghoSNU/webApp#readme"
+}
