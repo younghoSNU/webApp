@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- head를 구성하는 elements
+    1. charset
+    2. author, description
+    3. viewport
+    4. favicon
+    5. title
+    6. font
+    7. js(defer), css -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="img/favicon-96x96.png"/>
+    <link rel="apple-touch-icon" href="img/favicon-96x96.png"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <title>고속버스좌석알리미</title>
+    <meta name="author" content="YOUNGHO KIM(hois1998@snu.ac.kr)"/>
+    <meta name="description" content="Express Bus Seat Alarm Service aims to give alarm to user. If someone who booked a ticket early than the user of the itinerary same as the user cancels the ticket, one empty seat occurs. This site give as soon as possible alarm at that moment."/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans+KR|Jua"/>
+</head>
+<body>
+    <header class="header-container row">
+        <img id="bus-image" src="img/bus.png" alt="bus logo: front of bus"/>
+        <h1 id="title">고속버스 좌석 알림 서비스</h1>
+    </header>
+    <div class="main-content">
+        <div class="explan-content">
+            <h2>
+                사용방법
+            </h2>
+            <ol>
+                <li>출발날짜, 출발지, 도착지를 차례대로 입력하고 검색버튼을 누릅니다.</li>
+                <li>만약 좌석이 매진된 여정이 있다면, 체크박스가 보이게 됩니다.</li>
+                <li>체크박스를 누르면 자신의 전화번호를 입력할 수 있고 여유 좌석이 생기면 해당 번호로 알림을 받으실 수 있습니다.</li>
+            </ol>
+        </div>
+        <form class="search-menu">
+            <ul class="main-menu">
+                <li>
+                    <p>출발날짜</p>
+                    <select id="date-select" required>
+                        <option value="">--날짜를 입력하세요--</option>
+                    </select>
+                </li>
+                <li>
+                    <p>출발지</p>
+                    <select id="dprt-select" required>
+                        <option value="">--출발지를 입력하세요--</option>
+                        <option value="아산온양">아산온양</option>
+                        <option value="배방정류소">배방정류소</option>
+                        <option value="아산서부(호서대)">아산서부(호서대)</option>                        
+                        <option value="천안아산역">천안아산역</option>
+                    </select>
+                </li>
+                <li>
+                    <p>도착지</p>
+                    <select id="arvl-select" required>
+                        <option value="">--도착지를 입력하세요--</option>
+                        <option value="서울경부">서울고속버스터미널</option> 
+                    </select>
+                </li>
+            </ul>
+            <!-- button을 div에 넣어주지 않으면 ul과 상호작용하기 불편하다. -->
+            <div class="main-button"> 
+                <!-- <i class="normal-size-image" src="img/search.png"></i> -->
+                <input type="image" src="img/search.png" class="row" value="검색"/>
+            </div>
+        </form>
+    </div>
+    <div id="bar"></div>
+    <footer class="row">
+        <img class="normal-size-image" id="emoji-image" src="img/my-emoji.jpg" alt="my emoji with suprised face"/>
+        <div class="flex-start-center">
+            <p>문의 및 연락: hois1998@snu.ac.kr <a href="mailto:hois1998@snu.ac.kr">send mail to nowhere</a></p>
+            <p>Portions of this content are ©2022-2023 by individual contributors YOUNGHOKIM. Content available under a Creative Commons license.</p>
+        </div>
+    </footer>
+    <!-- <script src="./js/request2proxy.js"></script> -->
+    <!-- <script defer src="./js/kobusRequest.js"></script> -->
+    <script src="./js/main.js" type="module"></script>
+    <script src="./js/dprtDate.js"></script>
+</body>
+</html>
+
+

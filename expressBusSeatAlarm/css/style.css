@@ -1,0 +1,138 @@
+html {
+    font-size: 100%;
+    font-family: 'IBM Plex Sans KR', serif;
+}
+
+body {
+    width: 80%;
+    margin: 0 2em;
+    background-color: #f0f0f0;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+#bus-image {
+    max-width: 10vw;
+    height: auto;
+    margin: 1em;
+}
+
+/* 타이틀 고속버스 좌석 알림 서비스 */
+/* h1엘리먼트에 감싸져 있지만 그것보다 상위에서 적용시켜버린다. class의 override개념과 유사 */
+#title {
+    font-size: 400%;
+    margin: auto 1em;
+    /* font-family: 'IBM Plex Sans KR', serif; 근데 다른 폰트로 바꿔주자*/
+}
+
+header,
+footer {
+    font-family: 'Jua', serif;
+}
+
+.main-content {
+    background-color: rgb(255, 255, 255);
+    border-radius: 1em;
+    padding: 1em;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+
+.header-container {
+    /* position: sticky; */
+    top: 0;
+    z-index: var(--z-index-top);
+}
+
+.column {
+    flex-direction: column;
+}
+
+.flex-start-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+ul.main-menu {
+    width: 70%;
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+    display: flex;
+    margin: 5% 2%;
+    border-width: 1px;
+    border-radius: 1em;
+    padding-bottom: 2%;
+}
+
+div.main-button {
+    display: flex;
+    width: 30%;
+    justify-content:flex-start;
+    align-items: center;
+    margin: 1em;
+}
+
+button {
+    border-radius: 1em;
+    font-size: medium;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10%;
+    font-weight: bold;
+}
+
+div.search-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    width: max-content;
+}
+
+p {
+    margin: 0.1em;
+}
+
+select {
+    font-size: 0.9rem;
+    padding: 10% 5px;
+  	min-height: 2em;
+  	max-width: 25em;
+    margin: 1em auto;
+}
+
+#bar {
+    background-color: #cdcdcd;
+    min-height: 2px;
+    margin: 1em auto;   
+}
+
+#emoji-image {
+    width: auto;
+    max-height: 4em;
+}
+
+/* 이미지크기 설정하기 */
+.normal-size-image {
+    width: 1.5em;
+    height: auto;
+    margin: 0.5em;
+    display: flex;
+    align-items: center;
+}

@@ -1,0 +1,2472 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+
+	
+		<html lang="ko">
+	
+	
+	
+	
+	
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	
+		
+			<title>고속버스통합예매</title>
+		
+		
+		
+		
+		
+	
+	<link rel="stylesheet" type="text/css" href="/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/css/plugin.css">
+	<link rel="stylesheet" type="text/css" href="/css/layout.css?v=0.9">
+	<link rel="stylesheet" type="text/css" href="/css/content.css?v=1.0">
+	<link rel="shortcut icon" href="/images/favicon.ico">
+	
+	
+		
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+<script type="text/javascript">
+/*********************************************
+ * 상수
+ *********************************************/
+</script>
+
+
+<link rel="stylesheet" type="text/css" href="/css/ui.jqgrid.custom.css" />
+
+<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript">
+//쿠키 가져오기
+function getCookie( name ) {
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while ( x <= document.cookie.length ) {
+		var y = (x+nameOfCookie.length);
+		if ( document.cookie.substring( x, y ) == nameOfCookie ) { 
+			if ( (endOfCookie=document.cookie.indexOf( ";", y )) == -1 ) {
+				endOfCookie = document.cookie.length;
+			}
+			return unescape( document.cookie.substring( y, endOfCookie ) );
+		}
+		x = document.cookie.indexOf( " ", x ) + 1;
+		if ( x == 0 ) {
+			break;
+		}
+	}
+	return ""; 
+}
+//쿠키 넣기
+function setCookie( name, value, expiredays ) {
+	var todayDate = new Date();
+	todayDate.setDate( todayDate.getDate() + expiredays );
+	document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+}
+
+// 상단 네비게이션, 모바일 좌측, 모바일 하단 언어선택 설정
+var lngCdCookie = getCookie("LNG_CD");
+
+lngCdCookie = (lngCdCookie != null && lngCdCookie != undefined && lngCdCookie != "") ? lngCdCookie : "";
+var lngCd = (lngCdCookie == "EN" || lngCdCookie == "CN" || lngCdCookie == "JP") ? lngCdCookie : "KO";
+$(document).ready(function() {
+	if (navigator.userAgent.toUpperCase().indexOf("MSIE 5") >= 0 || navigator.userAgent.toUpperCase().indexOf("MSIE 6") >= 0 || navigator.userAgent.toUpperCase().indexOf("MSIE 7") >= 0 || navigator.userAgent.toUpperCase().indexOf("MSIE 8") >= 0) {
+		// IE 8 이하
+		if (location.href.indexOf("/underIE8.do") < 0) {
+			// IE 8 이하 페이지 아님
+			location.href = "/underIE8.do";
+			return false;
+		}
+	}
+	if (window.innerWidth < 768) {
+		setCookie("IS_MOBILE_YN_WIDTH","Y",365);
+		if (lngCd == "KO" && location.href.indexOf("/cmn/") < 0 && location.href.indexOf("/mrs/mrsrecppub.do") < 0 && location.href.indexOf("/mrs/mrsrecppub4.do") < 0 && location.href.indexOf("/underIE8.do") < 0 && location.href.indexOf("/mrs/mrsmbltck.do") < 0 && location.href.indexOf("/adtnprdnew/prchpt/adtnrecppubmbl.do") < 0 && location.href.indexOf("/adtnprdnew/frps/frpsPrchGdMbl.do") < 0) {
+			location.href = "/mblIdx.do";
+			return false;
+		}
+	} else {
+		setCookie("IS_MOBILE_YN_WIDTH","N",365);
+	}
+	// 타이틀 수정
+	if ($("h2").length > 0) {
+		$("title").text($("title").text() + " - " + $("h2:eq(0)").text());
+	}
+	var $objBody = $("body");
+	if (!($objBody.hasClass("KO") || $objBody.hasClass("EN") ||  $objBody.hasClass("CN") ||  $objBody.hasClass("JP"))) {
+		$objBody.addClass(lngCd);
+	}
+	
+	$("#lng_cd_navi option[value='" + lngCd + "'],#lng_cd_foot option[value='" + lngCd + "']").attr("selected","selected");
+	$("#lng_cd_navi,#lng_cd_foot").unbind("change").bind("change",function() {
+		var tempCd = this.value;
+		lngCd = (tempCd != null && tempCd != undefined && tempCd != "" && (tempCd == "EN" || tempCd == "CN" || tempCd == "JP")) ? tempCd : "KO";
+		setCookie("LNG_CD",lngCd,1);
+		lngCdCookie = lngCd;
+		//document.location.reload();
+		location.href = "/main.do";
+	}); 
+	
+});
+
+
+if (lngCd == "KO") {
+	var dt = new Date();		//오늘날짜 전체
+	var yyyy  = dt.getFullYear();		//선택한 년도
+	var mm    = dt.getMonth()+1;		//선택한 월
+	var mm2Len = Number(mm) < 10 ? "0"+mm : mm;			// 선택ㅡㅜ?ㅌ월 ex:01 두글자로 변환
+	var ddTo    = Number(dt.getDate()) < 10 ? "0"+dt.getDate() : dt.getDate(); 			// 숫자형
+	var yymmddD0 = yyyy+""+mm2Len+""+ddTo;		//오늘날짜
+	
+	var url = window.location.pathname;
+
+	if (yymmddD0 < 20200128) {
+		if (url == "/main.do")
+			location.href="/mainExp.do";
+	}
+}
+
+</script>
+<script type="text/javascript" src="/js/ui.js"></script>
+<script type="text/javascript" src="/js/plugin.js"></script>
+<script type="text/javascript" src="/js/common.js?v=1"></script>
+
+<script type="text/javascript" src="/js/jquery/jquery.number.js"></script>
+<script type="text/javascript" src="/js/security.js?v=0.1"></script>
+	
+	
+</head>
+
+
+
+<body class="sub">
+<div id="wrap">
+	<!-- left menu include -->
+	
+		
+		
+			
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="/js/common/left.js"></script>
+
+<form name="leftForm" id="leftForm">
+	<input type="hidden" id="leftNtcNo" name="ntcNo" />
+</form>
+
+
+<script>
+$(function(){
+	var dt = new Date();		//오늘날짜 전체
+	var yyyy  = dt.getFullYear();		//선택한 년도
+	var mm    = dt.getMonth()+1;		//선택한 월
+	var mm2Len = Number(mm) < 10 ? "0"+mm : mm;			// 선택ㅡㅜ?ㅌ월 ex:01 두글자로 변환
+	var ddTo    = Number(dt.getDate()) < 10 ? "0"+dt.getDate() : dt.getDate(); 			// 숫자형
+	var yymmddD0 = yyyy+""+mm2Len+""+ddTo;		//오늘날짜
+	
+	var url = window.location.pathname;
+
+	if (yymmddD0 < 20200128) {
+		$("#rotinf").hide();
+	}
+});
+</script>
+
+<!-- 페이지 분류 -->
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+
+
+
+<!-- 170109 gnb 수정 -->
+	<!-- 170109 gnb 수정 -->
+	<div id="gnb" class="gnb_pc">
+		<h1 class="logo"><a href="/main.do">고속버스통합예매</a></h1>
+		<div class="menu">
+			<ul class="depth1">
+				<li id="rotinf" >
+					<a href="/mrs/rotinf.do">고속버스예매</a>
+				</li>
+				<li >
+						<a href="#">예매확인</a>
+					<ul class="depth2">
+						<li >
+							
+								<a href="/mrs/mrscfmlgnchec.do">예매 확인/취소/변경</a>
+							
+							
+						</li>
+						<li ><a href="/mrs/mrsrecplist.do">영수증 발행</a></li>
+					</ul>
+				</li>
+				<li >
+					<a href="#">운행정보</a>
+					<ul class="depth2">
+						<li ><a href="/oprninf/alcninqr/oprnAlcnPage.do">시간표조회</a></li>
+						<li ><a href="/oprninf/arscgd/oprnArscGd.do">도착시간안내</a></li>
+					</ul>
+				</li>
+				
+				
+					<li >
+						<a href="#">고속버스 프리패스/정기권</a>
+						<ul class="depth2">
+							
+								<li ><a href="/adtnprdnew/frps/frpsPrchGd.do">프리패스 여행권</a></li>
+							
+							
+							<li ><a href="/adtnprdnew/pass/passPrchGd.do">정기권</a></li>
+							<li ><a href="/adtnprdnew/prchpt/prdPrchPt.do">상품 구매내역</a></li>
+						</ul>
+					</li>
+				
+				<li >
+					<a href="#">이용안내</a>
+					<ul class="depth2">
+						<li ><a href="/ugd/mrsgd/Mrsgd.do">예매 안내</a></li>
+						<li ><a href="/ugd/mrsgd/MrdgdPrch.do">결제수단 안내</a></li>
+						<li ><a href="/ugd/rygd/Rygd.do">승차권 환불안내</a></li>
+						<li ><a href="/ugd/mlggd/Mlggd.do">프리미엄 마일리지 안내</a></li>
+						<li ><a href="/ugd/crewgd/Crewgd.do">국민안전 승무원제 안내</a></li>
+						<li ><a href="/ugd/trtrgd/Trtrgd.do">휴게소 환승안내</a></li>
+						<li ><a href="/ugd/trmlgd/Trmlgd.do">고속버스 터미널 안내</a></li>
+						<li ><a href="/ugd/cacmgd/Cacmgd.do">고속버스 운송회사 안내</a></li>
+						<li ><a href="/ugd/cacmgd/CacmgdSale.do">시외노선 할인제도 안내</a></li>
+					</ul>
+				</li>
+				<li >
+					<a href="/cscn/ntcmttr/readNtcList.do">공지사항</a>					
+				</li>
+				<li >
+					<a href="#">고객센터</a>
+					<ul class="depth2">						
+						<li ><a href="/cscn/qna/readQnaList.do">자주하는 질문</a></li>
+						<li ><a href="/cscn/lossClnc/readLossClncList.do">유실물센터 안내</a></li>
+					</ul>
+				</li>
+				<li >
+					<a href="#">전국고속버스운송사업조합</a> <!-- 170123 txt수정 -->
+					<ul class="depth2">
+						<li ><a href="/ugd/bustrop/Bustrop.do">이사장 인사말</a></li>
+						<li ><a href="/ugd/bustrop/BustropHistory.do">연혁</a></li>
+						<li ><a href="/ugd/bustrop/BustropPurpose.do">설립목적 및 사업</a></li>
+						<li ><a href="/ugd/bustrop/BustropGroup.do">조직도</a></li>
+						<li ><a href="/ugd/bustrop/BustropCondition.do">회원사 현황</a></li>
+						<li ><a href="/ugd/bustrop/BustropContactUs.do">찾아오시는 길</a></li>
+					</ul>
+				</li>
+				<li >
+					<a href="#">터미널사업자협회</a>
+					<ul class="depth2">
+						<li ><a href="/ugd/trmlbizr/Trmlbizr.do">협회장 인사말</a></li> <!-- 170123 txt수정 -->
+						<li ><a href="/ugd/trmlbizr/TrmlbizrHistory.do">연혁</a></li>
+						<li ><a href="/ugd/trmlbizr/TrmlbizrPurpose.do">설립목적 및 사업</a></li>
+						<li ><a href="/ugd/trmlbizr/TrmlbizrGroup.do">조직도</a></li>
+						<li ><a href="/ugd/trmlbizr/TrmlbizrContactUs.do">찾아오시는 길</a></li>
+					</ul>
+				</li>
+				<!-- <li>
+					<a href="/mrs/mrsrecplist.do" style="color:red;">구 인터넷 예약 조회</a>
+				</li> -->
+			</ul>
+		</div>
+		 <!-- 190925 추가 -->
+        <div class="app wheel">
+            <a href="/wchr/main.do" target="_blank">
+                <span>휠체어 좌석<br>예매 사이트</span>
+                <p>함께가요!<br>행복여행</p>
+            </a>
+        </div>
+        <!-- //190925 추가 -->	
+		<div class="app"  style="padding: 0 !important">
+			<!-- <a href="http://www.epassmobile.co.kr" target="_blank"> -->
+			<a href="javascript:void(0);" >
+				<span>예매부터 탑승까지!</span>
+				<p>고속버스<br>티머니</p> 
+			</a>
+		</div>
+		<div class="notice">
+			<ul class="slide_notice" id="noticeView">
+				<li>
+					<p></p>
+					<a href="#">
+						<span class="news ellipsis"></span> <span class="date"></span>
+					</a>
+				</li>
+			</ul>
+			<p class="notice_btns">
+				<span href="#" class="btn prev"></span>
+				<span href="#" class="btn next"></span>
+				<a href="/cscn/ntcmttr/readNtcList.do" class="btn list">목록</a>
+			</p>
+		</div>
+	</div>
+	<div id="gnb" class="gnb_tablet">
+		<h1 class="logo"><a href="/main.do">고속버스통합예매</a></h1>
+		<a href="#" class="menu_toggle view">메뉴</a>
+		<div class="menu">
+			<ul class="depth1">
+				<li class="menu01 "><a href="/mrs/rotinf.do">고속버스예매</a></li>
+				<li class="menu02 ">
+					<a href="#">예매확인</a>
+					<ul class="depth2">
+						<li >
+							
+								<a href="/mrs/mrscfmlgnchec.do">예매 확인/취소/변경</a>
+							
+							
+						</li>
+						<li ><a href="/mrs/mrsrecplist.do">영수증 발행</a></li>
+					</ul>
+				</li>
+				<li class="menu03 "><a href="#">운행정보</a>
+					<ul class="depth2">
+						<li ><a href="/oprninf/alcninqr/oprnAlcnPage.do">시간표조회</a></li>
+						<li ><a href="/oprninf/arscgd/oprnArscGd.do">도착시간안내</a></li>
+					</ul>
+				</li>
+				
+				
+					<li class="menu04 "><a href="#">고속버스 프리패스/정기권</a>
+						<ul class="depth2">
+							
+								<li ><a href="/adtnprdnew/frps/frpsPrchGd.do">프리패스 여행권</a></li>
+							
+							
+							<li ><a href="/adtnprdnew/pass/passPrchGd.do">정기권</a></li>
+							<li ><a href="/adtnprdnew/prchpt/prdPrchPt.do">상품 구매내역</a></li>
+						</ul>
+					</li>
+				
+				<li class="menu06 " ><a href="#">이용안내</a>
+					<ul class="depth2">
+						<li ><a href="/ugd/mrsgd/Mrsgd.do">예매 안내</a></li>
+						<li ><a href="/ugd/mrsgd/MrdgdPrch.do">결제수단 안내</a></li>
+						<li ><a href="/ugd/rygd/Rygd.do">승차권 환불안내</a></li>
+						<li ><a href="/ugd/mlggd/Mlggd.do">프리미엄 마일리지 안내</a></li>
+						<li ><a href="/ugd/crewgd/Crewgd.do">국민안전 승무원제 안내</a></li>
+						<li ><a href="/ugd/trtrgd/Trtrgd.do">휴게소 환승안내</a></li>
+						<li ><a href="/ugd/trmlgd/Trmlgd.do">고속버스 터미널 안내</a></li>
+						<li ><a href="/ugd/cacmgd/Cacmgd.do">고속버스 운송회사 안내</a></li>
+						<li ><a href="/ugd/cacmgd/CacmgdSale.do">시외노선 할인제도 안내</a></li>
+					</ul>
+				</li>
+				<li class="menu10 "><a href="/cscn/ntcmttr/readNtcList.do">공지사항</a></li>
+				<li class="menu09 "><a href="#">고객센터</a>
+					<ul class="depth2">
+						<li ><a href="/cscn/qna/readQnaList.do">자주하는 질문</a></li>
+						<li ><a href="/cscn/lossClnc/readLossClncList.do">유실물센터 안내</a></li>
+					</ul>
+				</li>
+				<li class="menu07 "><a href="#">전국고속버스운송사업조합</a> <!-- 170123 txt수정 -->
+					<ul class="depth2">
+						<li ><a href="/ugd/bustrop/Bustrop.do">이사장 인사말</a></li>
+						<li ><a href="/ugd/bustrop/BustropHistory.do">연혁</a></li>
+						<li ><a href="/ugd/bustrop/BustropPurpose.do">설립목적 및 사업</a></li>
+						<li ><a href="/ugd/bustrop/BustropGroup.do">조직도</a></li>
+						<li ><a href="/ugd/bustrop/BustropCondition.do">회원사 현황</a></li>
+						<li ><a href="/ugd/bustrop/BustropContactUs.do">찾아오시는 길</a></li>
+					</ul>
+				</li>
+				<li class="menu08 "><a href="#">터미널사업자협회</a>
+					<ul class="depth2">
+						<li ><a href="/ugd/trmlbizr/Trmlbizr.do">협회장 인사말</a></li> <!-- 170123 txt수정 -->
+						<li ><a href="/ugd/trmlbizr/TrmlbizrHistory.do">연혁</a></li>
+						<li ><a href="/ugd/trmlbizr/TrmlbizrPurpose.do">설립목적 및 사업</a></li>
+						<li ><a href="/ugd/trmlbizr/TrmlbizrGroup.do">조직도</a></li>
+						<li ><a href="/ugd/trmlbizr/TrmlbizrContactUs.do">찾아오시는 길</a></li>
+					</ul>
+				</li>
+				<!-- li class="menu02">
+					<a href="/mrs/mrsrecplist.do" style="color:red;">구 인터넷 예약 조회</a>
+				</li> -->
+			</ul>
+		</div>
+		<div class="app">
+			<a href="http://www.epassmobile.co.kr" target="_blank">고속버스 모바일앱</a>
+		</div>
+		<div class="notice">
+			<a href="/cscn/ntcmttr/readNtcList.do">공지사항<span class="noti_cnt"></span></a>
+		</div>
+	</div>
+	<div id="gnb" class="gnb_mobile logout
+">
+		<h1 class="logo">
+			<a href="/main.do">고속버스통합예매</a>
+			<p class="user_info">
+				<a href="/mbrs/mbrspage/myPageMain.do">
+					<span class="mail"></span>
+					<span class="phone"></span>
+				</a>
+			</p>
+		</h1>
+		<p class="mo_util">
+			<a href="/mbrs/lgn/loginMain.do" class="out">로그인</a>
+			<a href="/mbrs/lgn/logoutMain.do" class="in">로그아웃</a>
+			<a href="/mbrs/mbrspage/myPageMain.do" class="in">마이페이지</a>
+			<a href="/mbrs/trprinqr/pymPtInqr.do">결제내역조회</a>
+		</p>
+		<div class="menu">
+			<ul class="depth1">
+				<li class="menu_home"><a href="/main.do">홈</a></li> <!-- 170213 추가 -->
+				<li class="menu01 "><a href="/mrs/rotinf.do">고속버스예매</a></li>
+				<li class="menu02 ">
+					<a href="#">예매확인</a>
+					<ul class="depth2">
+						<li >
+							
+								<a href="/mrs/mrscfmlgnchec.do">예매 확인/취소/변경</a>
+							
+							
+						</li>
+						<li ><a href="/mrs/mrsrecplist.do">영수증 발행</a></li>
+					</ul>
+				</li>
+				<li class="menu03 "><a href="#">운행정보</a>
+					<ul class="depth2">
+						<li ><a href="/oprninf/alcninqr/oprnAlcnPage.do">시간표조회</a></li>
+						<li ><a href="/oprninf/arscgd/oprnArscGd.do">도착시간안내</a></li>
+					</ul>
+				</li>
+				
+				
+					<li class="menu04 "><a href="#">고속버스 프리패스/정기권</a>
+						<ul class="depth2">
+							
+								<li ><a href="/adtnprdnew/frps/frpsPrchGd.do">프리패스 여행권</a></li>
+							
+							
+							<li ><a href="/adtnprdnew/pass/passPrchGd.do">정기권</a></li>
+							<li ><a href="/adtnprdnew/prchpt/prdPrchPt.do">상품 구매내역</a></li>
+						</ul>
+					</li>
+				
+				<li class="menu06 " ><a href="#">이용안내</a>
+					<ul class="depth2">
+						<li ><a href="/ugd/mrsgd/Mrsgd.do">예매 안내</a></li>
+						<li ><a href="/ugd/mrsgd/MrdgdPrch.do">결제수단 안내</a></li>
+						<li ><a href="/ugd/rygd/Rygd.do">승차권 환불안내</a></li>
+						<li ><a href="/ugd/trtrgd/Trtrgd.do">휴게소 환승안내</a></li>
+						<li ><a href="/ugd/trmlgd/Trmlgd.do">고속버스 터미널 안내</a></li>
+						<li ><a href="/ugd/cacmgd/Cacmgd.do">고속버스 운송회사 안내</a></li>
+						<li ><a href="/ugd/cacmgd/CacmgdSale.do">시외노선 할인제도 안내</a></li>
+					</ul>
+				</li>
+				<li class="menu10 "><a href="/cscn/ntcmttr/readNtcList.do">공지사항</a></li>
+				<li class="menu09 "><a href="#">고객센터</a>
+					<ul class="depth2">
+						<li ><a href="/cscn/qna/readQnaList.do">자주하는 질문</a></li>
+						<li ><a href="/cscn/lossClnc/readLossClncList.do">유실물센터 안내</a></li>
+					</ul>
+				</li>
+				<li class="menu07 "><a href="#">전국고속버스운송사업조합</a> <!-- 170123 txt수정 -->
+					<ul class="depth2">
+						<li ><a href="/ugd/bustrop/Bustrop.do">이사장 인사말</a></li>
+						<li ><a href="/ugd/bustrop/BustropHistory.do">연혁</a></li>
+						<li ><a href="/ugd/bustrop/BustropPurpose.do">설립목적 및 사업</a></li>
+						<li ><a href="/ugd/bustrop/BustropGroup.do">조직도</a></li>
+						<li ><a href="/ugd/bustrop/BustropCondition.do">회원사 현황</a></li>
+						<li ><a href="/ugd/bustrop/BustropContactUs.do">찾아오시는 길</a></li>
+					</ul>
+				</li>
+				<li class="menu08 "><a href="#">터미널사업자협회</a>
+					<ul class="depth2">
+						<li ><a href="/ugd/trmlbizr/Trmlbizr.do">협회장 인사말</a></li> <!-- 170123 txt수정 -->
+						<li ><a href="/ugd/trmlbizr/TrmlbizrHistory.do">연혁</a></li>
+						<li ><a href="/ugd/trmlbizr/TrmlbizrPurpose.do">설립목적 및 사업</a></li>
+						<li ><a href="/ugd/trmlbizr/TrmlbizrGroup.do">조직도</a></li>
+						<!-- <li><a href="#">회원사 현황</a></li> --> <!-- 170123 삭제 -->
+						<li ><a href="/ugd/trmlbizr/TrmlbizrContactUs.do">찾아오시는 길</a></li>
+					</ul>
+				</li>
+				<!-- <li class="menu02">
+					<a href="/mrs/mrsrecplist.do" style="color:red;">구 인터넷 예약 조회</a>
+				</li> -->
+			</ul>
+		</div>
+	</div>
+	<a href="#" class="close">닫기</a> <!-- 170105수정 gnb_mobiel div안에 있던 a태그를 밖으로 뺌 -->
+	 <!-- // 170109 gnb 수정 -->
+
+<script type="text/javascript">
+//<![CDATA[
+
+
+//]]>
+</script>
+
+		
+		
+		
+		
+		
+	
+	<!-- wrap -->
+			<!-- contents -->
+			<div id="contentWrap">
+				<div class="dimmed"></div>
+				<div id="contents">
+					
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="/js/kor/mrs/tckmrs/AlcnSrch.js?v=0.14"></script>
+
+<form name="alcnSrchFrm" id="alcnSrchFrm" method="post"  action="/mrs/alcnSrch.do" >
+	<input type="hidden" name="deprCd"         id="deprCd"         value="340" /><!-- 출발지코드 -->
+	<input type="hidden" name="deprNm"         id="deprNm"         value="아산온양" /><!-- 출발지명 -->
+	<input type="hidden" name="arvlCd"         id="arvlCd"         value="010" /><!-- 도착지코드 -->
+	<input type="hidden" name="arvlNm"         id="arvlNm"         value="서울경부" /><!-- 도착지명 -->
+	<input type="hidden" name="tfrCd"          id="tfrCd"          value="" /><!-- 환승지코드 -->
+	<input type="hidden" name="tfrNm"          id="tfrNm"          value="" /><!-- 환승지명 -->
+	<input type="hidden" name="tfrArvlFullNm"  id="tfrArvlFullNm"  value="" /><!-- 환승지포함 도착지 명 -->
+	<input type="hidden" name="pathDvs"        id="pathDvs"        value="sngl" /><!-- 직통sngl,환승trtr,왕복rtrp -->
+	<input type="hidden" name="pathStep"       id="pathStep"       value="1" /><!-- 왕복,환승 가는편순번 -->
+	<input type="hidden" name="deprDtm"        id="deprDtm"        value="20230125" /><!-- 가는날(편도,왕복) -->
+	<input type="hidden" name="deprDtmAll"     id="deprDtmAll"     value="2023. 01. 25}. 수" /><!-- 가는날(편도,왕복) -->
+	<input type="hidden" name="arvlDtm"        id="arvlDtm"        value="20230125" /><!-- 오는날(왕복) -->
+	<input type="hidden" name="arvlDtmAll"     id="arvlDtmAll"     value="2023. 01. 25. 수" /><!-- 오는날(왕복) -->
+	<input type="hidden" name="busClsCd"       id="busClsCd"       value="0" /><!-- 버스등급 -->
+	<input type="hidden" name="takeDrtmOrg"    id="takeDrtmOrg"    value="90" /><!-- 소요시간 -->
+	<input type="hidden" name="distOrg"        id="distOrg"        value="99.8" /><!-- 거리 -->
+	<input type="hidden" name="rtrpChc"        id="rtrpChc"        value="1" /><!-- 왕편 복편 설정 -->
+	<input type="hidden" name="timeLinkMin"    id="timeLinkMin"    value="15" /><!-- 시간링크 최소값 -->
+	<input type="hidden" name="timeLinkMax"    id="timeLinkMax"    value="21" /><!-- 식간링크 최대값 -->
+	
+	<!-- 출발일자:deprDtm or arvlDtm, 출발터미널번호:deprCd, 도착터미널번호:arvlCd  -->
+	<input type="hidden" name="deprTime"       id="deprTime"    value="" /><!-- 출발시각 -->
+	<input type="hidden" name="alcnDeprTime"   id="alcnDeprTime"    value="" /><!-- 배차출발시각 -->
+	<input type="hidden" name="alcnDeprTrmlNo" id="alcnDeprTrmlNo"    value="" /><!-- 배차출발터미널 -->
+	<input type="hidden" name="alcnArvlTrmlNo" id="alcnArvlTrmlNo"    value="" /><!-- 배차도착터미널 -->
+	<input type="hidden" name="indVBusClsCd"   id="indVBusClsCd"    value="" /><!-- 선택한버스등급 -->
+	<input type="hidden" name="cacmCd"         id="cacmCd"    value="" /><!-- 운수사코드 -->
+	
+	<!-- 왕복시 왕편데이터  -->
+	<input type="hidden" name="prmmDcDvsCd"    id="prmmDcDvsCd"    value="" /><!-- 우등형할인코드 -->
+	<input type="hidden" name="rtrpDtl1"       id="rtrpDtl1"       value="" /><!-- 왕복시 왕편데이터 -->
+	<input type="hidden" name="pcpyNoAll1"     id="pcpyNoAll1"     value="" /><!-- 왕복시 왕편좌석선점번호 -->
+	<input type="hidden" name="satsNoAll1"     id="satsNoAll1"     value="" /><!-- 왕복시 왕편좌석선점번호 -->
+	<input type="hidden" name="alcnTrmlNoInfo" id="alcnTrmlNoInfo" value="" /><!-- 왕편출도착지 터미널코드 -->
+	
+	<!-- 사전데이터 체크용  -->
+	<input type="hidden" name="deprDtmOrg"        id="deprDtmOrg"        value="20230125" /><!-- 가는날(편도,왕복) -->
+	<input type="hidden" name="deprDtmAllOrg"     id="deprDtmAllOrg"     value="2023. 01. 25}. 수" /><!-- 가는날(편도,왕복) -->
+	<input type="hidden" name="arvlDtmOrg"        id="arvlDtmOrg"        value="20230125" /><!-- 오는날(왕복) -->
+	<input type="hidden" name="arvlDtmAllOrg"     id="arvlDtmAllOrg"     value="2023. 01. 25. 수" /><!-- 오는날(왕복) -->
+	
+	<input type="hidden" name="rtrpStep2DtYn"     id="rtrpStep2DtYn"     value="Y" /><!-- 오늘날 데이터 여부 -->
+	
+	<input type="hidden" name="prvtBbizEmpAcmtRt"     id="prvtBbizEmpAcmtRt"     value="" /><!-- 국민차장제 여부 -->
+	<input type="hidden" name="chldSftySatsYn"     id="chldSftySatsYn"     value="" /><!-- 유아카시트 여부 -->
+	<input type="hidden" name="dsprSatsYn"     id="dsprSatsYn"     value="" /><!-- 휠체어 가능 여부 -->
+	
+	<!-- 2020-01-17 yahan -->
+	<input type="hidden" name="spexp"          id="spexp"     value="" /><!-- 특송플래그 -->
+	<!-- 20200327 yahan	 -->
+	<input type="hidden" name="dcDvsCd"         id="dcDvsCd"    value="" /><!-- 할인구분코드 -->
+	
+	<input type="hidden" name="extrComp"       id="extrComp"       value="" /><!-- 거래처코드 -->
+	<input type="hidden" name="stdDtm"         id="stdDtm"         value="" />
+	<input type="hidden" name="endDtm"         id="endDtm"         value="" />
+	
+</form>	
+ 
+			
+				
+				
+					<div class="title_wrap in_process ticketingT">
+						 
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+<!-- 170110 수정 -->
+<div class="util">
+	<ul class="clfix">
+		
+			<li class="login"><a href="/mbrs/lgn/loginMain.do"><span>로그인</span></a></li>
+		
+		
+		
+			<li><a href="/mbrs/mbrsjoin/mbrsJoin.do">회원가입</a></li>
+		
+		<li><a href="/mbrs/mbrspage/myPageMain.do">마이페이지</a></li>
+		<li><a href="/mbrs/trprinqr/pymPtInqr.do">결제내역조회</a></li>
+		<li><a href="/etc/sitemap/SiteMap.do">사이트맵</a></li>
+	</ul>
+	<!-- 170209 다국어선택 select수정 -->
+	<div class="select-box">
+		<select name="lng_cd_navi" id="lng_cd_navi" title="다국어사이트 선택">
+			<option value="KO" selected="selected">한국어</option>
+			<option value="EN">English</option>
+			<option value="CN">中文</option>
+			<option value="JP">日本語</option>
+		</select>
+	</div>
+	<!-- //170209 다국어선택 select수정 -->
+</div>
+
+<a href="#" class="back">back</a>
+<a href="#" class="mo_toggle">메뉴</a>
+
+	
+	
+	
+	
+	
+
+						<h2>고속버스예매</h2>
+						<ol class="process">
+							<li class="active">예매정보입력</li>
+							<li>결제정보입력</li>
+							<li>예매완료</li>
+						</ol>
+					</div>
+				
+			
+ 
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+$(document).ready(function(){
+	$('.breadcrumb_list .select-box select').selectric();
+	
+	$(".breadcrumb_list .select").on("change", function(){
+		location.href = $(this).val();
+	});
+	
+});
+</script>
+<!-- 페이지 분류 -->
+
+	
+		  
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+
+
+<div class="breadcrumb">
+	<ul class="breadcrumb_list">
+		<li><a href="/main.do">HOME</a></li>
+		<li>
+			<div class="select-box">
+				<select name="" id="" class="select">
+					<option value="/mrs/rotinf.do" selected="selected">고속버스예매</option>
+					
+						<option value="/mrs/mrscfmlgnchec.do"  >예매확인</option>
+					
+					
+					<option value="/oprninf/alcninqr/oprnAlcnPage.do" >운행정보</option>
+					<option value="/adtnprdnew/frps/frpsPrchGd.do" >고속버스 프리패스/정기권</option>
+					<option value="/ugd/mrsgd/Mrsgd.do" >이용안내</option>
+					<option value="/cscn/ntcmttr/readNtcList.do" >공지사항</option>
+					<option value="/cscn/qna/readQnaList.do" >고객센터</option>
+					<option value="/ugd/bustrop/Bustrop.do" >전국고속버스운송사업조합</option>
+					<option value="/ugd/trmlbizr/Trmlbizr.do" >터미널사업자협회</option>
+				</select>
+			</div>
+		</li>
+		<!-- 예매확인 -->
+		
+		<!-- 운행정보 -->
+		 
+		
+		<!-- 부가상품 -->
+		 
+		<!-- 이용안내 -->
+		
+		<!-- 고객센터 -->
+		
+		<!-- 전국고속버스운송사업조합 -->
+		
+		<!-- 터미널사업자협회 -->
+		
+	</ul>
+</div>
+	
+	
+	
+	
+	
+
+  
+			<div class="page">
+				
+					
+					
+					<h3>배차조회</h3>
+				
+				<div class="buscheck_wrap clfix">
+					<!-- 좌측 infoBox -->
+					<div class="infoBox">
+						
+						
+							<p class="date" id="alcnDeprDtm"><!-- 출발일 --></p>
+						
+						<!-- //왕복시 노출 추가 2017-02-10 -->
+							
+						<div class="route_wrap" id="alcnRotInfo">
+							<div class="inner">
+								<p class="roundBox departure" id="alcnDeprTmlNm"><!-- 출발지 --></p>
+								
+								<p class="roundBox arrive" id="alcnArvlTmlNm"><!-- 도착지 --></p>
+							</div>
+							<div class="detail_info">
+								<span id="takeDrtm"><!-- 소요시간 --></span>
+								<span id="dist"><!-- 거리 --></span>
+							</div>
+							<div class="btn_r">
+								<a href="#none" class="btn btn_modify white" onclick="fnUpdRot()">수정</a>
+							</div>
+						</div>
+						
+						<a href="#" class="btn_price">요금보기</a>
+						<div class="price_info bottom" id="alcnPriceInf">
+							<p class="stit">요금정보<span>(일반요금)</span></p>
+							
+							
+							<dl>
+								
+									
+										<dt class="">우등</dt>
+										<dd >10,100 원</dd>
+									
+								
+									
+								
+									
+								
+									
+										<dt class="">고속</dt>
+										<dd >7,700 원</dd>
+									
+								
+									
+								
+									
+								
+									
+										<dt class="">심야우등</dt>
+										<dd >11,100 원</dd>
+									
+								
+									
+										<dt class="">심야우등할증</dt>
+										<dd >12,100 원</dd>
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+									
+										<dt class="">심야고속</dt>
+										<dd >8,400 원</dd>
+									
+								
+									
+										<dt class="">심야고속할증</dt>
+										<dd >9,200 원</dd>
+									
+								
+									
+								
+									
+								
+									
+								
+									
+								
+							</dl>
+							
+							
+						</div>
+					</div>
+					<!-- //좌측 infoBox -->
+					<!-- 우측 detailBox -->
+					<div class="detailBox">
+						<div class="detailBox_head col3">
+							<div class="box_refresh">
+								<button type="button" class="btn btn_refresh" id="reloadBtn"><span class="ico_refresh">새로고침</span></button>
+							</div>
+							<div class="head_date">
+								<span class="date_cont" id="rideDate"></span>
+								<input type="text" id="busDate11" readonly>
+								<span class="calender" ></span>
+							</div>
+						</div>
+						<div class="detailBox_body clfix">
+							<ul class="time">
+								
+									
+										<li class="night" ><a href="#none" class="noselect" data-time="01">1</a></li>
+									
+										<li class="night" ><a href="#none" class="noselect" data-time="03">3</a></li>
+									
+										<li class="night" ><a href="#none" class="noselect" data-time="05">5</a></li>
+									
+										<li class="daytime" ><a href="#none" class="noselect" data-time="07">7</a></li>
+									
+										<li class="daytime" ><a href="#none" class="noselect" data-time="09">9</a></li>
+									
+										<li class="daytime" ><a href="#none" class="noselect" data-time="11">11</a></li>
+									
+										<li class="daytime" ><a href="#none" class="noselect" data-time="13">13</a></li>
+									
+										<li class="daytime active" ><a href="#none" class="noselect" data-time="15">15</a></li>
+									
+										<li class="daytime" ><a href="#none" class="" data-time="17">17</a></li>
+									
+										<li class="daytime" ><a href="#none" class="" data-time="19">19</a></li>
+									
+										<li class="night" ><a href="#none" class="" data-time="21">21</a></li>
+									
+										<li class="night" ><a href="#none" class="" data-time="23">23</a></li>
+									
+								
+								
+							</ul>
+							
+							<div class="bustime_wrap">
+								<p class="bustime_head">
+									<span class="start_time">출발</span>
+									<span class="bus_info">고속사/등급</span> <!-- tablet / mobile 사이즈에서 보임 -->
+									<span class="bus_com">고속사</span> <!-- pc 사이즈에서만 보임 -->
+									<span class="grade">등급</span> <!-- pc 사이즈에서만 보임 -->
+									<span class="temp" >할인</span>
+									<span class="remain">잔여석</span>
+									<span class="status"></span>
+								</p>
+								<div class="bus_time">
+									<!-- 동양고속 class="dyexpress" 삼화고속 class="samhwa" 중앙고속 class="jabus" 금호고속 class="kumho" 천일고속 class="chunil" 한일고속 class="hanil" 동부고속 class="dongbu" 금호속리산고속 class="songnisan" 코버스 class="kobus" -->
+									
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+											
+												<div class="noti" id="notiNoToday"> <!-- 현시점 기준 출발 5분~60분 남은 차량의 경우 배차정보는 노출하되 예매진행 불가처리하여 고속버스 모바일앱 안내 노출 -->
+													<p>
+														<span class="accent">출발예정 60분전</span> 배차 차량은 고속버스 모바일앱을 통하여 예매할 수 있습니다.<br><span class="show_pc">곧 출발하는 버스탑승을 하시려면 지금 바로 고속버스 모바일앱으로 접속하세요.</span><br>
+														임시차량은 공동운수협정차량이 운행될 수도 있습니다.
+													</p>
+													<a href="http://www.epassmobile.co.kr" class="btnS btn_normal" target="_blank">고속버스 모바일앱</a>
+												</div>	
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="15">
+
+
+											
+												
+													
+													
+														<a href="#" class="noselect">
+													
+												
+												
+													<span class="start_time">16 : 30</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="grade_mo">고속</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">고속 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">26 석</span>
+													<span class="status">
+														
+															
+															
+																출발임박
+															
+															
+														
+													</span>
+												</a>
+											</p>
+											
+												<div class="noti"> <!-- 현시점 기준 출발 5분~60분 남은 차량의 경우 배차정보는 노출하되 예매진행 불가처리하여 고속버스 모바일앱 안내 노출 -->
+													<p>
+														<span class="accent">출발예정 60분전</span> 배차 차량은 고속버스 모바일앱을 통하여 예매할 수 있습니다.<br><span class="show_pc">곧 출발하는 버스탑승을 하시려면 지금 바로 고속버스 모바일앱으로 접속하세요.</span><br>
+														임시차량은 공동운수협정차량이 운행될 수도 있습니다.
+													</p>
+													<a href="http://www.epassmobile.co.kr" class="btnS btn_normal" target="_blank">고속버스 모바일앱</a>
+												</div>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="17">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230125','171000','171000','340','010','2','03','0','Y','N','340','010','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">17 : 10</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="grade_mo">고속</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">고속 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">40 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+															
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+												
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230125','180000','180000','340','010','1','03','0','Y','N','340','010','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">18 : 00</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info via">
+															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="grade_mo">우등</span>
+															  		
+															  			<span class="via_mo">(아산둔포경유)</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">우등 
+															<span class="via">(아산둔포경유)
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">22 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230125','183000','183000','340','010','2','03','0','Y','N','340','010','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">18 : 30</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="grade_mo">고속</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">고속 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">37 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="19">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230125','192000','192000','340','010','1','03','0','Y','N','340','010','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">19 : 20</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="grade_mo">우등</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">우등 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">16 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230125','201000','201000','340','010','2','03','0','Y','N','340','010','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">20 : 10</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="grade_mo">고속</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">고속 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">37 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="21">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230125','210000','210000','340','010','2','03','0','Y','N','340','010','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">21 : 00</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="grade_mo">고속</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">고속 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">43 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230125','214500','214500','340','010','2','03','0','Y','N','340','010','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">21 : 45</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="grade_mo">고속</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">고속 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">44 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+									
+									
+									
+										
+							
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- //우측 detailBox -->
+				</div>
+				<div class="section">
+					<ul class="desc_list">
+						<li>심야고속 및 심야우등의 할증 요금은 당일 02:00부터 04:00 사이 출발차량</li>
+						<li>노선에 따라 심야요금과 심야할증요금이 동일할 수도 있음</li>
+						<li>마일리지 구매 승차권은 프리미엄/편도 노선(일부노선 제외)에 한정하며 각 1매씩 예매 가능(*회원대상)</li>
+						<li>유아 카시트 가능( <img src="/images/page/ico_child_on.png" alt="" style="width:13px"> ) 표시된 차량에만 유아 카시트 장착 가능 (본인 소유의 유아 카시트 준비)</li>
+						<li>소요(도착)시간은 도로 사정에 따라 지연될 수 있음</li>
+						<!-- 190925 추가 -->
+                        <li>휠체어 탑승 가능( <img src="/images/page/ico_wheel_on.png" alt="" style="width:13px"> ) 표시된 차량에만 휠체어 동반 탑승 가능 (전동식 휠체어만 탑승 가능)</li>
+                        <li>휠체어 좌석 예매는 wkobus 사이트에서 예매 가능하며, 휠체어 좌석 예매는 출발일로 부터 3일 전까지만 가능<br>(*휠체어 좌석 예매가 없을 시 출발일 이틀 전부터 일반석 예매 가능)</li>
+                        <!-- // 190925 추가 -->
+					</ul>
+				</div>
+			</div>
+			
+			<!-- 요금보기 -->
+			<div class="remodal pop_price" data-remodal-id="popPrice" role="dialog">
+				<p class="tbl_tit">요금보기</p>
+				<div class="cont">
+					<div class="tbl_type1">
+						<table>
+							<caption>요금보기</caption>
+							<colgroup>
+								<col style="width: 22%">
+								<col style="width: 50%">
+								<col style="width: auto;">
+							</colgroup>
+							<thead>
+								<tr>
+									<th scope="col">운임</th>
+									<th scope="col">구분</th>
+									<th scope="col">일반요금</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td rowspan="9"></td>
+									<td>프리미엄</td>
+									<td class="sum">
+										 원
+										
+									</td>
+								</tr>
+								<tr>
+									<td>우등고속</td>
+									<td class="sum">
+										 원
+										
+									</td>
+								</tr>
+								<tr>
+									<td>일반고속</td>
+									<td class="sum">
+										 원
+										
+									</td>
+								</tr>
+								<tr>
+									<td>심야프리미엄</td>
+									<td class="sum">
+										 원
+										
+									</td>
+								</tr>
+								<tr>
+									<td>심야우등</td>
+									<td class="sum">
+										 원
+										
+									</td>
+								</tr>
+								<tr>
+									<td>심야고속</td>
+									<td class="sum">
+										 원
+										
+									</td>
+								</tr>
+								<tr>
+									<td>할증프리미엄</td>
+									<td class="sum">
+										 원
+										
+									</td>
+								</tr>
+								<tr>
+									<td>할증우등</td>
+									<td class="sum">
+										 원
+										
+									</td>
+								</tr>
+								<tr>
+									<td>할증고속</td>
+									<td class="sum">
+										 원
+										
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="btns">
+					<button data-remodal-action="cancel" class="btnL btn_close">닫기</button>
+				</div>
+			</div>
+
+				</div>
+				
+					
+						
+<div id="footer">
+	<script type="text/javascript">
+		if (/ip(hone|od)/i.test(navigator.userAgent)) {
+			$(document).ready(function() {
+				$('.family_site.select-box').addClass('iphone');
+				$('.family_site.select-box select').selectric({
+					disableOnMobile: false
+				});
+			});
+		}
+		function familySite(obj){
+			if (obj.value != "") {
+				window.open("http://" + obj.value,"","");				
+			}
+		}
+	</script>
+		<div class="family_site select-box">
+			<select name="" id="" title="관련사이트" class="select" onchange="familySite(this);">
+				<option value="">관련사이트</option>
+				<option value="www.kobus.co.kr/wchr/main.do">장애인 휠체어 사이트</option>
+				<option value="www.tago.go.kr">국가대중교통정보센터</option>
+				<!-- <option value="www.epassmobile.co.kr">고속버스모바일</option> -->
+				<option value="www.intis.or.kr">인천장애인콜택시</option>
+				<option value="www.centralcityseoul.co.kr">센트럴시티터미널</option>
+				<option value="txbus.t-money.co.kr">시외버스 통합예매시스템</option>
+			</select>
+		</div>
+		<div class="foot_bottom clfix">
+			<div class="foot_cont">
+				<p class="foot_menu">
+					<a href="/etc/svcstpl/SvcStpl.do">서비스 이용약관</a>
+					<a href="/etc/indlstpl/IndlStpl.do" class="indl">개인정보 처리방침</a><!-- 181121 수정 -->					
+					<a href="/etc/busstpl/BusStpl.do">고속버스 운송약관</a>
+					<!-- <a href="/etc/cmsstpl/CmsStpl.do">전자금융거래 이용약관</a> -->
+					<a href="http://www.tmoney.co.kr" class="btn_intro_footer" target="_blank">티머니</a>
+					<a>고객센터 1644-9030</a>
+				</p>				
+				<p class="foot_addr">서울특별시 서초구 신반포로 194 <span class="mo_block">통신판매업신고: 2009-서울서초 0587호 대표자 : 이광재</span></p>
+				<p class="foot_copy">COPYRIGHT&copy; 2016. WWW.KOBUS.CO.KR . ALL RIGHT RESERVED</p>
+				<p class="foot_com">
+					<a href="/ugd/bustrop/Bustrop.do"><img src="/images/common/sfoot_com1.png" alt="KOBUS 전국고속버스운송사업조합" /></a>
+					<a href="/ugd/trmlbizr/Trmlbizr.do"><img src="/images/common/sfoot_com2.png" alt="전국여객자동차터미널사업자협회" /></a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="foot_lang_wrap"> <!-- 170213 감싸는 div 추가 -->
+			<select name="lng_cd_foot" id="lng_cd_foot" title="다국어선택" class="foot_lang">
+				<!-- <option value="KO" selected="selected">한국어</option> -->
+				<option value="EN">English</option>
+				<option value="CN">中文</option>
+				<option value="JP">日本語</option>
+			</select>
+		</div>
+</div>
+
+<!-- 웹홍보가이드 시작 -->
+<link rel="stylesheet" type="text/css" href="/ksccinfo/css/aeb_common_02.css" />
+<!-- // 웹 홍보가이드 js -->
+<script type="text/javascript" src="/ksccinfo/js/jquery.introUI_02.js?v=0.1"></script>
+<!-- // 웹 홍보가이드 끝-->
+					
+					
+					
+					
+					
+				
+			</div>
+			<!-- //contents -->
+	<!-- //wrap -->
+</div>
+
+</body>
+</html>
