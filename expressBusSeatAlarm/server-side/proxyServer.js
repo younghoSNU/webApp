@@ -15,7 +15,7 @@ app.post('/exprm', (req, res) => {
 
     console.log(`request is accepted to server!`);
     const worker = new Worker(WORKERDIR);
-    console.log(`made worker done`);
+    console.log(`made worker done on ${WORKERDIR}`);
     worker.postMessage(req);
 
     worker.on('message', msg => {
