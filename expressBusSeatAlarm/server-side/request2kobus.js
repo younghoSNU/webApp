@@ -8,7 +8,7 @@ const { JSDOM } = require('jsdom');
 parentPort.once('message', async (msg) => {
     try {
         console.log(`worker received request:`);
-    
+		msg = JSON.parse(msg); 
         let postData = msg.body;
         console.log(postData);
         let result = await itineraryRequestKobus(postData);
