@@ -60,6 +60,7 @@ export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
       if (xhr.readyState === 4) {
           if (xhr.status === 200) {
               const res = JSON.parse(xhr.responseText);
+              console.log(`this is response from server`);
               console.log(res);
               resolve(xhr.responseText);
 

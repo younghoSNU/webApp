@@ -8,10 +8,8 @@ const { JSDOM } = require('jsdom');
 parentPort.once('message', async (msg) => {
     try {
         console.log(`worker received request:`);
-		msg = JSON.parse(msg); 
-        let postData = msg.body;
-        console.log(postData);
-        let result = await itineraryRequestKobus(postData);
+        console.log(msg);
+        let result = await itineraryRequestKobus(msg);
     
         parentPort.postMessage(result);
     } catch(e) {
@@ -26,7 +24,7 @@ function itineraryRequestKobus(postData) {
         let str2Cnctn = ''; 
         let itineraryResult = [];
 
-        const postData = `deprCd=340&deprNm=%EC%95%84%EC%82%B0%EC%98%A8%EC%96%91&arvlCd=010&arvlNm=%EC%84%9C%EC%9A%B8%EA%B2%BD%EB%B6%80&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230204&deprDtmAll=2023.+2.+4.+%ED%86%A0&arvlDtm=20230204&arvlDtmAll=2023.+2.+4.+%ED%86%A0&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;
+        // const postData = `deprCd=340&deprNm=%EC%95%84%EC%82%B0%EC%98%A8%EC%96%91&arvlCd=010&arvlNm=%EC%84%9C%EC%9A%B8%EA%B2%BD%EB%B6%80&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230204&deprDtmAll=2023.+2.+4.+%ED%86%A0&arvlDtm=20230204&arvlDtmAll=2023.+2.+4.+%ED%86%A0&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;
 
         const options = {
             port: 443,

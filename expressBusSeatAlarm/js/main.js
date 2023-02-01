@@ -24,7 +24,10 @@ function onSubmitInput(e) {
     const day = dateNday.slice(3, 4);
 
     itineraryRequest(dprtNm, arvlNm, year, month, date, day)
-        .then(val => console.log(`passed then function after resovle`))
+        .then(val => {
+            console.log(`passed then function after resovle`);
+            console.log(val);
+        })
         .catch(e => console.log(`padded catch function after reject`));
 }
 
