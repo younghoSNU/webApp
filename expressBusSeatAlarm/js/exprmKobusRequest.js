@@ -36,9 +36,7 @@ export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
     console.log(`postDate:\n ${postData}`);
 
     const headers = {
-      'Content-Length': postData.length,
       'Content-Type': 'text/plain',
-      'Upgrade-Insecure-Requests': '1',
     };
 
     let xhr = new XMLHttpRequest();

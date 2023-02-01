@@ -10,6 +10,7 @@ const PORT = 3000;
 const WORKERDIR = __dirname + "/request2kobus.js";
 
 app.use(cors());
+app.use(express.text({ type: `text/plain` }));
 
 app.post('/exprm', (req, res) => {
     //req가 올바는 형식인지 확인 아니면 res로 invalid 전송
