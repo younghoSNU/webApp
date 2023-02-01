@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 // 꼭 워커가 필요한 것은 아니지만 연습삼아
 const { Worker } = require('worker_threads');
+const bodyParser = require('body-parser');
 
 const app = express();
 

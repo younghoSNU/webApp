@@ -36,10 +36,8 @@ export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
     console.log(`postDate:\n ${postData}`);
 
     const headers = {
-      'Cache-Control': 'max-age=0',
-      'Accept-Language': 'en-US,en;q=0.9,ko-KR;q=0.8,ko;q=0.7',
-      // 'Content-Length': Buffer.byteLength(postData),
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': postData.length,
+      'Content-Type': 'text/plain',
       'Upgrade-Insecure-Requests': '1',
     };
 
