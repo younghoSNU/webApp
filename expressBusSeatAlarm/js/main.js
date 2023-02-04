@@ -160,7 +160,8 @@ async function onSubmitChck (e) {
         //체크한 여정들이 올바르게 체크됏는지 확인 후 맞다면
         if (confirm(selectedItnrs)) {
             //체크버튼을 가린다
-            await Notification.requestPermission();
+            let re = await Notification.requestPermission();
+            console.log(re)
             e.target.classList.add(HIDDEN_CLS_NM);
             //매 10초마다 서버에 가서 확인한다. 각 여정은 출발시간을 id로 활용할 수 있다. 여정에 빈자리가 있으면 알림을 보낸다.
             // Notification.requestPermission().then((result) => {
