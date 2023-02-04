@@ -41,7 +41,7 @@ export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
 
     let xhr = new XMLHttpRequest();
 
-    xhr.open('POST', `http://54.177.74.91/exprm`, true);
+    xhr.open('POST', `https://youngho.click/exprm`, true);
     setHeaderData(headers, xhr);
     //set port
     //set hearder
@@ -58,7 +58,7 @@ export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
               const res = JSON.parse(xhr.responseText);
               console.log(`this is response from server`);
               console.log(res);
-              resolve(xhr.responseText);
+              resolve(res);
 
 
               //document를 건드려서 수정해주기

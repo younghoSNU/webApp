@@ -9,21 +9,47 @@ body {
     background-color: #f0f0f0;
 }
 
+ol {
+    list-style-type: decimal;
+}
+
+li {
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+p {
+    margin: 0.1em;
+}
+
+
 .row {
     display: flex;
     flex-direction: row;
 }
 
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.center {
+    justify-content: center;
+}
+
 #bus-image {
     max-width: 10vw;
-    height: auto;
+    height: 10vw;
     margin: 1em;
 }
 
 /* 타이틀 고속버스 좌석 알림 서비스 */
 /* h1엘리먼트에 감싸져 있지만 그것보다 상위에서 적용시켜버린다. class의 override개념과 유사 */
 #title {
-    font-size: 400%;
+    font-size: max(40px, 5vw);
     margin: auto 1em;
     /* font-family: 'IBM Plex Sans KR', serif; 근데 다른 폰트로 바꿔주자*/
 }
@@ -33,15 +59,38 @@ footer {
     font-family: 'Jua', serif;
 }
 
+footer {
+    padding: 20px 0;
+    border-top: 2px solid #cdcdcd;
+}
+
 .main-content {
     background-color: rgb(255, 255, 255);
     border-radius: 1em;
     padding: 1em;
+    margin: 20px 0;
+    /* max-height: 70vh; */
 }
 
-h2 {
-    font-size: 2em;
+.search-container {
+    background-color: #e6e6e6;
+    border-radius: 10px 10px;
+    width: max(100px, 15vw);
+    height: max(50px, 7vw);
+    justify-content: center;
+    align-items: center;
 }
+
+.search {
+    width: max(4vw, 40px);
+}
+
+.search-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 
 
 .header-container {
@@ -54,19 +103,15 @@ h2 {
     flex-direction: column;
 }
 
-.flex-start-center {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+
 
 
 ul.main-menu {
     width: 70%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: center;
     list-style-type: none;
-    display: flex;
     margin: 5% 2%;
     border-width: 1px;
     border-radius: 1em;
@@ -76,37 +121,9 @@ ul.main-menu {
 div.main-button {
     display: flex;
     width: 30%;
-    justify-content:flex-start;
+    justify-content: center;
     align-items: center;
     margin: 1em;
-}
-
-button {
-    border-radius: 1em;
-    font-size: medium;
-    justify-content: center;
-    align-items: center;
-    padding: 0 10%;
-    font-weight: bold;
-}
-
-div.search-menu {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-li {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5em;
-    width: max-content;
-}
-
-p {
-    margin: 0.1em;
 }
 
 select {
@@ -117,11 +134,11 @@ select {
     margin: 1em auto;
 }
 
-#bar {
+/* #bar {
     background-color: #cdcdcd;
     min-height: 2px;
     margin: 1em auto;   
-}
+} */
 
 #emoji-image {
     width: auto;
@@ -135,4 +152,45 @@ select {
     margin: 0.5em;
     display: flex;
     align-items: center;
+}
+
+.itnr-item-container {
+    display: table;
+    width: 90%;
+    max-height: 60%;
+    padding: 1em 0;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.itnr-content-container {
+    overflow-y: scroll;
+    max-height: 500px;
+}
+
+.itnr-content-container span {
+    font-size: large;
+    vertical-align: middle;
+}
+
+.time,
+.busCmp,
+.remain,
+.busGrd {
+    display: table-cell;
+    padding: 10px 0;
+}
+
+.itnr-head {
+    display: table;
+    width: 100%;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.table-cell {
+    display: table-cell;
+}
+
+.hidden {
+    display: none;
 }

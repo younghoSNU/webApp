@@ -37,7 +37,8 @@
             </ol>
         </div>
         <form class="search-menu">
-            <ul class="main-menu">
+            <ul class="main-menu row">
+                
                 <li>
                     <p>출발날짜</p>
                     <select id="date-select" required>
@@ -60,19 +61,34 @@
                         <option value="">--도착지를 입력하세요--</option>
                         <option value="서울경부">서울고속버스터미널</option> 
                     </select>
-                </li>
+                </li>              
             </ul>
-            <!-- button을 div에 넣어주지 않으면 ul과 상호작용하기 불편하다. -->
-            <div class="main-button"> 
+            <div class="main-button row"> 
                 <!-- <i class="normal-size-image" src="img/search.png"></i> -->
-                <input type="image" src="img/search.png" class="row" value="검색"/>
+                <div class="search-container row">
+                    <input type="image" src="img/search.png" class="search" value="검색"/>
+                </div>
+            </div>
+            <!-- button을 div에 넣어주지 않으면 ul과 상호작용하기 불편하다. -->
+           
+        </form>
+        <form class="itnr-form hidden">
+            <p class="itnr-head">
+                <span class="table-cell">출발시간</span>
+                <span class="table-cell">고속사</span>
+                <span class="table-cell">버스등급</span>                
+                <span class="table-cell">잔여석</span>
+                <span class="hidden table-cell" id="notif-span" >알림등록</span>
+            </p>
+            <input class="hidden" type="button" value="알림등록하기">
+            <div class="itnr-content-container">
             </div>
         </form>
+        
     </div>
-    <div id="bar"></div>
     <footer class="row">
         <img class="normal-size-image" id="emoji-image" src="img/my-emoji.jpg" alt="my emoji with suprised face"/>
-        <div class="flex-start-center">
+        <div class="column center">
             <p>문의 및 연락: hois1998@snu.ac.kr <a href="mailto:hois1998@snu.ac.kr">send mail to nowhere</a></p>
             <p>Portions of this content are ©2022-2023 by individual contributors YOUNGHOKIM. Content available under a Creative Commons license.</p>
         </div>

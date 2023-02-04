@@ -51,7 +51,7 @@ function itineraryRequestKobus(postData) {
                 itinerary.forEach(el => {
                     console.log(el.querySelector(`.start_time`).innerHTML);
 
-                    const dprtTime = el.querySelector(`.start_time`).innerHTML.split(' : ').join();
+                    const dprtTime = el.querySelector(`.start_time`).innerHTML.split(' : ').join(`:`);
                     const busCmp = el.querySelector(`.dyexpress`).innerHTML;
                     const busGrade = el.querySelector(`.grade_mo`).innerHTML;
                     const remain = el.querySelector(`.remain`).innerHTML;
