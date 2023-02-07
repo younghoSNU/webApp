@@ -8,7 +8,7 @@ import { noZero, zero } from "./dbgInput.js";   //디버깅을 위해 임시려�
 // console.log(zero);
 
 const HIDDEN_CLS_NM = `hidden`;
-const NOTIFICATION_SW_FILE = `notificationSW.js`
+const NOTIFICATION_SW_FILE = `/js/notificationSW.js`
 
 //document에 property로 제출된 출발날짜, 출발지, 도착지를 넣으면 됨으로 굳이 모듈끼리 import/export가 필요없다
 // import {serverRes} from './kobusRequest.js';
@@ -169,10 +169,10 @@ async function onSubmitChck (e) {
             if (confirm(selectedItnrs)) { //유저에게 원하는 여정(들)이 잘 선택됐는지 확인시켜준다. 
                 //체크버튼을 가린다
                 e.target.classList.add(HIDDEN_CLS_NM);
-
                 await reqNotificationPermission();
+                console.log('aaa');
                 await registerServiceWorker();
-                
+                console.log(`ccc`)
                
     
             } else {
@@ -200,6 +200,8 @@ async function reqNotificationPermission() {
     if (permission === `denied`) {
         alert(`알림을 '차단'하셨습니다.\n검색주소(url) 왼쪽 좌물쇠 버튼을 눌러 알림을 허용해주시고 페이지를 새로고침해 주세요`)
     }
+
+    return;
 }
 
 async function registerServiceWorker() {
@@ -207,11 +209,16 @@ async function registerServiceWorker() {
         throw new Error(`no serviceWorker in browser`);
     }
 
-    if (!(`pushManager` in window)) {
+    if (!(`PushManager` in window)) {
         throw new Error(`no push manager in browser`);
     }
 
+    console.log('bbb')
     const swRegistration = await navigator.serviceWorker.register(NOTIFICATION_SW_FILE);
+    console.log(swRegistration)
+    console.log('registered service worker');
+
+    return;
 
 }
 

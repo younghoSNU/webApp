@@ -1,5 +1,4 @@
-import { PUBLIC_KEY, PRIVATE_KEY } from `./secureInfo.js`; 
-
+const PUBLIC_KEY = `BJX1JFKLeds75dvaBzGXaliLkyYhR-_v_5Vbu2I6SXQngkP2XiCVkl_de4lmevcbNOQvbI3rrFXPLkpBatB0cZE`;
 // urlB64ToUint8Array is a magic function that will encode the base64 public key
 // to Array buffer which is needed by the subscription option
 const urlB64ToUint8Array = base64String => {
@@ -34,16 +33,17 @@ const saveSubscription = async subscription => {
 self.addEventListener('activate', async () => {
     // This will be called only once when the service worker is activated.
     try {
-      const applicationServerKey = urlB64ToUint8Array(PUBLIC_KEY);
-      const options = { applicationServerKey, userVisibleOnly: true };
+        console.log(`i'm at service worker`)
+        const applicationServerKey = urlB64ToUint8Array(PUBLIC_KEY);
+        const options = { applicationServerKey, userVisibleOnly: true };
 
-      //vapid와 userVisibleOnly 옵션을 적용한 subscription을 만든다.
-      const subscription = await self.registration.pushManager.subscribe(options);
+        //vapid와 userVisibleOnly 옵션을 적용한 subscription을 만든다.
+        const subscription = await self.registration.pushManager.subscribe(options);
 
-      console.log(JSON.stringify(subscription));
+        console.log(JSON.stringify(subscription));
 
-      const msg = await saveSubscription(subscription);
-
+        const msg = await saveSubscription(subscription);
+        console.log(msg)
     } catch (err) {
       console.log('Error', err);
     }
