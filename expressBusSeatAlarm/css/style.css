@@ -194,3 +194,10 @@ select {
 .hidden {
     display: none;
 }
+
+#loader{
+	width: 30px;
+	height: 30px;
+    border-radius: 15px 15px;
+	background: #21242d url('../img/Wedges-3s-200px.gif') no-repeat center;
+}

@@ -70,35 +70,7 @@
                 </div>
             </div>
             <!-- button을 div에 넣어주지 않으면 ul과 상호작용하기 불편하다. -->
-           
         </form>
-        <script>
-            function notifyMe() {
-                if (!("Notification" in window)) {
-                    // Check if the browser supports notifications
-                    alert("This browser does not support desktop notification");
-                } else if (Notification.permission === "granted") {
-                    // Check whether notification permissions have already been granted;
-                    // if so, create a notification
-                    const notification = new Notification("Hi there!");
-                    // …
-                } else if (Notification.permission !== "denied") {
-                    // We need to ask the user for permission
-                    Notification.requestPermission().then((permission) => {
-                    // If the user accepts, let's create a notification
-                    if (permission === "granted") {
-                        const notification = new Notification("Hi there!");
-                        // …
-                    }
-                    });
-                }
-
-                // At last, if the user has denied notifications, and you
-                // want to be respectful there is no need to bother them anymore.
-                }
-        </script>
-        <button onclick="notifyMe()">Notify me!</button>
-
         <form class="itnr-form hidden">
             <p class="itnr-head">
                 <span class="table-cell">출발시간</span>
@@ -109,6 +81,7 @@
             </p>
             <input class="hidden" type="button" value="알림등록하기">
             <div class="itnr-content-container">
+                <div id="loader"></div>
             </div>
         </form>
         

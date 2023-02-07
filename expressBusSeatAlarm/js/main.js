@@ -8,6 +8,7 @@ import { noZero, zero } from "./dbgInput.js";   //디버깅을 위해 임시려�
 // console.log(zero);
 
 const HIDDEN_CLS_NM = `hidden`;
+const NOTIFICATION_SW_FILE = `notificationSW.js`
 
 //document에 property로 제출된 출발날짜, 출발지, 도착지를 넣으면 됨으로 굳이 모듈끼리 import/export가 필요없다
 // import {serverRes} from './kobusRequest.js';
@@ -28,6 +29,10 @@ searchForm.addEventListener('submit', onSubmitInput);
 async function onSubmitInput(e) {
     try {
         e.preventDefault(); //페이지를 새로고침하는 기본값을 없앤다.
+
+        //버튼을 누르면 로딩화면과 여정관련 템플릿을 보여진다.
+        itnrForm.classList.remove(HIDDEN_CLS_NM);
+
         // console.dir(e)
         const fullDate = dateSelect.value;  // 2023/01/25(수)
         const dprtNm = dprtSelect.value; // 아산온양
@@ -51,6 +56,7 @@ async function onSubmitInput(e) {
 
         glbItnrList = itnrList;
 
+        
         const dsp = displayItnrList(itnrList);  //알림등록버튼 활성화 여부를 결정한다.
 
         if (dsp) {
@@ -119,8 +125,10 @@ function displayItnrList(itnrList) {
         if (inputChck) {
             p.appendChild(inputChck);
         }
-
+        
+        document.querySelector(`#loader`).classList.add(HIDDEN_CLS_NM);
         itnrDiv.appendChild(p);
+        // 여기에 로딩해제하고
     }
 
     if (isRmnZero) {
@@ -136,52 +144,76 @@ function displayItnrList(itnrList) {
  * @param {Event} e 
  */
 async function onSubmitChck (e) {
-    const chckList = document.querySelectorAll(`.checkbox`);
-    let checkedList = [];
-
-    //체크박스 중에 체크된 것의 여부를 확인한다.
-    chckList.forEach(el => {
-        if (el.checked) {
-            checkedList.push(+el.value);
-        }
-    });
-
-    //체크된 박스가 0개면 alert
-    if (!checkedList.length) {
-        alert(`등록할 알림이 선택되지 않았습니다.`);
-    } else {
-        //등록한 내용이 맞는지 확인 
-        let selectedItnrs = ``;
-
-        for (let idx of checkedList) {
-            selectedItnrs += JSON.stringify(glbItnrList[idx]);
-        }
-
-        //체크한 여정들이 올바르게 체크됏는지 확인 후 맞다면
-        if (confirm(selectedItnrs)) {
-            //체크버튼을 가린다
-            let re = await Notification.requestPermission();
-            console.log(re)
-            e.target.classList.add(HIDDEN_CLS_NM);
-            //매 10초마다 서버에 가서 확인한다. 각 여정은 출발시간을 id로 활용할 수 있다. 여정에 빈자리가 있으면 알림을 보낸다.
-            // Notification.requestPermission().then((result) => {
-            //     console.log(result);
-            // });
-
-            let cnt = 0;
-            let tempRpt = setInterval(() => {
-                cnt++;
-
-                if (cnt === 3) {
-                    // 잔여좌석이 생겨서 때문에 알림을 준다.
-                    clearInterval(tempRpt);
-                    alert(`${selectedItnrs}에 잔여좌석이 생겼습니다.`);
-                }
-            },2000);
-
+    try {
+        const chckList = document.querySelectorAll(`.checkbox`);
+        let checkedList = [];
+    
+        //체크박스 중에 체크된 것의 여부를 확인한다.
+        chckList.forEach(el => {
+            if (el.checked) {
+                checkedList.push(+el.value);
+            }
+        });
+    
+        //체크된 박스가 0개면 alert
+        if (!checkedList.length) {
+            alert(`등록할 알림이 선택되지 않았습니다.`);
         } else {
-            alert(`사용자가 취소했습니다.`);
+            //등록한 내용이 맞는지 확인 
+            let selectedItnrs = ``;
+    
+            for (let idx of checkedList) {
+                selectedItnrs += JSON.stringify(glbItnrList[idx]);
+            }
+    
+            if (confirm(selectedItnrs)) { //유저에게 원하는 여정(들)이 잘 선택됐는지 확인시켜준다. 
+                //체크버튼을 가린다
+                e.target.classList.add(HIDDEN_CLS_NM);
+
+                await reqNotificationPermission();
+                await registerServiceWorker();
+                
+               
+    
+            } else {
+                alert(`사용자가 취소했습니다.`);
+            }
         }
+    } catch (e) {
+
+    }
+    
+}
+
+/**
+ * 통고허용을 요청하는 함수로 거절하거나 x를 눌러 요청창을 닫을 경우 다시 요청이 가도록 한다. 
+ */
+async function reqNotificationPermission() {
+    const permission = await Notification.requestPermission();
+    console.log(permission)
+    if (permission === `default`) {
+        alert(`알림을 허가해 줘야 서비스를 이용하실 수 있습니다.`);
+
+        await reqNotificationPermission();
+    }
+
+    if (permission === `denied`) {
+        alert(`알림을 '차단'하셨습니다.\n검색주소(url) 왼쪽 좌물쇠 버튼을 눌러 알림을 허용해주시고 페이지를 새로고침해 주세요`)
     }
 }
+
+async function registerServiceWorker() {
+    if (!(`serviceWorker` in navigator)) {
+        throw new Error(`no serviceWorker in browser`);
+    }
+
+    if (!(`pushManager` in window)) {
+        throw new Error(`no push manager in browser`);
+    }
+
+    const swRegistration = await navigator.serviceWorker.register(NOTIFICATION_SW_FILE);
+
+}
+
+
 
