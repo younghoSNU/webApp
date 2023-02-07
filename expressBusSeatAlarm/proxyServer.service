@@ -1,0 +1,11 @@
+[Unit]
+Description=A simple expressBusAlarm project
+
+[Service]
+ExecStart=/home/ubuntu/1.projects/webApp/expressBusSeatAlarm/server-side/proxyServer.js
+Restart=always
+Group=nogroup
+WorkingDirectory=/home/ubuntu/1.projects/webApp/expressBusSeatAlarm/server-side/
+
+[Install]
+WantedBy=multi-user.target
