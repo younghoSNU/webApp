@@ -24,7 +24,7 @@ const subscription2server = async payload => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(subscription),
+      body: JSON.stringify(payload),
     });
 
     return response.json();
@@ -49,8 +49,8 @@ self.addEventListener('activate', async () => {
             itnrData: params
         };
 
-        const res = await saveSubscription(payload);
-        console.log(msg)
+        const res = await subscription2server(payload);
+        console.log(res)
     } catch (err) {
       console.log('Error', err);
     }
@@ -67,11 +67,11 @@ self.addEventListener('push', function(event) {
     }
   });
 
-  const showLocalNotification = (title, body, swRegistration) => {
+const showLocalNotification = (title, body, swRegistration) => {
     const options = {
-      body,
-      // here you can add more properties like icon, image, vibrate, etc.
+        body,
+        // here you can add more properties like icon, image, vibrate, etc.
     }
     swRegistration.showNotification(title, options)
-  }
+}
 
