@@ -10,14 +10,14 @@
 
 /**
  * 
- * @param {String} deprNm 
+ * @param {String} dprtNm 
  * @param {String} arvlNm 
  * @param {String:4} year 
  * @param {String:2} month 
  * @param {String:2} date 
  * @param {String} day 월, 화, 수 등 요일 
  */
-export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
+export function itineraryRequest(dprtNm, arvlNm, year, month, date, day) {
 
   /** 
    * @param {object} obj 
@@ -31,7 +31,7 @@ export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
 
   return new Promise((resolve, reject) => {
 
-    const postData = JSON.stringify({deprNm, arvlNm, year, month, date, day});
+    const postData = JSON.stringify({dprtNm, arvlNm, year, month, date, day});
 
     console.log(`postDate:\n ${postData}`);
 
