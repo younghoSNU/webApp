@@ -4,7 +4,7 @@ const { JSDOM } = require('jsdom');
 
 //유저들이 얼마나 사용하는지 확인하는 작업으 로그 추가 필요
 
-const SUBSCRIPTOIN_CHECK_KEY = 'idxs';
+const DEPARTURE_TIME = 'dprtTime';
 //kobus에 요청 보내는 바디에 필요한 코드 정보
 const Nm2Cd = {아산온양: `340`, 서울경부: `010`, 천안아산역: `343`, 배방정류소: `337`};
 Nm2Cd[`아산서부(호서대)`] = `341`;
@@ -28,7 +28,7 @@ parentPort.once('message', async (msg) => {
         //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
         if (lists !== undefined) {
             //do something
-            itineraryRequestKobusSbscrp();
+            itineraryRequestKobusSbscrp(postData, lists);
         } else {
             let result = await itineraryRequestKobus(postData);
 
@@ -44,6 +44,11 @@ parentPort.once('message', async (msg) => {
     
 });
 
+/**
+ * 실제로 kobus에 요청을 보내는 함수이다. https 모듈을 사용한다. 응답으로 받은 html을 파싱해서 object를 리턴한다.
+ * @param {string} postData 
+ * @returns {Promise} resolve면 여정데이터 reject면 에러 이유를 리턴
+ */
 function itineraryRequestKobus(postData) {
     return new Promise((resolve, reject) => {
         let str2Cnctn = ''; 
@@ -103,8 +108,31 @@ function itineraryRequestKobus(postData) {
     
 }
 
-function itineraryRequestKobusSbscrp(postData) {
+async function itineraryRequestKobusSbscrp(postData, lists) {
     // 요청을 보내서 데이터를 받는다 
     // 현재시간과 비교한다. 애초에 확실한 idx인 시간을 보내자.
     console.log(`in itineraryRequestKobusSbscrp`);
+    const listsLen = lists.length;
+    let startT =  new Date();
+    const result = await itineraryRequestKobus(postData);
+    const resultLen = result.length;
+    let endT = new Date();
+
+    console.log(endT-startT);
+    // for (let i=0; i<listsLen; ++i) {
+    //     const tempDprtTime = lists[i];
+    //     let found = fasle;  //여정이 과거의 것이라 이미 서버에서 없어진 상태라면 found가 false가 돼 리스트에서 자동으로 삭제한다. 
+
+    //     for (let j=0; j<resultLen; ++j) {
+    //         if (result[j][DEPARTURE_TIME] === tempDprtTime) {
+    //             found = true;
+    //         }
+    //     }
+
+    //     if (!found) {
+    //         리스트 삭제 작업 실시
+    //     }
+    // }
+
+
 }

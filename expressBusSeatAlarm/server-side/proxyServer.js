@@ -37,8 +37,8 @@ app.post(`/save-subscription`, async (req, res) => {
     let { subscription, itnrData } = req.body;
 	subscription = JSON.parse(subscription);
 
-    console.log(`subscription\n${subscription}`);
-    console.log(`itnrData\n${itnrData}`);
+    console.log(`subscription\n${JSON.stringify(subscription)}`);
+    console.log(`itnrData\n${JSON.stringify(itnrData)}`);
 
     const sbscrpWorker = new Worker(WORKERDIR);
     let resIdx = await saveSbscrp2DB(subscription);
