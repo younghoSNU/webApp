@@ -4,6 +4,7 @@ const { JSDOM } = require('jsdom');
 
 //유저들이 얼마나 사용하는지 확인하는 작업으 로그 추가 필요
 
+const SUBSCRIPTOIN_CHECK_KEY = 'idxs';
 //kobus에 요청 보내는 바디에 필요한 코드 정보
 const Nm2Cd = {아산온양: `340`, 서울경부: `010`, 천안아산역: `343`, 배방정류소: `337`};
 Nm2Cd[`아산서부(호서대)`] = `341`;
@@ -21,6 +22,18 @@ parentPort.once('message', async (msg) => {
     try {
         console.log(`worker received request:`);
         console.log(msg);
+
+        const {deprNm, arvlNm, year, month, date, day, list, resIdx} = msg;
+        const postData = makePostData(deprNm, arvlNm, year, month, date, day);
+        //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
+        if (list !== undefined) {
+            //do something
+            itineraryRequestKobusSbscrp();
+        } else {
+            let result = await itineraryRequestKobus(postData);
+
+            parentPort.postMessage(result);
+        }
         // let result = await itineraryRequestKobus(msg);
     
         // parentPort.postMessage(result);
@@ -71,7 +84,11 @@ function itineraryRequestKobus(postData) {
                     itineraryResult.push({dprtTime, busCmp, busGrade, remain});
                 });
 
-                resolve(itineraryResult);
+                if (itineraryResult.length === 0) {
+                    reject(`해당 날짜, 출발지, 도착지, 에대한 여정이 kobus서버에 존재하지 않습니다.`);
+                } else {
+                    resolve(itineraryResult);
+                }
             })
         });
 
@@ -84,4 +101,10 @@ function itineraryRequestKobus(postData) {
         req.end();
     });
     
+}
+
+function itineraryRequestKobusSbscrp(postData) {
+    // 요청을 보내서 데이터를 받는다 
+    // 현재시간과 비교한다. 애초에 확실한 idx인 시간을 보내자.
+    console.log(`in itineraryRequestKobusSbscrp`);
 }

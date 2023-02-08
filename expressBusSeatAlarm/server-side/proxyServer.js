@@ -12,6 +12,7 @@ const PORT = 3000;
 const WORKERDIR = __dirname + "/request2kobusW.js";
 
 let dummyDb = {};
+let cnt = 0;
 
 app.use(cors());
 app.use(express.text({ type: `text/plain` }));
@@ -37,14 +38,31 @@ app.post(`/save-subscription`, async (req, res) => {
 	subscription = JSON.parse(subscription);
 
     console.log(`subscription\n${subscription}`);
+    console.log(`itnrData\n${itnrData}`);
 
-    await saveToDatabase(subscription);
+    const sbscrpWorker = new Worker(WORKERDIR);
+    let resIdx = await saveSbscrp2DB(subscription);
+
+    sbscrpWorker.postMessage({...itnrData, resIdx});
+
+    sbscrpWorker.on(`message`, msg => {
+        webpush.sendNotification(dummyDb[`${msg.resIdx}`] , msg);
+    })
     res.json({ message: `success to save in db`});
 
     // setTimeout(() => {
     //     webpush.sendNotification(dummyDb.subscription, `done!!!!!`);
     // },2000);
 });
+
+//임시 데이터베이스 접속 함수
+async function saveSbscrp2DB (subscription) {
+    const idx = cnt;
+    dummyDb[`${idx}`] = subscription;
+    cnt++;
+
+    return idx;
+}
 
 app.listen(PORT, () => {
     console.log(`proxy server is listening on prot ${PORT}`);
