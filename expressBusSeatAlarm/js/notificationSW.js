@@ -45,11 +45,12 @@ self.addEventListener('activate', async () => {
         const subscription = await self.registration.pushManager.subscribe(options);
 
         const payload = {
-            subscription: subscription,
-            itnrData: params
+            subscription: JSON.stringify(subscription),
+            itnrData: params,
         };
-        console.log(JSON.stringify(subscription));
-        console.log(payload)
+        
+        console.log(payload);
+        console.log(JSON.stringify(payload));
         const res = await subscription2server(payload);
         console.log(res)
     } catch (err) {
