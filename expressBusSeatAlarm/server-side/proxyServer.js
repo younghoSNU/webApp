@@ -42,8 +42,21 @@ app.post(`/save-subscription`, async (req, res) => {
 
     const sbscrpWorker = new Worker(WORKERDIR);
     let resIdx = await saveSbscrp2DB(subscription);
+    let [year, month, tempDate] = itnrData.split(`/`);
+    let date = tempDate.slice(0,2);
+    let day = tempDate.slice(3,4);
+    const postData = {
+        dprtNm: itnrData.dprtNm,
+        arvlNm: itnrData.arvlNm,
+        year,
+        month,
+        date,
+        day,
+        lists: itnrData.lists,
+        resIdx
+    };
 
-    sbscrpWorker.postMessage({...itnrData, resIdx});
+    sbscrpWorker.postMessage(postData);
 
     sbscrpWorker.on(`message`, msg => {
         webpush.sendNotification(dummyDb[`${msg.resIdx}`] , msg);
