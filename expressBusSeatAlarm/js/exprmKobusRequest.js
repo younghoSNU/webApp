@@ -4,17 +4,17 @@
 // import {JSDOM} from 'jsdom';
 
 //주의할 점
-// kobus데이터를 사용하고 있음을 숨기자.
-const Nm2Cd = {아산온양: `340`, 서울경부: `010`, 천안아산역: `343`, 배방정류소: `337`};
-Nm2Cd[`아산서부(호서대)`] = `341`;
+// // kobus데이터를 사용하고 있음을 숨기자.
+// const Nm2Cd = {아산온양: `340`, 서울경부: `010`, 천안아산역: `343`, 배방정류소: `337`};
+// Nm2Cd[`아산서부(호서대)`] = `341`;
 
 /**
  * 
  * @param {String} deprNm 
  * @param {String} arvlNm 
- * @param {String} year 
- * @param {String} month 
- * @param {String} date 
+ * @param {String:4} year 
+ * @param {String:2} month 
+ * @param {String:2} date 
  * @param {String} day 월, 화, 수 등 요일 
  */
 export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
@@ -31,12 +31,12 @@ export function itineraryRequest(deprNm, arvlNm, year, month, date, day) {
 
   return new Promise((resolve, reject) => {
 
-    const postData = `deprCd=${Nm2Cd[deprNm]}&deprNm=${deprNm}&arvlCd=${Nm2Cd[arvlNm]}&arvlNm=${arvlNm}&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=Y&deprDtm=${year+month+date}&deprDtmAll=${year}.+${month}.+${date}}.+${day}&arvlDtm=${year+month+date}&arvlDtmAll=${year}.+${month}.+${date}.+${day}&busClsCd=0&abnrData=&prmmDcYn=N`;
+    const postData = JSON.stringify({deprNm, arvlNm, year, month, date, day});
 
     console.log(`postDate:\n ${postData}`);
 
     const headers = {
-      'Content-Type': 'text/plain',
+      'Content-Type': 'application/json',
     };
 
     let xhr = new XMLHttpRequest();

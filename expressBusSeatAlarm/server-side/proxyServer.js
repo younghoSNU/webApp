@@ -9,7 +9,9 @@ const { Worker } = require('worker_threads');
 const app = express();
 
 const PORT = 3000;
-const WORKERDIR = __dirname + "/request2kobus.js";
+const WORKERDIR = __dirname + "/request2kobusW.js";
+
+let dummyDb = {};
 
 app.use(cors());
 app.use(express.text({ type: `text/plain` }));
@@ -18,12 +20,9 @@ app.use(express.json());
 app.post('/exprm', (req, res) => {
     //req가 올바는 형식인지 확인 아니면 res로 invalid 전송
 
-    console.log(`request is accepted to server!`);
+    console.log(`request from /exprm is accepted to server!`);
     const worker = new Worker(WORKERDIR);
     console.log(`made worker done on ${WORKERDIR}`);
-    console.log(req.body);
-    console.log(req);
-    console.log(req.host);
     worker.postMessage(req.body);
 
     worker.on('message', msg => {
@@ -33,12 +32,11 @@ app.post('/exprm', (req, res) => {
 
 app.post(`/save-subscription`, async (req, res) => {
     console.log(`enter /save-subscription`);
-    console.log(req.body);
-	console.log(typeof(req.body));
+
     let { subscription, itnrData } = req.body;
 	subscription = JSON.parse(subscription);
-	console.log(typeof(subscription));
-	console.log(subscription);
+
+    console.log(`subscription\n${subscription}`);
 
     await saveToDatabase(subscription);
     res.json({ message: `success to save in db`});
