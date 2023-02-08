@@ -48,7 +48,7 @@ self.addEventListener('activate', async () => {
             subscription: subscription,
             itnrData: params
         };
-
+        console.log(JSON.stringify(subscription));
         console.log(payload)
         const res = await subscription2server(payload);
         console.log(res)
