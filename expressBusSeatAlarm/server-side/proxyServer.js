@@ -58,14 +58,16 @@ app.post(`/save-subscription`, async (req, res) => {
 
     sbscrpWorker.postMessage(postData);
 
+    //msg는 {foundList, resIdx}가 있다.
     sbscrpWorker.on(`message`, msg => {
-        webpush.sendNotification(dummyDb[`${msg.resIdx}`] , msg);
-    })
+        let dbSbscrp = dummyDb[`${msg.resIdx}`];
+        console.log(dbSbscrp);
+        console.log(JSON.stringify(msg));
+        webpush.sendNotification(dbSbscrp, msg.foundList);
+    });
     res.json({ message: `success to save in db`});
 
-    // setTimeout(() => {
-    //     webpush.sendNotification(dummyDb.subscription, `done!!!!!`);
-    // },2000);
+
 });
 
 //임시 데이터베이스 접속 함수

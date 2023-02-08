@@ -1,10 +1,12 @@
 const { parentPort } = require('worker_threads');
 const https = require('https');
 const { JSDOM } = require('jsdom');
-
+const webpush = require('web-push');
 //유저들이 얼마나 사용하는지 확인하는 작업으 로그 추가 필요
 
 const DEPARTURE_TIME = 'dprtTime';
+const REMAIN = `remain`;
+const REQUEST_PERIOD = 3000;
 //kobus에 요청 보내는 바디에 필요한 코드 정보
 const Nm2Cd = {아산온양: `340`, 서울경부: `010`, 천안아산역: `343`, 배방정류소: `337`};
 Nm2Cd[`아산서부(호서대)`] = `341`;
@@ -28,7 +30,9 @@ parentPort.once('message', async (msg) => {
         //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
         if (lists !== undefined) {
             //do something
-            itineraryRequestKobusSbscrp(postData, lists);
+            let foundList = await itineraryRequestKobusSbscrp(postData, lists);
+
+            parentPort.postMessage({foundList, resIdx});
         } else {
             let result = await itineraryRequestKobus(postData);
 
@@ -48,6 +52,13 @@ parentPort.once('message', async (msg) => {
  * 실제로 kobus에 요청을 보내는 함수이다. https 모듈을 사용한다. 응답으로 받은 html을 파싱해서 object를 리턴한다.
  * @param {string} postData 
  * @returns {Promise} resolve면 여정데이터 reject면 에러 이유를 리턴
+ * 여정데이터는 아래 오브젝트들을 담은 배열
+ *  {
+        "dprtTime": "14:50",
+        "busCmp": "동양고속",
+        "busGrade": "고속",
+        "remain": "5 석"
+    }
  */
 function itineraryRequestKobus(postData) {
     return new Promise((resolve, reject) => {
@@ -108,32 +119,65 @@ function itineraryRequestKobus(postData) {
     
 }
 
+/**
+ * 
+ * @param {string} postData 
+ * @param {array} lists eg) [[idx, dprtTime], [0, 11:30], [1, 12:45]]
+ */
 async function itineraryRequestKobusSbscrp(postData, lists) {
     // 요청을 보내서 데이터를 받는다 
     // 현재시간과 비교한다. 애초에 확실한 idx인 시간을 보내자.
     console.log(`in itineraryRequestKobusSbscrp`);
     const listsLen = lists.length;
-    let startT =  new Date();
-    console.log(JSON.stringify(postData))
-    const result = await itineraryRequestKobus(postData);
-    const resultLen = result.length;
-    let endT = new Date();
+    // console.log(JSON.stringify(postData))
 
-    console.log(endT-startT);
-    // for (let i=0; i<listsLen; ++i) {
-    //     const tempDprtTime = lists[i];
-    //     let found = fasle;  //여정이 과거의 것이라 이미 서버에서 없어진 상태라면 found가 false가 돼 리스트에서 자동으로 삭제한다. 
+    const foundList = await requestWithSto(postData, lists);
 
-    //     for (let j=0; j<resultLen; ++j) {
-    //         if (result[j][DEPARTURE_TIME] === tempDprtTime) {
-    //             found = true;
-    //         }
-    //     }
+    return foundList;
+}
 
-    //     if (!found) {
-    //         리스트 삭제 작업 실시
-    //     }
-    // }
-
-
+function requestWithSto(postData, lists) {
+    //임시 실험용 count
+    let count = 0;
+    return new Promise((resolve, reject) => {
+        let intvl = setInterval(async () => {
+            let startT =  new Date();
+            const result = await itineraryRequestKobus(postData);
+            let endT = new Date();
+            const resultLen = result.length;
+            let foundList = []; //잔여좌석이 남은 여정을 담는다.
+            let found = false;
+    
+            console.log(`한번 kobus요청에 걸리는 시간`);
+            console.log(endT-startT);   //1593
+    
+            //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
+            for (let i=0; i<listsLen; ++i) {
+                const tempDprtTime = lists[i][1];
+    
+                for (let j=0; j<resultLen; ++j) {
+                    const tempEntry = result[j];
+    
+                    //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
+                    if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
+                        if ((+tempEntry[REMAIN]) > 0) {
+                            foundList.push(tempEntry);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (count === 3) {
+                foundList = [`무언가 있어요`];
+            }
+            //Lists의 빠른 시간대는 kobus 상에서 없어질 수 있다. 이없어지는 것은 나중에 생각해보고하자.
+    
+            //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다. 
+            if (foundList.length > 0) {
+                resolve(foundList);
+                clearInterval(intvl);
+            }
+            count++;
+        }, REQUEST_PERIOD);
+    });
 }
