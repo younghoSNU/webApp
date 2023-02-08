@@ -9,12 +9,12 @@ const SUBSCRIPTOIN_CHECK_KEY = 'idxs';
 const Nm2Cd = {아산온양: `340`, 서울경부: `010`, 천안아산역: `343`, 배방정류소: `337`};
 Nm2Cd[`아산서부(호서대)`] = `341`;
 
-function makePostData(deprNm, arvlNm, year, month, date, day) {
-    if (Nm2Cd[deprNm] === undefined || Nm2Cd[arvlNm] === undefined) {
+function makePostData(dprtNm, arvlNm, year, month, date, day) {
+    if (Nm2Cd[dprtNm] === undefined || Nm2Cd[arvlNm] === undefined) {
         throw new Error(`해당 여정에 대한 코드가 존재하지 않습니다.`);
     }
 
-    return `deprCd=${Nm2Cd[deprNm]}&deprNm=${deprNm}&arvlCd=${Nm2Cd[arvlNm]}&arvlNm=${arvlNm}&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=Y&deprDtm=${year+month+date}&deprDtmAll=${year}.+${month}.+${date}}.+${day}&arvlDtm=${year+month+date}&arvlDtmAll=${year}.+${month}.+${date}.+${day}&busClsCd=0&abnrData=&prmmDcYn=N`;
+    return `deprCd=${Nm2Cd[dprtNm]}&deprNm=${dprtNm}&arvlCd=${Nm2Cd[arvlNm]}&arvlNm=${arvlNm}&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=Y&deprDtm=${year+month+date}&deprDtmAll=${year}.+${month}.+${date}}.+${day}&arvlDtm=${year+month+date}&arvlDtmAll=${year}.+${month}.+${date}.+${day}&busClsCd=0&abnrData=&prmmDcYn=N`;
 }
 
 //worker thread로 한번만 메시지 받으면 되니까 once를 사용했다.
@@ -23,10 +23,10 @@ parentPort.once('message', async (msg) => {
         console.log(`worker received request:`);
         console.log(msg);
 
-        const {deprNm, arvlNm, year, month, date, day, list, resIdx} = msg;
-        const postData = makePostData(deprNm, arvlNm, year, month, date, day);
+        const {dprtNm, arvlNm, year, month, date, day, lists, resIdx} = msg;
+        const postData = makePostData(dprtNm, arvlNm, year, month, date, day);
         //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
-        if (list !== undefined) {
+        if (lists !== undefined) {
             //do something
             itineraryRequestKobusSbscrp();
         } else {
