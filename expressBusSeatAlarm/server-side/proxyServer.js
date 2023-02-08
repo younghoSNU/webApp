@@ -34,7 +34,12 @@ app.post('/exprm', (req, res) => {
 app.post(`/save-subscription`, async (req, res) => {
     console.log(`enter /save-subscription`);
     console.log(req.body);
-    const { subscription, itnrData } = JSON.parse(req.body);
+	console.log(typeof(req.body));
+    let { subscription, itnrData } = req.body;
+	subscription = JSON.parse(subscription);
+	console.log(typeof(subscription));
+	console.log(subscription);
+
     await saveToDatabase(subscription);
     res.json({ message: `success to save in db`});
 
