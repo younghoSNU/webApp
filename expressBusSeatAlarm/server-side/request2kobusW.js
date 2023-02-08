@@ -114,6 +114,7 @@ async function itineraryRequestKobusSbscrp(postData, lists) {
     console.log(`in itineraryRequestKobusSbscrp`);
     const listsLen = lists.length;
     let startT =  new Date();
+    console.log(JSON.stringify(postData))
     const result = await itineraryRequestKobus(postData);
     const resultLen = result.length;
     let endT = new Date();
