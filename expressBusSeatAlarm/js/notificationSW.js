@@ -17,7 +17,7 @@ const urlB64ToUint8Array = base64String => {
  * @param {subscription} subscription 
  */
 const subscription2server = async payload => {
-    const SERVER_URL = 'https://youngho.click:3000/save-subscription';
+    const SERVER_URL = 'https://youngho.click/save-subscription';
 
     const response = await fetch(SERVER_URL, {
       method: 'POST',
@@ -37,13 +37,13 @@ self.addEventListener('activate', async () => {
         const applicationServerKey = urlB64ToUint8Array(PUBLIC_KEY);
         const options = { applicationServerKey, userVisibleOnly: true };
 
-        let params = new URL(location).searchParams.get(`config`);
+        const params = new URL(location).searchParams.get(`config`);
         console.log(JSON.parse(params));
         console.log(location);
+        
         // vapid와 userVisibleOnly 옵션을 적용한 subscription을 만든다.
         const subscription = await self.registration.pushManager.subscribe(options);
 
-        console.log(JSON.stringify(subscription));
         const payload = {
             subscription: subscription,
             itnrData: params
