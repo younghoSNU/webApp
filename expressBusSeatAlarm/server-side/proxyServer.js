@@ -34,9 +34,9 @@ app.post('/exprm', (req, res) => {
 app.post(`/save-subscription`, async (req, res) => {
     console.log(`enter /save-subscription`);
     
-    // const subscription = req.body;
-    // await saveToDatabase(subscription);
-    // res.json({ message: `success to save in db`});
+    const { subscription, itnrData } = JSON.parse(req.body);
+    await saveToDatabase(subscription);
+    res.json({ message: `success to save in db`});
 
     // setTimeout(() => {
     //     webpush.sendNotification(dummyDb.subscription, `done!!!!!`);

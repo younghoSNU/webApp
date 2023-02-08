@@ -23,6 +23,8 @@ const notifSpan = itnrForm.querySelector(`#notif-span`);
 const chckSbmInput = itnrForm.querySelector(`input[type="button"]`);
 
 let glbItnrList;    //응답으로 받은 itnrList는 계속 사용할거기 때문에...
+let glbSwData = Object.create({});  //서비스워커에게 전달할 변수들이다.
+
 
 searchForm.addEventListener('submit', onSubmitInput);
 
@@ -37,6 +39,9 @@ async function onSubmitInput(e) {
         const fullDate = dateSelect.value;  // 2023/01/25(수)
         const dprtNm = dprtSelect.value; // 아산온양
         const arvlNm = arvlSelect.value; // 서울경부
+        glbSwData.fullDate = fullDate;
+        glbSwData.dprtNm = dprtNm;
+        glbSwData.arvlNm = arvlNm;
 
         // fullDate변수 파싱
         const [year, month, dateNday] = fullDate.split('/');
@@ -149,9 +154,11 @@ async function onSubmitChck (e) {
         let checkedList = [];
     
         //체크박스 중에 체크된 것의 여부를 확인한다.
+        //
         chckList.forEach(el => {
             if (el.checked) {
-                checkedList.push(+el.value);
+                const idx = +el.value;
+                checkedList.push(idx);
             }
         });
     
@@ -161,7 +168,10 @@ async function onSubmitChck (e) {
         } else {
             //등록한 내용이 맞는지 확인 
             let selectedItnrs = ``;
-    
+            
+            //sw가 서버를 구독할 때, 서버에서는 kobus의 날짜, 출발지, 도착지 여정 중 idx에 해당하는 것의 좌석만 확인하면 되므로 
+            glbSwData.idxList = checkedList;
+
             for (let idx of checkedList) {
                 selectedItnrs += JSON.stringify(glbItnrList[idx]);
             }
@@ -170,17 +180,14 @@ async function onSubmitChck (e) {
                 //체크버튼을 가린다
                 e.target.classList.add(HIDDEN_CLS_NM);
                 await reqNotificationPermission();
-                console.log('aaa');
-                await registerServiceWorker();
-                console.log(`ccc`)
+                await registerServiceWorker(glbSwData);
                
-    
             } else {
                 alert(`사용자가 취소했습니다.`);
             }
         }
     } catch (e) {
-
+        console.error(e);
     }
     
 }
@@ -204,7 +211,7 @@ async function reqNotificationPermission() {
     return;
 }
 
-async function registerServiceWorker() {
+async function registerServiceWorker(swData) {
     if (!(`serviceWorker` in navigator)) {
         throw new Error(`no serviceWorker in browser`);
     }
@@ -213,12 +220,10 @@ async function registerServiceWorker() {
         throw new Error(`no push manager in browser`);
     }
 
-    console.log('bbb')
-    const swRegistration = await navigator.serviceWorker.register(NOTIFICATION_SW_FILE);
+    const swRegistration = await navigator.serviceWorker.register(NOTIFICATION_SW_FILE+`?config=`+JSON.stringify(swData));
     console.log(swRegistration)
     console.log('registered service worker');
 
-    return;
 
 }
 

@@ -16,13 +16,13 @@ const urlB64ToUint8Array = base64String => {
  * save subscription to the backend
  * @param {subscription} subscription 
  */
-const saveSubscription = async subscription => {
+const subscription2server = async payload => {
     const SERVER_URL = 'https://youngho.click:3000/save-subscription';
 
     const response = await fetch(SERVER_URL, {
-      method: 'post',
+      method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(subscription),
     });
@@ -33,16 +33,23 @@ const saveSubscription = async subscription => {
 self.addEventListener('activate', async () => {
     // This will be called only once when the service worker is activated.
     try {
-        console.log(`i'm at service worker`)
+        console.log(`i'm at service worker`);
         const applicationServerKey = urlB64ToUint8Array(PUBLIC_KEY);
         const options = { applicationServerKey, userVisibleOnly: true };
 
-        //vapid와 userVisibleOnly 옵션을 적용한 subscription을 만든다.
+        let params = new URL(location).searchParams.get(`config`);
+        console.log(JSON.parse(params));
+        console.log(location);
+        // vapid와 userVisibleOnly 옵션을 적용한 subscription을 만든다.
         const subscription = await self.registration.pushManager.subscribe(options);
 
         console.log(JSON.stringify(subscription));
+        const payload = {
+            subscription: subscription,
+            itnrData: params
+        };
 
-        const msg = await saveSubscription(subscription);
+        const res = await saveSubscription(payload);
         console.log(msg)
     } catch (err) {
       console.log('Error', err);
@@ -67,3 +74,4 @@ self.addEventListener('push', function(event) {
     }
     swRegistration.showNotification(title, options)
   }
+
