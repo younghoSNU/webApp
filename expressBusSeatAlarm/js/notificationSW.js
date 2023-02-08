@@ -49,6 +49,7 @@ self.addEventListener('activate', async () => {
             itnrData: params
         };
 
+        console.log(payload)
         const res = await subscription2server(payload);
         console.log(res)
     } catch (err) {
