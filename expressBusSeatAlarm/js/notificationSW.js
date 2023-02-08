@@ -37,9 +37,9 @@ self.addEventListener('activate', async () => {
         const applicationServerKey = urlB64ToUint8Array(PUBLIC_KEY);
         const options = { applicationServerKey, userVisibleOnly: true };
 
-        const params = new URL(location).searchParams.get(`config`);
-        console.log(JSON.parse(params));
-        console.log(location);
+        const params = JSON.parse(new URL(location).searchParams.get(`config`));
+        console.log(params);
+        // console.log(location);
         
         // vapid와 userVisibleOnly 옵션을 적용한 subscription을 만든다.
         const subscription = await self.registration.pushManager.subscribe(options);

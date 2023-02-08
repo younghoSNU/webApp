@@ -33,7 +33,7 @@ app.post('/exprm', (req, res) => {
 
 app.post(`/save-subscription`, async (req, res) => {
     console.log(`enter /save-subscription`);
-    
+    console.log(req.body);
     const { subscription, itnrData } = JSON.parse(req.body);
     await saveToDatabase(subscription);
     res.json({ message: `success to save in db`});
