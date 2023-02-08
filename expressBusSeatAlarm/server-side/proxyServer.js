@@ -42,7 +42,7 @@ app.post(`/save-subscription`, async (req, res) => {
 
     const sbscrpWorker = new Worker(WORKERDIR);
     let resIdx = await saveSbscrp2DB(subscription);
-    let [year, month, tempDate] = itnrData.split(`/`);
+    let [year, month, tempDate] = itnrData.fullDate.split(`/`);
     let date = tempDate.slice(0,2);
     let day = tempDate.slice(3,4);
     const postData = {
