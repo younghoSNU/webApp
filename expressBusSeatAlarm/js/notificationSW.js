@@ -20,11 +20,11 @@ const subscription2server = async payload => {
     const SERVER_URL = 'https://youngho.click/save-subscription';
 
     const response = await fetch(SERVER_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
     });
 
     return response.json();
@@ -59,7 +59,8 @@ self.addEventListener('activate', async () => {
 });
 
 
-self.addEventListener('push', function(event) {
+self.addEventListener('push', event => {
+
     if (event.data) {
       console.log('Push event!! ', event.data.text());
 
@@ -67,8 +68,9 @@ self.addEventListener('push', function(event) {
     } else {
       console.log('Push event but no data')
     }
-  });
+});
 
+//알림을 보낼 때, 잔여좌석이 언제 생겼는지 기준 시각과 함게 화면에 띄운다.
 const showLocalNotification = (title, body, swRegistration) => {
     const options = {
         body,

@@ -10,6 +10,8 @@ const app = express();
 
 const PORT = 3000;
 const WORKERDIR = __dirname + "/request2kobusW.js";
+const DISPLAY = `display`;
+const NOTIFICATION = `notification`;
 
 let dummyDb = {};
 let cnt = 0;
@@ -25,9 +27,16 @@ app.post('/exprm', (req, res) => {
     const worker = new Worker(WORKERDIR);
     console.log(`made worker done on ${WORKERDIR}`);
     worker.postMessage(req.body);
-
+    
+    //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     worker.on('message', msg => {
-        res.send(JSON.stringify(msg));
+        const {success, message} = msg;
+
+        if (success) {
+            res.send(JSON.stringify(msg));
+        } else {
+            console.error(`kobus서버에서 리스트들을 불러오는 과정에서 에러가 발생했습니다.`)
+        }
     })
 });
 
@@ -58,12 +67,20 @@ app.post(`/save-subscription`, async (req, res) => {
 
     sbscrpWorker.postMessage(postData);
 
-    //msg는 {foundList, resIdx}가 있다.
+    //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     sbscrpWorker.on(`message`, msg => {
-        let dbSbscrp = dummyDb[`${msg.resIdx}`];
-        console.log(dbSbscrp);
-        console.log(JSON.stringify(msg));
-        webpush.sendNotification(dbSbscrp, msg.foundList);
+        const {success, type, message} = msg;
+
+        let dbSbscrp = dummyDb[`${message.resIdx}`];
+        //type을 명시하긴 했지만 라우팅이 달리 돼있어, 여기로 type: 'display'인 경우는 없다.
+        if (success) {
+            console.log(`더미디비에서 가져온 구독정보\n${JSON.stringify(dbSbscrp)}`);
+            console.log(`워커에서 넘어온 메시지\n${JSON.stringify(msg)}`);
+            
+            webpush.sendNotification(dbSbscrp, {success, message:message.foundList});
+        } else {
+            webpush.sendNotification(dbSbscrp, {success, message:message.foundList});
+        }
     });
     res.json({ message: `success to save in db`});
 
