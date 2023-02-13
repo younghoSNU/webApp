@@ -73,8 +73,8 @@ app.post(`/save-subscription`, async (req, res) => {
 
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     sbscrpWorker.on(`message`, msg => {
+        console.log(`워커에서 메인쓰레드로 잔여석있는 여정 보냈고 메인이 받았다.`)
         const {success, type, message} = msg;
-
         let dbSbscrp = dummyDb[`${message.resIdx}`];
         //type을 명시하긴 했지만 라우팅이 달리 돼있어, 여기로 type: 'display'인 경우는 없다.
         if (success) {

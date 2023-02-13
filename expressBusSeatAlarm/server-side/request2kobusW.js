@@ -1,7 +1,9 @@
 const { parentPort } = require('worker_threads');
 const https = require('https');
 const { JSDOM } = require('jsdom');
-const webpush = require('web-push');
+//#########################TEST##########################
+const { noZero, zero } = require(`./dbgInput`);
+//#######################################################
 //유저들이 얼마나 사용하는지 확인하는 작업으 로그 추가 필요
 
 const DEPARTURE_TIME = 'dprtTime';
@@ -53,7 +55,9 @@ async function parentPortMsgCallback(msg) {
         //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
         if (list !== undefined) {
             //do something
-            let foundList = await itineraryRequestKobusSbscrp(postData, list, date);
+            // #######################TEST###########################
+            // date+1해서 내일 데이터라고 가정한다. 그래야 doCount반응 안한다.
+            let foundList = await itineraryRequestKobusSbscrp(postData, list, date+1);
 
             // 타입이 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
             parentPort.postMessage({success: true, message: {foundList, resIdx}, type: `notification`});
@@ -114,7 +118,7 @@ function itineraryRequestKobus(postData) {
                 const itinerary = document.querySelectorAll(`p[data-time]`);
 
                 itinerary.forEach(el => {
-                    console.log(el.querySelector(`.start_time`).innerHTML);
+                    // console.log(el.querySelector(`.start_time`).innerHTML);
 
                     const dprtTime = el.querySelector(`.start_time`).innerHTML.split(' : ').join(`:`);
                     const busCmp = el.querySelector(`.dyexpress`).innerHTML;
@@ -186,15 +190,26 @@ function requestWithSto(postData, list, date) {
 
             // startT와 endT는 한번요청으로 ec2 프리티어 서버에서 얼마나 걸려서 응답을 받는지 확인한다.
             let startT =  new Date();
-            const result = await itineraryRequestKobus(postData);
+            //###################TEST#########################
+            // 테스트때문에 let으로 했다.
+            let result = await itineraryRequestKobus(postData);
+            
             let endT = new Date();
+
+            //#################TEST############################
+            if (count === 3) {
+                result = noZero;
+            } else {
+                result = zero;
+            }
+            //#################################################
             const resultLen = result.length;
             let foundList = []; //잔여좌석이 생긴 여정을 담는다.
             
             //test
             console.log(`한번 kobus요청에 걸리는 시간`);
             console.log(endT-startT);   //1593
-
+            console.log(`count: ${count} result:\n${JSON.stringify(result)}`);
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
             for (let i=0; i<listLen; ++i) {
                 const tempDprtTime = list[i].dprtTime;
@@ -211,15 +226,12 @@ function requestWithSto(postData, list, date) {
                     }
                 }
             }
-            // if (count === 3) {
-            //     foundList = [`무언가 있어요`];
-            // }
-            // //Lists의 빠른 시간대는 kobus 상에서 없어질 수 있다. 이없어지는 것은 나중에 생각해보고하자.
 
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다. 
             if (foundList.length > 0) {
                 resolve(foundList);
                 clearInterval(intrvl);
+                console.log(`cleared interval`);
                 //이후 추가적업 없나?
                 //id등록된 것 일시적으로 없애야 3초마다 알림 가는 것 방지 가능
             } 

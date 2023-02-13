@@ -23,7 +23,8 @@ const notifSpan = itnrForm.querySelector(`#notif-span`);
 const chckSbmInput = itnrForm.querySelector(`input[type="button"]`);
 
 let glbItnrList;    //응답으로 받은 itnrList는 계속 사용할거기 때문에...
-let glbSwData = Object.create({});  //서비스워커에게 전달할 변수들이다.
+let glbSwData = Object.create({});  //서비스워커에게 전달할 변수들이다. 나중에 만들어지는 형태는 
+// {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]}
 glbSwData.list = [];
 
 searchForm.addEventListener('submit', onSubmitInput);
