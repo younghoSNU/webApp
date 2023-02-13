@@ -24,7 +24,7 @@ const chckSbmInput = itnrForm.querySelector(`input[type="button"]`);
 
 let glbItnrList;    //응답으로 받은 itnrList는 계속 사용할거기 때문에...
 let glbSwData = Object.create({});  //서비스워커에게 전달할 변수들이다.
-
+glbSwData.list = [];
 
 searchForm.addEventListener('submit', onSubmitInput);
 
