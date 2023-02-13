@@ -176,7 +176,8 @@ async function onSubmitChck (e) {
                 selectedItnrs += JSON.stringify(itnrEntry);
                 //sw가 서버를 구독할 때, 서버에서는 kobus의 날짜, 출발지, 도착지 여정 중 idx에 해당하는 것의 좌석만 확인하면 되므로 
                 //추가로 idx는 시간이 지나면 사라져 파싱에 어려움이 있지만 dprtTime(출발시간)은 하나 밖에 없는 id처럼 사용할 수 있어 kobus 응답으로 받은 데이터를 파싱할 때 편하다 
-                glbSwData.lists = [idx, glbItnrList[idx][`dprtTime`]];
+                let date = glbSwData.fullDate.slice(8,10);
+                glbSwData.list.push({idx, dprtTime: glbItnrList[idx][`dprtTime`]});
             }
     
             if (confirm(selectedItnrs)) { //유저에게 원하는 여정(들)이 잘 선택됐는지 확인시켜준다. 
@@ -213,7 +214,10 @@ async function reqNotificationPermission() {
 
     return;
 }
-
+/**
+ * 
+ * @param {object} swData {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]} 
+ */
 async function registerServiceWorker(swData) {
     if (!(`serviceWorker` in navigator)) {
         throw new Error(`no serviceWorker in browser`);

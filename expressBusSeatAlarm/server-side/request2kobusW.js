@@ -38,7 +38,7 @@ function makePostData(dprtNm, arvlNm, year, month, date, day) {
 
 /**
  * 
- * @param {object} msg: a.처럼 사용할 때는 dprtNm, arvlNm, year, month, date, day만 있으면 되고 b.로 사용할 때는 앞선 얘기한 property에 추가로 lists와 resIdx 프로퍼티도 있어야 한다. 
+ * @param {object} msg: a.처럼 사용할 때는 dprtNm, arvlNm, year, month, date, day만 있으면 되고 b.로 사용할 때는 앞선 얘기한 property에 추가로 list와 resIdx 프로퍼티도 있어야 한다. 
  * 이 함수 안에서 parentPort에 postMessage를 한다. 포스트하는 메시지는 아래와 같은 형식을 띤다.
  * {success: true/false, type: `display`/`notification`, message: content}
  */
@@ -47,13 +47,13 @@ async function parentPortMsgCallback(msg) {
         console.log(`r2k worker received request:`);    //r2k: request to kobus server
         console.log(`check validation of msg\n${JSON.stringify(msg)}`);
 
-        const {dprtNm, arvlNm, year, month, date, day, lists, resIdx} = msg;
+        const {dprtNm, arvlNm, year, month, date, day, list, resIdx} = msg;
         const postData = makePostData(dprtNm, arvlNm, year, month, date, day);
 
         //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
-        if (lists !== undefined) {
+        if (list !== undefined) {
             //do something
-            let foundList = await itineraryRequestKobusSbscrp(postData, lists);
+            let foundList = await itineraryRequestKobusSbscrp(postData, list, date);
 
             // 타입이 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
             parentPort.postMessage({success: true, message: {foundList, resIdx}, type: `notification`});
@@ -144,11 +144,12 @@ function itineraryRequestKobus(postData) {
 }
 
 /**
- * 
+ * 구독과 관련해 서버로 요청을 보낸 함수 중에서 메인 함수이다. parent port로 메시지가 들어와 진행되는 parentPortMsgCallback함수에서 구독이 필요한 경우 실행되는 함수다. setTimeout으로 요청을 보내는 requestWithSto를 담고잇다.
  * @param {string} postData 
- * @param {array} lists eg) [[idx, dprtTime], [0, 11:30], [1, 12:45]]
+ * @param {array} list eg) [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]
+ * @param {string} date 몇 일인지 비교해서 당일이면 시간 지난 여정은 삭제하는 작업하려고
  */
-async function itineraryRequestKobusSbscrp(postData, lists) {
+async function itineraryRequestKobusSbscrp(postData, list, date) {
     
     // 요청을 보내서 데이터를 받는다 
     // 현재시간과 비교한다. 애초에 확실한 idx인 시간을 보내자.
@@ -156,7 +157,7 @@ async function itineraryRequestKobusSbscrp(postData, lists) {
     // console.log(JSON.stringify(postData))
 
     // requestWithSto에서 lists에 더이상 데이터가 없으면 reject한다
-    const foundList = await requestWithSto(postData, lists);
+    const foundList = await requestWithSto(postData, list, date);
 
     return foundList;
 }
@@ -164,20 +165,25 @@ async function itineraryRequestKobusSbscrp(postData, lists) {
 /**
  * 실질적으로 잔여좌석 확인을 구독하는 때에 kobus서버로 요청을 보내는 함수이다. 내부에 setTimeout이 있어 주기를 갖고 요청을 보낸다.
  * @param {string} postData 
- * @param {array} lists eg) [[idx, dprtTime], [0, 11:30], [1, 12:45]]
+ * @param {array} list eg) [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]
+ * @param {string} date 몇 일인지 비교해서 당일이면 시간 지난 여정은 삭제하는 작업하려고
  * @returns 
  */
-function requestWithSto(postData, lists) {
+function requestWithSto(postData, list, date) {
     //임시 실험용 count: count 횟수가 어느 정도 차면 잔여좌석이 0이 아닌 데이터를 의도적으로 보내 잘 동작하는지 확인한다.
     let count = 0;
-    const listsLen = lists.length;
 
     return new Promise((resolve, reject) => {
         let countPeroid = 0;
-        let intvl = setInterval(async () => {
-            if (lists.length === 0) {
+        let doCount = false;
+
+        let intrvl = setInterval(async () => {
+            const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
+
+            if (listLen === 0) {
                 reject(`구독했던 여정(들)에서 잔여좌석이 생기지 않고 출발했습니다.`);
             }
+
             // startT와 endT는 한번요청으로 ec2 프리티어 서버에서 얼마나 걸려서 응답을 받는지 확인한다.
             let startT =  new Date();
             const result = await itineraryRequestKobus(postData);
@@ -190,8 +196,8 @@ function requestWithSto(postData, lists) {
             console.log(endT-startT);   //1593
 
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
-            for (let i=0; i<listsLen; ++i) {
-                const tempDprtTime = lists[i][1];
+            for (let i=0; i<listLen; ++i) {
+                const tempDprtTime = list[i].dprtTime;
 
                 for (let j=0; j<resultLen; ++j) {
                     const tempEntry = result[j];
@@ -213,28 +219,42 @@ function requestWithSto(postData, lists) {
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다. 
             if (foundList.length > 0) {
                 resolve(foundList);
-                clearInterval(intvl);
+                clearInterval(intrvl);
                 //이후 추가적업 없나?
                 //id등록된 것 일시적으로 없애야 3초마다 알림 가는 것 방지 가능
             } 
 
-            countPeroid++;
-            // countPeroid에 따라 lists에서 시간 지난 list는 삭제한다.
-            if (countPeroid === COUNT_PERIOD) {
-                countPeroid = 0;
+            // 구독하는 여정 일부 지우기: 다음날의 여정을 구독하는 거라면 상관없다 그러나 만약 오늘 여정인데 시간이 지나 출발했다면 list변수에서 지워줘야 한다
+            //여정의 출발일이 오늘인지 확인
+            //만약 오늘이면 지우는 작업 진행
+            //시간 지나 진짜 출발한 여정이면 지움
+            const d = new Date();
 
-                const date = new Date();
-                const currentHour = date.getHours();
-                const currentMinute = date.getMinutes();
-
-                for (let i=0; i<listsLen; ++i) {
-                    const [listHour, listMinute] = lists[i][1].split(`:`).map(e => +e);
-
-                    if ((listHour < currentHour) && (listHour === currentHour && listMinute < currentMinute)) {
-                        lists = lists.filter((_, idx) => i !== idx);
-                    } 
+            if (!doCount) {
+                currentDate = d.getDate();
+                if (date === currentDate) {
+                    doCount = true;
+                }    
+            } else {
+                countPeroid++;
+                // countPeroid에 따라 lists에서 시간 지난 list는 삭제한다.
+                // 삭제는 COUNT_PERIOD*REQUEST_PERIOD/1000(s) 마다 한다.
+                if (countPeroid === COUNT_PERIOD) {
+                    countPeroid = 0;
+    
+                    const currentHour = d.getHours();
+                    const currentMinute = d.getMinutes();
+    
+                    for (let i=0; i<listLen; ++i) {
+                        const [listHour, listMinute] = lists[i].dprtTime.split(`:`).map(e => +e);
+    
+                        if ((listHour < currentHour) && (listHour === currentHour && listMinute <= currentMinute)) {
+                            list = list.filter((_, idx) => i !== idx);
+                        } 
+                    }
                 }
             }
+            
             //test
             count++;
         }, REQUEST_PERIOD);

@@ -41,7 +41,9 @@ p {
 }
 
 #bus-image {
+    display: table-cell;
     max-width: 10vw;
+    min-width: 80px;
     height: 10vw;
     margin: 1em;
 }
@@ -49,8 +51,10 @@ p {
 /* 타이틀 고속버스 좌석 알림 서비스 */
 /* h1엘리먼트에 감싸져 있지만 그것보다 상위에서 적용시켜버린다. class의 override개념과 유사 */
 #title {
+    display: table-cell;
     font-size: max(40px, 5vw);
     margin: auto 1em;
+    vertical-align: middle;
     /* font-family: 'IBM Plex Sans KR', serif; 근데 다른 폰트로 바꿔주자*/
 }
 
@@ -96,6 +100,7 @@ footer {
 .header-container {
     /* position: sticky; */
     top: 0;
+    display: table;
     z-index: var(--z-index-top);
 }
 

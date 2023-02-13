@@ -40,6 +40,10 @@ app.post('/exprm', (req, res) => {
     })
 });
 
+/**
+ * req.body = {subscription, itnrData}
+ * itnrData = {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]}
+ */
 app.post(`/save-subscription`, async (req, res) => {
     console.log(`enter /save-subscription`);
 
@@ -61,7 +65,7 @@ app.post(`/save-subscription`, async (req, res) => {
         month,
         date,
         day,
-        lists: itnrData.lists,
+        list: itnrData.list,
         resIdx
     };
 

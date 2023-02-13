@@ -37,6 +37,8 @@ self.addEventListener('activate', async () => {
         const applicationServerKey = urlB64ToUint8Array(PUBLIC_KEY);
         const options = { applicationServerKey, userVisibleOnly: true };
 
+        // main.js의 glbSwData에서 얻어온 것이다.
+        // {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]}
         const params = JSON.parse(new URL(location).searchParams.get(`config`));
         console.log(params);
         // console.log(location);
@@ -49,7 +51,6 @@ self.addEventListener('activate', async () => {
             itnrData: params,
         };
         
-        console.log(payload);
         console.log(JSON.stringify(payload));
         const res = await subscription2server(payload);
         console.log(res)
