@@ -4,6 +4,7 @@ const { JSDOM } = require('jsdom');
 //#########################TEST##########################
 const { noZero, zero } = require(`./dbgInput`);
 let glbCount = 0;
+const DEBUG_COUNT = 5;
 //#######################################################
 //유저들이 얼마나 사용하는지 확인하는 작업으 로그 추가 필요
 
@@ -133,8 +134,7 @@ function itineraryRequestKobus(postData) {
                     reject(`해당 날짜, 출발지, 도착지, 에대한 여정이 kobus서버에 존재하지 않습니다.`);
                 } else {
                     // ##################################TEST#######
-                    if (glbCount === 10) {
-                        glbCount = 0;
+                    if (glbCount === DEBUG_COUNT) {
                         resolve(noZero);
                     } else {
                         resolve(zero);
@@ -221,7 +221,7 @@ function requestWithSto(postData, list, date) {
             } else {
                 console.log(`count: ${glbCount}`);
             }
-            if (glbCount === 10) {
+            if (glbCount === DEBUG_COUNT) {
                 console.log(`\n\n자 잔여석 생기는 때입니다.\nresult:\n${JSON.stringify(result)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
             }
             // ######################################################
@@ -229,13 +229,13 @@ function requestWithSto(postData, list, date) {
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
             for (let i=0; i<listLen; ++i) {
                 const tempDprtTime = list[i].dprtTime;
-                if (glbCount==10) {
+                if (glbCount==DEBUG_COUNT) {
                     console.log(`tempDprtTime ${tempDprtTime}`);
                 }
                 for (let j=0; j<resultLen; ++j) {
                     const tempEntry = result[j];
 
-                    if (glbCount == 10) {
+                    if (glbCount == DEBUG_COUNT) {
                         console.log(`tempEntry of result ${JSON.stringify(tempEntry)}`);
                     }
                     //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
@@ -252,7 +252,7 @@ function requestWithSto(postData, list, date) {
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
             
             console.log(`foundList ${JSON.stringify(foundList)}`);
-
+            glbCount = 0;
             if (foundList.length > 0) {
                 resolve(foundList);
                 // clearInterval(intrvl);
