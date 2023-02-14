@@ -59,17 +59,44 @@ self.addEventListener('activate', async () => {
     }
 });
 
-
+// 성공 시 event.data는 다음과 같다
+// {success: true, message: {foundList: [{dprtTime: "14:50", busCmp: "동양고속", busGrade: "고속", remain: "5 석"}, {...}], time: {hours, minutes, seconds}, date: '12'}}
+// 실패 시, {success, message: 실패이유}
 self.addEventListener('push', event => {
-
     if (event.data) {
-        console.log(`event data ${event.data} ${typeof(event.data)}`);
-        
-        console.log('Push event!! ', event.data.text());
-        console.log(`브라우저가 구독하고 있던 통고를 받은거다.`)
-        showLocalNotification('wow', event.data.text(), self.registration);
+        console.log(`event data ${JSON.stringify(event.data)} ${typeof(event.data)}`);
+        console.dir(event);
+
+        const payload = JSON.parse(event.data.text());
+
+        console.log(`브라우저가 구독하고 있던 통고를 받은 상황`);
+
+        if (payload.success === true) {
+            const { foundList, time, date } = payload.message;
+            const hours = String(time.hours).padStart(2, `0`);
+            const minutes = String(time.minutes).padStart(2, `0`);
+            const seconds = String(time.seconds).padStart(2, `0`);
+
+            const title = `(${hours}:${minutes}:${seconds} 기준) 잔여석이 생겼습니다!`;
+            let body = `${date}일 버스 스케줄 중\n`
+
+            for (const entry of foundList) {
+                body += `출발시간: ${entry.dprtTime} 잔여석: ${entry.remain}`;
+
+                if (entry.busGrade === `우등`) {
+                    body += ` 등급: 우등\n`;
+                } else {
+                    body += `\n`;
+                }
+            }
+
+            showLocalNotification(title, body, self.registration);
+        } else {
+            showLocalNotification('구독을 종료합니다.', payload.message, self.registration);
+        }
     } else {
-        console.log('Push event but no data')
+        console.log('Push event but no data');
+        alert(`push event but without data`);
     }
 });
 

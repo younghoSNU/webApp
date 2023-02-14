@@ -74,21 +74,24 @@ app.post(`/save-subscription`, async (req, res) => {
     sbscrpWorker.postMessage(postData);
 
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
+    //구독 성공 msg
+    // {success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date: '1'}, type: `notification`}
     sbscrpWorker.on(`message`, async msg => {
         try {
             console.log(`워커에서 메인쓰레드로 잔여석있는 여정 보냈고 메인이 받았다.`)
+            console.log(`워커에서 넘어온 메시지\n${JSON.stringify(msg)}`);
+
             const {success, type, message} = msg;
-            const dbSbscrp = dummyDb[`${message.resIdx}`];
+            const { foundList, resIdx, time, date} = message;
+            const dbSbscrp = dummyDb[String(resIdx)];
             //type을 명시하긴 했지만 라우팅이 달리 돼있어, 여기로 type: 'display'인 경우는 없다.
-    
-            const payload = JSON.stringify({success, message: message.foundList});
-    
+            console.log(`더미디비에서 가져온 구독정보\n${JSON.stringify(dbSbscrp)}`);
+            
             if (success) {
-                console.log(`더미디비에서 가져온 구독정보\n${JSON.stringify(dbSbscrp)}`);
-                console.log(`워커에서 넘어온 메시지\n${JSON.stringify(msg)}`);
-                
+                const payload = JSON.stringify({success, message: {foundList, time, date}});
                 await webpush.sendNotification(dbSbscrp, payload);
             } else {
+                const payload = JSON.stringify({success, message});
                 await webpush.sendNotification(dbSbscrp, payload);
             }
         } catch(e) {

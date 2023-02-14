@@ -133,15 +133,14 @@ function itineraryRequestKobus(postData) {
                 if (itineraryResult.length === 0) {
                     reject(`해당 날짜, 출발지, 도착지, 에대한 여정이 kobus서버에 존재하지 않습니다.`);
                 } else {
-                    // // ##################################TEST#######
-                    // if (glbCount === DEBUG_COUNT) {
-                    //     resolve(noZero);
-                    // } else {
-                    //     resolve(zero);
-                    // }
-                    // // resolve(itineraryResult);
-                    // // ##############################################
-                    resolve(itineraryResult);
+                    // ##################################TEST#######
+                    if (glbCount === DEBUG_COUNT) {
+                        resolve(noZero);
+                    } else {
+                        resolve(zero);
+                    }
+                    // resolve(itineraryResult);
+                    // ##############################################
                 }
             })
         });
@@ -245,7 +244,7 @@ function requestWithSto(postData, list, date, resIdx) {
                     if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
                         const tempRemain = +(tempEntry[REMAIN].slice(0,2));
                         if (tempRemain > 0) {
-                            foundList.push(tempEntry);
+                            foundList.push({entry: tempEntry});
                             break;
                         }
                     }
@@ -260,8 +259,10 @@ function requestWithSto(postData, list, date, resIdx) {
             }
             if (foundList.length > 0) {
                 // resolve(foundList);
+
+                const foundTime = new Date();
                 // 타입이 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
-                parentPort.postMessage({success: true, message: {foundList, resIdx}, type: `notification`});
+                parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date}, type: `notification`});
                 // clearInterval(intrvl);
                 console.log(`cleared interval`);
                 //이후 추가적업 없나?
