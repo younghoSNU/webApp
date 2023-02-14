@@ -72,8 +72,8 @@ async function onSubmitInput(e) {
            
     } catch (e) {
         console.log(e);
-        alert(e);
         itnrForm.classList.add(HIDDEN_CLS_NM);
+        alert(e);
     }   
 }
 
