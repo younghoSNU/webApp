@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const webpush = require('web-push');
-
+const { PUBLIC_KEY, PRIVATE_KEY } = require(`./secureInfo.js`)
 // 꼭 워커가 필요한 것은 아니지만 연습삼아
 const { Worker } = require('worker_threads');
 
@@ -12,6 +12,7 @@ const PORT = 3000;
 const WORKERDIR = __dirname + "/request2kobusW.js";
 const DISPLAY = `display`;
 const NOTIFICATION = `notification`;
+const MAIL = `hois1998@snu.ac.kr`;
 
 let dummyDb = {};
 let cnt = 0;
@@ -19,6 +20,9 @@ let cnt = 0;
 app.use(cors());
 app.use(express.text({ type: `text/plain` }));
 app.use(express.json());
+
+
+webpush.setVapidDetails(`mailto:`+MAIL, PUBLIC_KEY, PRIVATE_KEY);
 
 app.post('/exprm', (req, res) => {
     //req가 올바는 형식인지 확인 아니면 res로 invalid 전송
