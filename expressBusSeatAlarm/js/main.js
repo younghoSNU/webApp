@@ -37,7 +37,7 @@ async function onSubmitInput(e) {
         e.preventDefault(); //페이지를 새로고침하는 기본값을 없앤다.    
 
         if (itnrDiv.updated) {
-            itnrDiv = false;
+            itnrDiv.updated = false;
             itnrDiv.innerHTML = itnrDivTemplate;
         }
 
