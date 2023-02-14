@@ -77,10 +77,12 @@ self.addEventListener('push', event => {
             const minutes = String(time.minutes).padStart(2, `0`);
             const seconds = String(time.seconds).padStart(2, `0`);
 
+            
             const title = `(${hours}:${minutes}:${seconds} 기준) 잔여석이 생겼습니다!`;
             let body = `${date}일 버스 스케줄 중\n`
 
             for (const entry of foundList) {
+                console.log(JSON.stringify(entry), typeof(entry));
                 body += `출발시간: ${entry.dprtTime} 잔여석: ${entry.remain}`;
 
                 if (entry.busGrade === `우등`) {
