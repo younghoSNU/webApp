@@ -184,6 +184,6 @@ const zero = [
     }
 ]
 
-export { noZero, zero };
+module.exports =  { noZero, zero };
 
 

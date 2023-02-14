@@ -2,7 +2,7 @@ const { parentPort } = require('worker_threads');
 const https = require('https');
 const { JSDOM } = require('jsdom');
 //#########################TEST##########################
-const { noZero, zero } = require(`../dbgInput`);
+const { noZero, zero } = require(`./dbgInput`);
 let glbCount = 0;
 const DEBUG_COUNT = 5;
 //#######################################################
