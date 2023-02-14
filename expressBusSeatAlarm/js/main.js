@@ -40,7 +40,7 @@ async function onSubmitInput(e) {
             itnrDiv = false;
             itnrDiv.innerHTML = itnrDivTemplate;
         }
-        
+
         //itnrForm에서 itnr-content-contain클래스는 안보이더라도 폼의 틀은 보여지도록 한다.
         if (itnrForm.classList.contains(HIDDEN_CLS_NM)) {
             itnrForm.classList.remove(HIDDEN_CLS_NM);
@@ -106,9 +106,6 @@ function displayItnrList(itnrList) {
 
         return false;
     }
-    itnrForm.
-    //버튼을 누르면 로딩화면과 여정관련 템플릿을 보여진다.
-    itnrForm.classList.remove(HIDDEN_CLS_NM);
 
     for (const [idx, etnr] of itnrList.entries()) {
         const { dprtTime, busCmp, busGrade, remain } = etnr;
