@@ -63,11 +63,12 @@ self.addEventListener('activate', async () => {
 self.addEventListener('push', event => {
 
     if (event.data) {
-      console.log('Push event!! ', event.data.text());
-
-      showLocalNotification('wow', event.data.text(), self.registration);
+        
+        console.log('Push event!! ', event.data.text());
+        console.log(`브라우저가 구독하고 있던 통고를 받은거다.`)
+        showLocalNotification('wow', event.data.text(), self.registration);
     } else {
-      console.log('Push event but no data')
+        console.log('Push event but no data')
     }
 });
 

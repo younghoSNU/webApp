@@ -55,12 +55,13 @@ async function onSubmitInput(e) {
         console.log(itnrList);
         
         // ################################TEST####################
-        if (dprtNm == `아산온양`) {
-            itnrList = zero;
-        } else {
-            itnrList = noZero;
-        }
+        // if (dprtNm == `아산온양`) {
+        //     itnrList = zero;
+        // } else {
+        //     itnrList = noZero;
+        // }
         // ########################################################
+        // 서버에서 테스트 하도록 수정
         glbItnrList = itnrList;
 
         

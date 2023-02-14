@@ -3,6 +3,7 @@ const https = require('https');
 const { JSDOM } = require('jsdom');
 //#########################TEST##########################
 const { noZero, zero } = require(`./dbgInput`);
+let glbCount = 0;
 //#######################################################
 //유저들이 얼마나 사용하는지 확인하는 작업으 로그 추가 필요
 
@@ -56,8 +57,8 @@ async function parentPortMsgCallback(msg) {
         if (list !== undefined) {
             //do something
             // #######################TEST###########################
-            // date+1해서 내일 데이터라고 가정한다. 그래야 doCount반응 안한다.
-            let foundList = await itineraryRequestKobusSbscrp(postData, list, date+1);
+            // date+1해서 내일 데이터라고 가정한다. 그래야 doCount반응 안한다. 일단 없애고 테스트중
+            let foundList = await itineraryRequestKobusSbscrp(postData, list, date);
 
             // 타입이 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
             parentPort.postMessage({success: true, message: {foundList, resIdx}, type: `notification`});
@@ -131,7 +132,15 @@ function itineraryRequestKobus(postData) {
                 if (itineraryResult.length === 0) {
                     reject(`해당 날짜, 출발지, 도착지, 에대한 여정이 kobus서버에 존재하지 않습니다.`);
                 } else {
-                    resolve(itineraryResult);
+                    // ##################################TEST#######
+                    if (glbCount === 10) {
+                        glbCount = 0;
+                        resolve(zero);
+                    } else {
+                        resolve(noZero);
+                    }
+                    // resolve(itineraryResult);
+                    // ##############################################
                 }
             })
         });
@@ -190,26 +199,27 @@ function requestWithSto(postData, list, date) {
 
             // startT와 endT는 한번요청으로 ec2 프리티어 서버에서 얼마나 걸려서 응답을 받는지 확인한다.
             let startT =  new Date();
-            //###################TEST#########################
-            // 테스트때문에 let으로 했다.
-            let result = await itineraryRequestKobus(postData);
+            const result = await itineraryRequestKobus(postData);
             
+            // ############################TEST####################
+            glbCount++;
+
             let endT = new Date();
 
-            //#################TEST############################
-            if (count === 3) {
-                result = noZero;
-            } else {
-                result = zero;
-            }
-            //#################################################
             const resultLen = result.length;
             let foundList = []; //잔여좌석이 생긴 여정을 담는다.
             
-            //test
+            // ############################TEST######################
+            if (glbCount === 1) {
+                console.log(`count: ${count} result:\n${JSON.stringify(result)}`);                
+            }
             console.log(`한번 kobus요청에 걸리는 시간`);
             console.log(endT-startT);   //1593
-            console.log(`count: ${count} result:\n${JSON.stringify(result)}`);
+            console.log(`count: ${glbCount}`);
+            if (glbCount === 10) {
+                console.log(`\n\n자 잔여석 생기는 때입니다.\n\n`)
+            }
+            // ######################################################
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
             for (let i=0; i<listLen; ++i) {
                 const tempDprtTime = list[i].dprtTime;
@@ -230,7 +240,7 @@ function requestWithSto(postData, list, date) {
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다. 
             if (foundList.length > 0) {
                 resolve(foundList);
-                clearInterval(intrvl);
+                // clearInterval(intrvl);
                 console.log(`cleared interval`);
                 //이후 추가적업 없나?
                 //id등록된 것 일시적으로 없애야 3초마다 알림 가는 것 방지 가능
@@ -246,6 +256,7 @@ function requestWithSto(postData, list, date) {
                 currentDate = d.getDate();
                 if (date === currentDate) {
                     doCount = true;
+                    console.log(`\n\n구독일이 오늘일과 같으므로 doCount true합니다.\n\n`);
                 }    
             } else {
                 countPeroid++;
@@ -261,6 +272,7 @@ function requestWithSto(postData, list, date) {
                         const [listHour, listMinute] = lists[i].dprtTime.split(`:`).map(e => +e);
     
                         if ((listHour < currentHour) && (listHour === currentHour && listMinute <= currentMinute)) {
+                            console.log(`이미 출발한 ${listHour}:${listMinute} 여정은 구독 리스트에서 삭제합니다.`)
                             list = list.filter((_, idx) => i !== idx);
                         } 
                     }
