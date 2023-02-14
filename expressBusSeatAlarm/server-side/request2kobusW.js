@@ -244,7 +244,7 @@ function requestWithSto(postData, list, date, resIdx) {
                     if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
                         const tempRemain = +(tempEntry[REMAIN].slice(0,2));
                         if (tempRemain > 0) {
-                            foundList.push({entry: tempEntry});
+                            foundList.push(tempEntry);
                             break;
                         }
                     }
