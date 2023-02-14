@@ -30,9 +30,7 @@ app.post('/exprm', (req, res) => {
     
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     worker.on('message', msg => {
-        const { success } = msg;
-
-        if (success === false) {
+        if (msg.success === false) {
             console.error(`kobus서버에서 여정 리스트를 불러오는 과정에서 에러가 발생했습니다.`);
         }
 
