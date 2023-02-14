@@ -22,23 +22,29 @@ const notifSpan = itnrForm.querySelector(`#notif-span`);
 const chckSbmInput = itnrForm.querySelector(`input[type="button"]`);
 
 //제출버튼을 다시 누르면 원래 html템플릿 위에서 dom에 의해 새 템플릿이 만들어져야 하므로
-const itnrFormTemplate = itnrForm.innerHTML;
+const itnrDivTemplate = itnrDiv.innerHTML;
 
 let glbItnrList;    //응답으로 받은 itnrList는 계속 사용할거기 때문에...
 let glbSwData = Object.create({});  //서비스워커에게 전달할 변수들이다. 나중에 만들어지는 형태는 
 // {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]}
 glbSwData.list = [];
+itnrDiv.updated = false;
 
 searchForm.addEventListener('submit', onSubmitInput);
 
 async function onSubmitInput(e) {
     try {
-        e.preventDefault(); //페이지를 새로고침하는 기본값을 없앤다.
+        e.preventDefault(); //페이지를 새로고침하는 기본값을 없앤다.    
 
-        //버튼을 누르면 로딩화면과 여정관련 템플릿을 보여진다.
-        itnrForm.innerHTML = itnrFormTemplate;
-        console.log(itnrForm.innerHTML);
-        itnrForm.classList.remove(HIDDEN_CLS_NM);
+        if (itnrDiv.updated) {
+            itnrDiv = false;
+            itnrDiv.innerHTML = itnrDivTemplate;
+        }
+        
+        //itnrForm에서 itnr-content-contain클래스는 안보이더라도 폼의 틀은 보여지도록 한다.
+        if (itnrForm.classList.contains(HIDDEN_CLS_NM)) {
+            itnrForm.classList.remove(HIDDEN_CLS_NM);
+        }
 
         // console.dir(e)
         const fullDate = dateSelect.value;  // 2023/01/25(수)
@@ -100,7 +106,8 @@ function displayItnrList(itnrList) {
 
         return false;
     }
-
+    itnrForm.
+    //버튼을 누르면 로딩화면과 여정관련 템플릿을 보여진다.
     itnrForm.classList.remove(HIDDEN_CLS_NM);
 
     for (const [idx, etnr] of itnrList.entries()) {
@@ -149,6 +156,8 @@ function displayItnrList(itnrList) {
         notifSpan.classList.remove(HIDDEN_CLS_NM);
         chckSbmInput.classList.remove(HIDDEN_CLS_NM);
     }
+
+    itnrDiv.updated = true;
 
     return true;
 }
