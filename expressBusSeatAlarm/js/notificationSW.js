@@ -63,6 +63,7 @@ self.addEventListener('activate', async () => {
 self.addEventListener('push', event => {
 
     if (event.data) {
+        console.log(`event data ${event.data} ${typeof(event.data)}`);
         
         console.log('Push event!! ', event.data.text());
         console.log(`브라우저가 구독하고 있던 통고를 받은거다.`)

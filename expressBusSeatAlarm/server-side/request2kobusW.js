@@ -212,12 +212,15 @@ function requestWithSto(postData, list, date) {
             let foundList = []; //잔여좌석이 생긴 여정을 담는다.
             
             // ############################TEST######################
-            if (glbCount === 1) {
-                console.log(`count: ${count} result:\n${JSON.stringify(result)}`);                
-            }
+            
             console.log(`한번 kobus요청에 걸리는 시간`);
             console.log(endT-startT);   //1593
-            console.log(`count: ${glbCount}`);
+            
+            if (glbCount === 1) {
+                console.log(`count: ${glbCount} result:\n${JSON.stringify(result)}`);                
+            } else {
+                console.log(`count: ${glbCount}`);
+            }
             if (glbCount === 10) {
                 console.log(`\n\n자 잔여석 생기는 때입니다.\nresult:\n${JSON.stringify(result)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
             }
@@ -248,8 +251,8 @@ function requestWithSto(postData, list, date) {
 
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
             
-            console.log(`foundList ${foundList}`);
-            
+            console.log(`foundList ${JSON.stringify(foundList)}`);
+
             if (foundList.length > 0) {
                 resolve(foundList);
                 // clearInterval(intrvl);
