@@ -3,6 +3,7 @@ const https = require('https');
 const { JSDOM } = require('jsdom');
 //#########################TEST##########################
 const { noZero, zero } = require(`./dbgInput`);
+const { itineraryRequest } = require('../js/exprmKobusRequest');
 let glbCount = 0;
 const DEBUG_COUNT = 5;
 //#######################################################
@@ -133,14 +134,15 @@ function itineraryRequestKobus(postData) {
                 if (itineraryResult.length === 0) {
                     reject(`해당 날짜, 출발지, 도착지, 에대한 여정이 kobus서버에 존재하지 않습니다.`);
                 } else {
-                    // ##################################TEST#######
-                    if (glbCount === DEBUG_COUNT) {
-                        resolve(noZero);
-                    } else {
-                        resolve(zero);
-                    }
-                    // resolve(itineraryResult);
-                    // ##############################################
+                    // // ##################################TEST#######
+                    // if (glbCount === DEBUG_COUNT) {
+                    //     resolve(noZero);
+                    // } else {
+                    //     resolve(zero);
+                    // }
+                    // // resolve(itineraryResult);
+                    // // ##############################################
+                    resolve(itineraryResult);
                 }
             })
         });
