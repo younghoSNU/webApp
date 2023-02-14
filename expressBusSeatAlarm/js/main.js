@@ -18,6 +18,7 @@ const arvlSelect = document.querySelector("#arvl-select");
 
 const itnrForm = document.querySelector(`.itnr-form`);
 const itnrDiv = itnrForm.querySelector(`.itnr-content-container`);
+//아래 두 엘리먼트는 빈좌석이 있을 때만 활성화된다.
 const notifSpan = itnrForm.querySelector(`#notif-span`);
 const chckSbmInput = itnrForm.querySelector(`input[type="button"]`);
 
@@ -39,6 +40,8 @@ async function onSubmitInput(e) {
         if (itnrDiv.updated) {
             itnrDiv.updated = false;
             itnrDiv.innerHTML = itnrDivTemplate;
+            notifSpan.classList.add(HIDDEN_CLS_NM);
+            chckSbmInput.classList.add(HIDDEN_CLS_NM);
         }
 
         //itnrForm에서 itnr-content-contain클래스는 안보이더라도 폼의 틀은 보여지도록 한다.
