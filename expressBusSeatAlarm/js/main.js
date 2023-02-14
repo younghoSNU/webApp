@@ -3,7 +3,7 @@
 // 받는다.
 
 import { itineraryRequest } from "./exprmKobusRequest.js";
-import { noZero, zero } from "./dbgInput.js";   //디버깅을 위해 임시려한 요청시 가져오는 데이터, noZero는 잔여석0인 경우가 없을 때, zero는 있을 때
+import { noZero, zero } from "../dbgInput.js";   //디버깅을 위해 임시려한 요청시 가져오는 데이터, noZero는 잔여석0인 경우가 없을 때, zero는 있을 때
 
 // console.log(zero);
 

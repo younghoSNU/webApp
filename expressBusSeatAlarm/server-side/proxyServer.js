@@ -101,7 +101,11 @@ app.post(`/save-subscription`, async (req, res) => {
 
 });
 
-//임시 데이터베이스 접속 함수
+/**
+ * 임시 데이터베이스 접속 함수
+ * @param {subscription from pushManager} subscription 
+ * @return {number} idx
+ */
 async function saveSbscrp2DB (subscription) {
     const idx = cnt;
     dummyDb[`${idx}`] = subscription;

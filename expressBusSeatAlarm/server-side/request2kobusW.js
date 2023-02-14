@@ -2,7 +2,7 @@ const { parentPort } = require('worker_threads');
 const https = require('https');
 const { JSDOM } = require('jsdom');
 //#########################TEST##########################
-const { noZero, zero } = require(`./dbgInput`);
+const { noZero, zero } = require(`../dbgInput`);
 let glbCount = 0;
 const DEBUG_COUNT = 5;
 //#######################################################
@@ -42,7 +42,8 @@ function makePostData(dprtNm, arvlNm, year, month, date, day) {
 
 /**
  * 
- * @param {object} msg: a.처럼 사용할 때는 dprtNm, arvlNm, year, month, date, day만 있으면 되고 b.로 사용할 때는 앞선 얘기한 property에 추가로 list와 resIdx 프로퍼티도 있어야 한다. 
+ * @param {object} msg {dprtNm: string, arvlNm: string, year: string, month: string, date: string, day: string, list: [{idx:number, dprtTime: string}, {...}], resIdx: number}
+ * a.처럼 사용할 때는 dprtNm, arvlNm, year, month, date, day만 있으면 되고 b.로 사용할 때는 앞선 얘기한 property에 추가로 list와 resIdx 프로퍼티도 있어야 한다. 
  * 이 함수 안에서 parentPort에 postMessage를 한다. 포스트하는 메시지는 아래와 같은 형식을 띤다.
  * {success: true/false, type: `display`/`notification`, message: content}
  */
@@ -59,10 +60,9 @@ async function parentPortMsgCallback(msg) {
             //do something
             // #######################TEST###########################
             // date+1해서 내일 데이터라고 가정한다. 그래야 doCount반응 안한다. 일단 없애고 테스트중
-            let foundList = await itineraryRequestKobusSbscrp(postData, list, date);
+            let foundList = await itineraryRequestKobusSbscrp(postData, list, date, resIdx);
 
-            // 타입이 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
-            parentPort.postMessage({success: true, message: {foundList, resIdx}, type: `notification`});
+            
         } else {
             let result = await itineraryRequestKobus(postData);
             
@@ -161,8 +161,9 @@ function itineraryRequestKobus(postData) {
  * @param {string} postData 
  * @param {array} list eg) [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]
  * @param {string} date 몇 일인지 비교해서 당일이면 시간 지난 여정은 삭제하는 작업하려고
+ * @param {number} resIdx
  */
-async function itineraryRequestKobusSbscrp(postData, list, date) {
+async function itineraryRequestKobusSbscrp(postData, list, date, resIdx) {
     
     // 요청을 보내서 데이터를 받는다 
     // 현재시간과 비교한다. 애초에 확실한 idx인 시간을 보내자.
@@ -170,7 +171,7 @@ async function itineraryRequestKobusSbscrp(postData, list, date) {
     // console.log(JSON.stringify(postData))
 
     // requestWithSto에서 lists에 더이상 데이터가 없으면 reject한다
-    const foundList = await requestWithSto(postData, list, date);
+    const foundList = await requestWithSto(postData, list, date, resIdx);
 
     return foundList;
 }
@@ -180,9 +181,10 @@ async function itineraryRequestKobusSbscrp(postData, list, date) {
  * @param {string} postData 
  * @param {array} list eg) [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]
  * @param {string} date 몇 일인지 비교해서 당일이면 시간 지난 여정은 삭제하는 작업하려고
+ * @param {number} resIdx
  * @returns 
  */
-function requestWithSto(postData, list, date) {
+function requestWithSto(postData, list, date, resIdx) {
     //임시 실험용 count: count 횟수가 어느 정도 차면 잔여좌석이 0이 아닌 데이터를 의도적으로 보내 잘 동작하는지 확인한다.
     let count = 0;
 
@@ -256,7 +258,9 @@ function requestWithSto(postData, list, date) {
                 glbCount = 0;
             }
             if (foundList.length > 0) {
-                resolve(foundList);
+                // resolve(foundList);
+                // 타입이 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
+                parentPort.postMessage({success: true, message: {foundList, resIdx}, type: `notification`});
                 // clearInterval(intrvl);
                 console.log(`cleared interval`);
                 //이후 추가적업 없나?
