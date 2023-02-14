@@ -63,7 +63,7 @@ async function parentPortMsgCallback(msg) {
             parentPort.postMessage({success: true, message: {foundList, resIdx}, type: `notification`});
         } else {
             let result = await itineraryRequestKobus(postData);
-
+            
             parentPort.postMessage({success: true, message: result, type: `display`});
         }
     } catch(e) {
@@ -128,7 +128,7 @@ function itineraryRequestKobus(postData) {
                     itineraryResult.push({dprtTime, busCmp, busGrade, remain});
                 });
 
-                if (itineraryResult.length === 0) {
+                if (true/*itineraryResult.length === 0*/) {
                     reject(`해당 날짜, 출발지, 도착지, 에대한 여정이 kobus서버에 존재하지 않습니다.`);
                 } else {
                     resolve(itineraryResult);

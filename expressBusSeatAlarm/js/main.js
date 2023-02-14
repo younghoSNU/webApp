@@ -54,12 +54,13 @@ async function onSubmitInput(e) {
         console.log(`successfully got response in client`);
         console.log(itnrList);
         
+        // ################################TEST####################
         if (dprtNm == `아산온양`) {
             itnrList = zero;
         } else {
             itnrList = noZero;
         }
-
+        // ########################################################
         glbItnrList = itnrList;
 
         
@@ -71,6 +72,7 @@ async function onSubmitInput(e) {
            
     } catch (e) {
         console.log(e);
+        alert(e);
     }   
 }
 
