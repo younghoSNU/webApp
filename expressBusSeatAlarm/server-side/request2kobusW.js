@@ -252,7 +252,9 @@ function requestWithSto(postData, list, date) {
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
             
             console.log(`foundList ${JSON.stringify(foundList)}`);
-            glbCount = 0;
+            if (glbCount == DEBUG_COUNT) {
+                glbCount = 0;
+            }
             if (foundList.length > 0) {
                 resolve(foundList);
                 // clearInterval(intrvl);
