@@ -199,10 +199,12 @@ function requestWithSto(postData, list, date) {
 
             // startT와 endT는 한번요청으로 ec2 프리티어 서버에서 얼마나 걸려서 응답을 받는지 확인한다.
             let startT =  new Date();
+            // #####################TEST###############
+            glbCount++;
+
             const result = await itineraryRequestKobus(postData);
             
             // ############################TEST####################
-            glbCount++;
 
             let endT = new Date();
 
@@ -235,7 +237,8 @@ function requestWithSto(postData, list, date) {
                     }
                     //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
                     if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
-                        if ((+tempEntry[REMAIN]) > 0) {
+                        const tempRemain = +(tempEntry[REMAIN].slice(0,2));
+                        if (tempRemain > 0) {
                             foundList.push(tempEntry);
                             break;
                         }
@@ -243,7 +246,10 @@ function requestWithSto(postData, list, date) {
                 }
             }
 
-            //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다. 
+            //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
+            
+            console.log(`foundList ${foundList}`);
+            
             if (foundList.length > 0) {
                 resolve(foundList);
                 // clearInterval(intrvl);
