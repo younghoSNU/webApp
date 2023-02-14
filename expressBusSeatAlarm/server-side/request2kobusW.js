@@ -217,16 +217,22 @@ function requestWithSto(postData, list, date) {
             console.log(endT-startT);   //1593
             console.log(`count: ${glbCount}`);
             if (glbCount === 10) {
-                console.log(`\n\n자 잔여석 생기는 때입니다.\nresult:\n${JSON.stringify(result)}\n참고로 구독중인 리스트는\n${list}`)
+                console.log(`\n\n자 잔여석 생기는 때입니다.\nresult:\n${JSON.stringify(result)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
             }
             // ######################################################
+
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
             for (let i=0; i<listLen; ++i) {
                 const tempDprtTime = list[i].dprtTime;
-                console.log(`tempDprtTime ${tempDprtTime}`);
+                if (glbCount==10) {
+                    console.log(`tempDprtTime ${tempDprtTime}`);
+                }
                 for (let j=0; j<resultLen; ++j) {
                     const tempEntry = result[j];
-                    console.log(`tempEntry of result ${tempEntry}`)
+
+                    if (glbCount == 10) {
+                        console.log(`tempEntry of result ${JSON.stringify(tempEntry)}`);
+                    }
                     //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
                     if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
                         if ((+tempEntry[REMAIN]) > 0) {
