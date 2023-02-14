@@ -135,9 +135,9 @@ function itineraryRequestKobus(postData) {
                     // ##################################TEST#######
                     if (glbCount === 10) {
                         glbCount = 0;
-                        resolve(zero);
-                    } else {
                         resolve(noZero);
+                    } else {
+                        resolve(zero);
                     }
                     // resolve(itineraryResult);
                     // ##############################################

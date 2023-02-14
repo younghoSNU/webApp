@@ -51,8 +51,8 @@ async function onSubmitInput(e) {
 
         let itnrList = await itineraryRequest(dprtNm, arvlNm, year, month, date, day);  //디버깅때문에 임시로 let사용
 
-        console.log(`successfully got response in client`);
-        console.log(itnrList);
+        // console.log(`successfully got response in client`);
+        // console.log(itnrList);
         
         // ################################TEST####################
         // if (dprtNm == `아산온양`) {
