@@ -78,14 +78,6 @@ export function itineraryRequest(dprtNm, arvlNm, year, month, date, day) {
     //위 이벤트 등록을 마쳤으면, 요청을 진짜로 보낸다.
     xhr.send(postData);
 
-
-    // const options = {
-    //   hostname: 'kobus.co.kr',
-    //   port: 443,
-    //   path: '/mrs/alcnSrch.do',
-    //   method: 'POST',
-    //   headers: fd
-    // };
   });  
 };
 

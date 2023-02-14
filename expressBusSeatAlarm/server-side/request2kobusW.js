@@ -128,7 +128,7 @@ function itineraryRequestKobus(postData) {
                     itineraryResult.push({dprtTime, busCmp, busGrade, remain});
                 });
 
-                if (true/*itineraryResult.length === 0*/) {
+                if (1/*itineraryResult.length === 0*/) {
                     reject(`해당 날짜, 출발지, 도착지, 에대한 여정이 kobus서버에 존재하지 않습니다.`);
                 } else {
                     resolve(itineraryResult);
