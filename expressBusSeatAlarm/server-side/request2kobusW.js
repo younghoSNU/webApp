@@ -261,6 +261,7 @@ function requestWithSto(postData, list, date, resIdx) {
                 // resolve(foundList);
 
                 const foundTime = new Date();
+                console.log(`foundT ${foundTime}`)
                 // 타입이 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
                 parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date}, type: `notification`});
                 // clearInterval(intrvl);
@@ -290,7 +291,7 @@ function requestWithSto(postData, list, date, resIdx) {
     
                     const currentHour = d.getHours();
                     const currentMinute = d.getMinutes();
-    
+                    
                     for (let i=0; i<listLen; ++i) {
                         const [listHour, listMinute] = lists[i].dprtTime.split(`:`).map(e => +e);
     

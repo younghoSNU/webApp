@@ -5,12 +5,13 @@ let dayMapping = ['월', '화', '수', '목', '금',
 '토', '일'];
 
 let date0 = new Date();
-let date1 = new Date(date0.getTime()+PLUS_A_DAY);
-let date2 = new Date(date0.getTime()+PLUS_A_DAY*2);
-let date3 = new Date(date0.getTime()+PLUS_A_DAY*3);
-let date4 = new Date(date0.getTime()+PLUS_A_DAY*4);
-let date5 = new Date(date0.getTime()+PLUS_A_DAY*5);
-let date6 = new Date(date0.getTime()+PLUS_A_DAY*6);
+const now = date0.getTime();
+let date1 = new Date(now+PLUS_A_DAY);
+let date2 = new Date(now+PLUS_A_DAY*2);
+let date3 = new Date(now+PLUS_A_DAY*3);
+let date4 = new Date(now+PLUS_A_DAY*4);
+let date5 = new Date(now+PLUS_A_DAY*5);
+let date6 = new Date(now+PLUS_A_DAY*6);
 let dateArr = [date0, date1, date2, date3, date4, date5, date6];
 
 console.log(date0);
