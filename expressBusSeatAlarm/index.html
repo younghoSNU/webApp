@@ -37,18 +37,17 @@
             </ol>
         </div>
         <form class="search-menu">
-            <ul class="main-menu row">
-                
+            <ul class="main-search-menu row">
                 <li>
                     <p>출발날짜</p>
                     <select id="date-select" required>
-                        <option value="">--날짜를 입력하세요--</option>
+                        <option value="">--날짜 입력하세요--</option>
                     </select>
                 </li>
                 <li>
                     <p>출발지</p>
                     <select id="dprt-select" required>
-                        <option value="">--출발지를 입력하세요--</option>
+                        <option value="">--출발지 입력하세요--</option>
                         <option value="아산온양">아산온양</option>
                         <option value="배방정류소">배방정류소</option>
                         <option value="아산서부(호서대)">아산서부(호서대)</option>                        
@@ -58,17 +57,21 @@
                 <li>
                     <p>도착지</p>
                     <select id="arvl-select" required>
-                        <option value="">--도착지를 입력하세요--</option>
+                        <option value="">--도착지 입력하세요--</option>
                         <option value="서울경부">서울고속버스터미널</option> 
                     </select>
                 </li>              
             </ul>
-            <div class="main-button row"> 
-                <!-- <i class="normal-size-image" src="img/search.png"></i> -->
+            <div class="search-container">
+                <input type="submit" class="main-button  row" value="제출하기">
+            </div>
+           
+            <!-- <div class="main-button row"> 
+                <i class="normal-size-image" src="img/search.png"></i>
                 <div class="search-container row">
                     <input type="image" src="img/search.png" class="search" value="검색"/>
                 </div>
-            </div>
+            </div> -->
             <!-- button을 div에 넣어주지 않으면 ul과 상호작용하기 불편하다. -->
         </form>
         <form class="itnr-form hidden">
@@ -95,6 +98,7 @@
     </footer>
     <script src="./js/main.js" type="module"></script>
     <script src="./js/dprtDate.js"></script>
+    <script src="./js/mobileViewport.js"></script>
 </body>
 </html>
 
