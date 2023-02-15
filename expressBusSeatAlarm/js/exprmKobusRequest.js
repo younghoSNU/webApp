@@ -16,6 +16,15 @@
  * @param {String:2} month 
  * @param {String:2} date 
  * @param {String} day 월, 화, 수 등 요일 
+ * @returns {success: true, message: Array(15), type: 'display'}
+ * message: [
+    {
+        "dprtTime": "11:20",
+        "busCmp": "(주)동양고속",
+        "busGrade": "고속",
+        "remain": "5 석"
+    }, {...}
+  ]
  */
 export function itineraryRequest(dprtNm, arvlNm, year, month, date, day) {
 

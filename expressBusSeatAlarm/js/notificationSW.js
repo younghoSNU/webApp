@@ -29,7 +29,8 @@ const subscription2server = async payload => {
 
     return response.json();
 };
-
+console.log(self);
+console.dir(self);
 self.addEventListener('activate', async () => {
     // This will be called only once when the service worker is activated.
     try {

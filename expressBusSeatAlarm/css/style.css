@@ -211,7 +211,7 @@ select {
 }
 
 .main-button:hover {
-    border-color: yellow;
+    border-color: rgb(236, 179, 35);
 }
 @media (width <= 1024px) {
     .search-menu {

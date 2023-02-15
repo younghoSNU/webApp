@@ -62,6 +62,11 @@ async function onSubmitInput(e) {
         const date = dateNday.slice(0, 2);
         const day = dateNday.slice(3, 4);
 
+        // chckSbmInput에서 confirm을 할 때 date도 보여준다.
+        chckSbmInput.fullDate = fullDate;
+        chckSbmInput.dprtNm = dprtNm;
+        chckSbmInput.arvlNm = arvlNm;
+
         let itnrList = await itineraryRequest(dprtNm, arvlNm, year, month, date, day);  //디버깅때문에 임시로 let사용
 
         // console.log(`successfully got response in client`);
@@ -184,20 +189,18 @@ async function onSubmitChck (e) {
         if (!checkedList.length) {
             alert(`등록할 알림이 선택되지 않았습니다.`);
         } else {
-            //등록한 내용이 맞는지 확인 
-            let selectedItnrs = ``;
+            //등록한 내용이 맞는지 confirm에서 확인 
+            let selectedItnrs = `${chckSbmInput.fullDate} ${chckSbmInput.dprtNm}->${chckSbmInput.arvlNm} 버스 스케줄 중 다음을 구독합니다.\n`;
             
-          
-
             for (let idx of checkedList) {
                 let itnrEntry = glbItnrList[idx];
                 selectedItnrs += JSON.stringify(itnrEntry);
                 //sw가 서버를 구독할 때, 서버에서는 kobus의 날짜, 출발지, 도착지 여정 중 idx에 해당하는 것의 좌석만 확인하면 되므로 
                 //추가로 idx는 시간이 지나면 사라져 파싱에 어려움이 있지만 dprtTime(출발시간)은 하나 밖에 없는 id처럼 사용할 수 있어 kobus 응답으로 받은 데이터를 파싱할 때 편하다 
-                let date = glbSwData.fullDate.slice(8,10);
                 glbSwData.list.push({idx, dprtTime: glbItnrList[idx][`dprtTime`]});
             }
-    
+            
+            
             if (confirm(selectedItnrs)) { //유저에게 원하는 여정(들)이 잘 선택됐는지 확인시켜준다. 
                 //체크버튼을 가린다
                 e.target.classList.add(HIDDEN_CLS_NM);
