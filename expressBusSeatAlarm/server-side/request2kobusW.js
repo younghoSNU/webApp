@@ -62,7 +62,7 @@ async function parentPortMsgCallback(msg) {
             const messageContainer = await itineraryRequestKobusSbscrp(postData, list, date, resIdx);
             const {success, message} = messageContainer;
 
-            parentPort.postMessage({success, message: {msg: message, resIdx}, type: `message`});
+            parentPort.postMessage({success, message: {msg0: message, resIdx}, type: `message`});
         } else {
             let result = await itineraryRequestKobus(postData);
             

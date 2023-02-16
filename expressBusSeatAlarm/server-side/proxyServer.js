@@ -80,12 +80,12 @@ app.post(`/save-subscription`, async (req, res) => {
     //구독 성공 msg
     // {success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date: '1'}, type: `notification`}
     sbscrpWorker.on(`message`, async (msg) => {
-        try {
+        try {  
             console.log(`워커에서 메인쓰레드로 잔여석있는 여정 보냈고 메인이 받았다.`)
             console.log(`워커에서 넘어온 메시지\n${JSON.stringify(msg)}`);
 
             const {success, type, message} = msg;
-            const { foundList, resIdx, time, date, msg} = message;
+            const { foundList, resIdx, time, date, msg0} = message;
             const dbSbscrp = dummyDb[String(resIdx)];
             //type을 명시하긴 했지만 라우팅이 달리 돼있어, 여기로 type: 'display'인 경우는 없다.
             console.log(`더미디비에서 가져온 구독정보\n${JSON.stringify(dbSbscrp)}`);
@@ -93,7 +93,7 @@ app.post(`/save-subscription`, async (req, res) => {
             if (success) {
                 //통고를 보내는 부분이 아니라 모든 구독한 여정이 출발하거나 모든 여정에 통고를 보낸 경우 구독을 끝내는 것이다. 서비스워커 등록도 없앤다.
                 if (type === MESSAGE) {
-                    const payload = JSON.stringify({success, message: msg})
+                    const payload = JSON.stringify({success, message: msg0})
                     await webpush.sendNotification(dbSbscrp, payload);
                 } else {
                     const payload = JSON.stringify({success, message: {foundList, time, date}});
@@ -103,6 +103,7 @@ app.post(`/save-subscription`, async (req, res) => {
                 const payload = JSON.stringify({success, message});
                 await webpush.sendNotification(dbSbscrp, payload);
             }
+            
         } catch(e) {
             console.error(e);
         }
