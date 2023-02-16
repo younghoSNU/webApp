@@ -100,8 +100,14 @@ app.post(`/save-subscription`, async (req, res) => {
                     await webpush.sendNotification(dbSbscrp, payload);
                 }
             } else {
-                const payload = JSON.stringify({success, message, type});
-                await webpush.sendNotification(dbSbscrp, payload);
+
+                if (type === MESSAGE) {
+                    const payload = JSON.stringify({success, message: msg0, type})
+                    await webpush.sendNotification(dbSbscrp, payload);
+                } else {
+                    const payload = JSON.stringify({success, message, type});
+                    await webpush.sendNotification(dbSbscrp, payload);
+                }
             }
             
         } catch(e) {
