@@ -198,8 +198,8 @@ function requestWithSto(postData, list, date, resIdx) {
             const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
 
             if (listLen === 0) {
-                clearInterval(intrvl);
-                throw {success: false, message: `구독했던 여정(들)에서 잔여좌석이 생기지 않고 출발했습니다.`};
+                reject({success: false, message: `구독했던 여정(들)에서 잔여좌석이 생기지 않고 출발했습니다.`});
+                return clearInterval(intrvl);
             }
 
             // startT와 endT는 한번요청으로 ec2 프리티어 서버에서 얼마나 걸려서 응답을 받는지 확인한다.
