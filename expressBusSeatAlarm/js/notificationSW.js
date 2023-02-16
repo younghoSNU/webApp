@@ -102,6 +102,9 @@ self.addEventListener('push', event => {
             //구독을 해지하는 작업을 한다.
             self.registration.pushManager.getSubscription()
                 .then(pushSubscription => {
+                    console.log('pushSubscription')
+                    console.log(pushSubscription)
+                    console.dir(pushSubscription)
                     pushSubscription.unsubscribe()
                         .then(success => {
                             if (success) {
