@@ -79,7 +79,7 @@ app.post(`/save-subscription`, async (req, res) => {
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     //구독 성공 msg
     // {success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date: '1'}, type: `notification`}
-    sbscrpWorker.on(`message`, async msg => {
+    sbscrpWorker.on(`message`, async (msg) => {
         try {
             console.log(`워커에서 메인쓰레드로 잔여석있는 여정 보냈고 메인이 받았다.`)
             console.log(`워커에서 넘어온 메시지\n${JSON.stringify(msg)}`);
