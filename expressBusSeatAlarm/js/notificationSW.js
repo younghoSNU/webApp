@@ -107,6 +107,7 @@ self.addEventListener('push', event => {
                     console.dir(pushSubscription)
                     pushSubscription.unsubscribe()
                         .then(success => {
+                            console.log(success);
                             if (success) {
                                 console.log(`성공적으로 구독해제`);
                             } else {
