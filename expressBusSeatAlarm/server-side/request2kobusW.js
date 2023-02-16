@@ -197,8 +197,8 @@ function requestWithSto(postData, list, date, resIdx) {
         let intrvl = setInterval(async () => {
             const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
 
-            if (listLen === 0) {
-                reject({success: false, message: `구독했던 여정(들)에서 잔여좌석이 생기지 않고 출발했습니다.`});
+            if (true) {
+                resolve({success: false, message: `구독했던 여정(들)에서 잔여좌석이 생기지 않고 출발했습니다.`});
                 return clearInterval(intrvl);
             }
 
@@ -233,6 +233,7 @@ function requestWithSto(postData, list, date, resIdx) {
 
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
             for (let i=0; i<listLen; ++i) {
+				console.log(JSON.stringify(list));
                 const tempDprtTime = list[i].dprtTime;
                 if (glbCount==DEBUG_COUNT) {
                     console.log(`tempDprtTime ${tempDprtTime}`);
