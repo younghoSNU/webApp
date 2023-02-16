@@ -93,14 +93,14 @@ app.post(`/save-subscription`, async (req, res) => {
             if (success) {
                 //통고를 보내는 부분이 아니라 모든 구독한 여정이 출발하거나 모든 여정에 통고를 보낸 경우 구독을 끝내는 것이다. 서비스워커 등록도 없앤다.
                 if (type === MESSAGE) {
-                    const payload = JSON.stringify({success, message: msg0})
+                    const payload = JSON.stringify({success, message: msg0, type})
                     await webpush.sendNotification(dbSbscrp, payload);
                 } else {
-                    const payload = JSON.stringify({success, message: {foundList, time, date}});
+                    const payload = JSON.stringify({success, message: {foundList, time, date}, type});
                     await webpush.sendNotification(dbSbscrp, payload);
                 }
             } else {
-                const payload = JSON.stringify({success, message});
+                const payload = JSON.stringify({success, message, type});
                 await webpush.sendNotification(dbSbscrp, payload);
             }
             

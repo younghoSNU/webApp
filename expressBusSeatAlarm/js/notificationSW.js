@@ -1,4 +1,5 @@
 const PUBLIC_KEY = `BJX1JFKLeds75dvaBzGXaliLkyYhR-_v_5Vbu2I6SXQngkP2XiCVkl_de4lmevcbNOQvbI3rrFXPLkpBatB0cZE`;
+const NOTIFICATION = `notification`;
 // urlB64ToUint8Array is a magic function that will encode the base64 public key
 // to Array buffer which is needed by the subscription option
 const urlB64ToUint8Array = base64String => {
@@ -73,7 +74,7 @@ self.addEventListener('push', event => {
 
         console.log(`브라우저가 구독하고 있던 통고를 받은 상황`);
      
-        if (payload.success === true) {
+        if (payload.success === true && payload.type === NOTIFICATION) {
             const { foundList, time, date } = payload.message;
             const hours = String(time.hours).padStart(2, `0`);
             const minutes = String(time.minutes).padStart(2, `0`);
