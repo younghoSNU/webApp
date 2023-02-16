@@ -50,27 +50,8 @@ self.addEventListener('activate', async () => {
 
 
         ////test////
-        self.registration.pushManager.getSubscription()
-                .then(pushSubscription => {
-                    console.log('pushSubscription')
-                    console.log(pushSubscription)
-                    console.dir(pushSubscription)
-                    pushSubscription.unsubscribe()
-                        .then(success => {
-                            console.log(success);
-                            if (success) {
-                                console.log(`성공적으로 구독해제`);
-                            } else {
-                                throw new Error(`구독해지 중 문제가 생겼습니다.`);
-                            }
-                        })
-                })
-                .catch(e => {
-                    console.log(e);
-                    alert(e);
-                })
-
-                
+        // 여기서 구독해지하면 해지된다.
+        
         const payload = {
             subscription: JSON.stringify(subscription),
             itnrData: params,
@@ -122,8 +103,9 @@ self.addEventListener('push', event => {
         } else {
             showLocalNotification('알림 종료', payload.message, self.registration);
 
-            //구독을 해지하는 작업을 한다.
-            self.registration.pushManager.getSubscription()
+            setTimeout(() => {
+                //구독을 해지하는 작업을 한다.
+                self.registration.pushManager.getSubscription()
                 .then(pushSubscription => {
                     console.log('pushSubscription')
                     console.log(pushSubscription)
@@ -143,8 +125,8 @@ self.addEventListener('push', event => {
                     alert(e);
                 })
 
-            //서비스워커 등록을 해지한다.
-            self.registration.unregister()
+                //서비스워커 등록을 해지한다.
+                self.registration.unregister()
                 .then(boolean => {
                     if (boolean) {
                         console.log(`성공적으로 서비스워커 등록해지`);
@@ -156,6 +138,8 @@ self.addEventListener('push', event => {
                     console.log(e);
                     alert(e);
                 });
+            } ,2000)
+            
         }
     } else {
         console.log('Push event but no data');
