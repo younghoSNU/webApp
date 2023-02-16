@@ -256,4 +256,9 @@ select {
         align-items: center;
         margin: 1em;
     }
+
+    .main-search-menu {
+        display: flex;
+        flex-direction: row;
+    }
 }

@@ -58,11 +58,11 @@ async function parentPortMsgCallback(msg) {
         //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
         if (list !== undefined) {
             //do something
-            // #######################TEST###########################
-            // date+1해서 내일 데이터라고 가정한다. 그래야 doCount반응 안한다. 일단 없애고 테스트중
-            let foundList = await itineraryRequestKobusSbscrp(postData, list, date, resIdx);
+            //message = {message: `...`, success: true/false}
+            const messageContainer = await itineraryRequestKobusSbscrp(postData, list, date, resIdx);
+            const {success, message} = messageContainer;
 
-            
+            parentPort.postMessage({success, message: {msg: message, resIdx}, type: `message`});
         } else {
             let result = await itineraryRequestKobus(postData);
             
@@ -170,10 +170,11 @@ async function itineraryRequestKobusSbscrp(postData, list, date, resIdx) {
     console.log(`in itineraryRequestKobusSbscrp`);
     // console.log(JSON.stringify(postData))
 
-    // requestWithSto에서 lists에 더이상 데이터가 없으면 reject한다
-    const foundList = await requestWithSto(postData, list, date, resIdx);
+    // requestWithSto에서 여정이 다 출발해 lists에 더이상 데이터가 없으면 reject한다
+    // 반면 구독한 모든 알림을 다 보낸 경우 리스트에 더이상 데이터가 없으면 resolve한다 
+    const message = await requestWithSto(postData, list, date, resIdx);
 
-    return foundList;
+    return message;
 }
 
 /**
@@ -191,119 +192,141 @@ function requestWithSto(postData, list, date, resIdx) {
     return new Promise((resolve, reject) => {
         let countPeroid = 0;
         let doCount = false;
+        let isClearIntrvl = false;
 
         let intrvl = setInterval(async () => {
-            const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
+            try {
+                const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
 
-            if (listLen === 0) {
-                reject(`구독했던 여정(들)에서 잔여좌석이 생기지 않고 출발했습니다.`);
-            }
-
-            // startT와 endT는 한번요청으로 ec2 프리티어 서버에서 얼마나 걸려서 응답을 받는지 확인한다.
-            let startT =  new Date();
-            // #####################TEST###############
-            glbCount++;
-
-            const result = await itineraryRequestKobus(postData);
-            
-            // ############################TEST####################
-
-            let endT = new Date();
-
-            const resultLen = result.length;
-            let foundList = []; //잔여좌석이 생긴 여정을 담는다.
-            
-            // ############################TEST######################
-            
-            console.log(`한번 kobus요청에 걸리는 시간`);
-            console.log(endT-startT);   //1593
-            
-            if (glbCount === 1) {
-                console.log(`count: ${glbCount} result:\n${JSON.stringify(result)}`);                
-            } else {
-                console.log(`count: ${glbCount}`);
-            }
-            if (glbCount === DEBUG_COUNT) {
-                console.log(`\n\n자 잔여석 생기는 때입니다.\nresult:\n${JSON.stringify(result)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
-            }
-            // ######################################################
-
-            //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
-            for (let i=0; i<listLen; ++i) {
-                const tempDprtTime = list[i].dprtTime;
-                if (glbCount==DEBUG_COUNT) {
-                    console.log(`tempDprtTime ${tempDprtTime}`);
+                if (listLen === 0) {
+                    clearInterval(intrvl);
+                    throw {success: false, message: `구독했던 여정(들)에서 잔여좌석이 생기지 않고 출발했습니다.`};
                 }
-                for (let j=0; j<resultLen; ++j) {
-                    const tempEntry = result[j];
 
-                    if (glbCount == DEBUG_COUNT) {
-                        console.log(`tempEntry of result ${JSON.stringify(tempEntry)}`);
+                // startT와 endT는 한번요청으로 ec2 프리티어 서버에서 얼마나 걸려서 응답을 받는지 확인한다.
+                let startT =  new Date();
+                // #####################TEST###############
+                glbCount++;
+
+                const result = await itineraryRequestKobus(postData);
+                
+                // ############################TEST####################
+
+                let endT = new Date();
+
+                const resultLen = result.length;
+                let foundList = []; //잔여좌석이 생긴 여정을 담는다.
+                
+                // ############################TEST######################
+                
+                console.log(`한번 kobus요청에 걸리는 시간`);
+                console.log(endT-startT);   //1593
+                
+                if (glbCount === 1) {
+                    console.log(`count: ${glbCount} result:\n${JSON.stringify(result)}`);                
+                } else {
+                    console.log(`count: ${glbCount}`);
+                }
+                if (glbCount === DEBUG_COUNT) {
+                    console.log(`\n\n자 잔여석 생기는 때입니다.\nresult:\n${JSON.stringify(result)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
+                }
+                // ######################################################
+
+                //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
+                for (let i=0; i<listLen; ++i) {
+                    const tempDprtTime = list[i].dprtTime;
+                    if (glbCount==DEBUG_COUNT) {
+                        console.log(`tempDprtTime ${tempDprtTime}`);
                     }
-                    //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
-                    if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
-                        const tempRemain = +(tempEntry[REMAIN].slice(0,2));
-                        if (tempRemain > 0) {
-                            foundList.push(tempEntry);
-                            break;
+                    for (let j=0; j<resultLen; ++j) {
+                        const tempEntry = result[j];
+
+                        if (glbCount == DEBUG_COUNT) {
+                            console.log(`tempEntry of result ${JSON.stringify(tempEntry)}`);
+                        }
+                        //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
+                        if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
+                            const tempRemain = +(tempEntry[REMAIN].slice(0,2));
+                            if (tempRemain > 0) {
+                                foundList.push(tempEntry);
+
+                                list = list.filter(e => e.dprtTime != tempDprtTime);
+                                break;
+                            }
                         }
                     }
                 }
-            }
 
-            //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
-            
-            console.log(`foundList ${JSON.stringify(foundList)}`);
-            if (glbCount == DEBUG_COUNT) {
-                glbCount = 0;
-            }
-            if (foundList.length > 0) {
-                // resolve(foundList);
-
-                const foundTime = new Date();
-                // 타입이 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
-                parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date}, type: `notification`});
-                // clearInterval(intrvl);
-                console.log(`cleared interval`);
-                //이후 추가적업 없나?
-                //id등록된 것 일시적으로 없애야 3초마다 알림 가는 것 방지 가능
-            } 
-
-            // 구독하는 여정 일부 지우기: 다음날의 여정을 구독하는 거라면 상관없다 그러나 만약 오늘 여정인데 시간이 지나 출발했다면 list변수에서 지워줘야 한다
-            //여정의 출발일이 오늘인지 확인
-            //만약 오늘이면 지우는 작업 진행
-            //시간 지나 진짜 출발한 여정이면 지움
-            const d = new Date();
-
-            if (!doCount) {
-                currentDate = d.getDate();
-                if (date === currentDate) {
-                    doCount = true;
-                    console.log(`\n\n구독일이 오늘일과 같으므로 doCount true합니다.\n\n`);
-                }    
-            } else {
-                countPeroid++;
-                // countPeroid에 따라 lists에서 시간 지난 list는 삭제한다.
-                // 삭제는 COUNT_PERIOD*REQUEST_PERIOD/1000(s) 마다 한다.
-                if (countPeroid === COUNT_PERIOD) {
-                    countPeroid = 0;
-    
-                    const currentHour = d.getHours();
-                    const currentMinute = d.getMinutes();
-                    
-                    for (let i=0; i<listLen; ++i) {
-                        const [listHour, listMinute] = lists[i].dprtTime.split(`:`).map(e => +e);
-    
-                        if ((listHour < currentHour) && (listHour === currentHour && listMinute <= currentMinute)) {
-                            console.log(`이미 출발한 ${listHour}:${listMinute} 여정은 구독 리스트에서 삭제합니다.`)
-                            list = list.filter((_, idx) => i !== idx);
-                        } 
+                //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
+                
+                console.log(`foundList ${JSON.stringify(foundList)}`);
+                if (glbCount == DEBUG_COUNT) {
+                    glbCount = 0;
+                    //test
+                    if (count === 1) {
+                        list = [];
+                        console.log(`list = []으로 만듬`)
                     }
+                    count++;
+                    
+                }
+                if (foundList.length > 0) {
+                    // resolve(foundList);
+
+                    const foundTime = new Date();
+                    // success프로퍼티가 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
+                    parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date}, type: `notification`});
+                    
+                    //이후 추가적업 없나?
+                    //일단 남아있는 리스트가 없다면 resolve 보내고 있으면 계속 sto
+                    if (list.length === 0) {
+                        clearInterval(intrvl);  //clearInterval을 하더라도 resolve나 reject같이 아래 코드도 모두 실행되고 나가지 thorw처럼 예외를 만들어 즉시 함수를 나가지 않는다.
+
+                        throw {success: true, message: `구독한 모든 여정의 알림을 보냈습니다. 계속 알림을 원하시면 다시 구독해주세요.`};
+                    } 
+                } 
+
+                // 구독하는 여정 일부 지우기: 다음날의 여정을 구독하는 거라면 상관없다 그러나 만약 오늘 여정인데 시간이 지나 출발했다면 list변수에서 지워줘야 한다
+                //여정의 출발일이 오늘인지 확인
+                //만약 오늘이면 지우는 작업 진행
+                //시간 지나 진짜 출발한 여정이면 지움
+               // const d = new Date();
+
+                // if (!doCount) {
+                //     currentDate = d.getDate();
+                //     if (date === currentDate) {
+                //         doCount = true;
+                //         console.log(`\n\n구독일이 오늘일과 같으므로 doCount true합니다.\n\n`);
+                //     }    
+                // } else {
+                //     countPeroid++;
+                //     // countPeroid에 따라 lists에서 시간 지난 list는 삭제한다.
+                //     // 삭제는 COUNT_PERIOD*REQUEST_PERIOD/1000(s) 마다 한다.
+                //     if (countPeroid === COUNT_PERIOD) {
+                //         countPeroid = 0;
+        
+                //         const currentHour = d.getHours();
+                //         const currentMinute = d.getMinutes();
+                        
+                //         for (let i=0; i<listLen; ++i) {
+                //             const [listHour, listMinute] = lists[i].dprtTime.split(`:`).map(e => +e);
+        
+                //             if ((listHour < currentHour) && (listHour === currentHour && listMinute <= currentMinute)) {
+                //                 console.log(`이미 출발한 ${listHour}:${listMinute} 여정은 구독 리스트에서 삭제합니다.`)
+                //                 list = list.filter((_, idx) => i !== idx);
+                //             } 
+                //         }
+                //     }
+                // }
+                
+                
+            } catch(e) {
+                if (e.success) {
+                    resolve(e);
+                } else {
+                    reject(e)
                 }
             }
-            
-            //test
-            count++;
         }, REQUEST_PERIOD);
     });
 }

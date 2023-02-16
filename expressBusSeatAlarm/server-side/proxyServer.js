@@ -12,6 +12,7 @@ const PORT = 3000;
 const WORKERDIR = __dirname + "/request2kobusW.js";
 const DISPLAY = `display`;
 const NOTIFICATION = `notification`;
+const MESSAGE = `message`;
 const MAIL = `hois1998@snu.ac.kr`;
 
 let dummyDb = {};
@@ -36,6 +37,8 @@ app.post('/exprm', (req, res) => {
     worker.on('message', msg => {
         if (msg.success === false) {
             console.error(`kobus서버에서 여정 리스트를 불러오는 과정에서 에러가 발생했습니다.`);
+        } else {
+            console.log(`성공적으로 여정 리스트를 불러왔습니다.`);
         }
 
         res.send(JSON.stringify(msg));
@@ -82,14 +85,20 @@ app.post(`/save-subscription`, async (req, res) => {
             console.log(`워커에서 넘어온 메시지\n${JSON.stringify(msg)}`);
 
             const {success, type, message} = msg;
-            const { foundList, resIdx, time, date} = message;
+            const { foundList, resIdx, time, date, msg} = message;
             const dbSbscrp = dummyDb[String(resIdx)];
             //type을 명시하긴 했지만 라우팅이 달리 돼있어, 여기로 type: 'display'인 경우는 없다.
             console.log(`더미디비에서 가져온 구독정보\n${JSON.stringify(dbSbscrp)}`);
             
             if (success) {
-                const payload = JSON.stringify({success, message: {foundList, time, date}});
-                await webpush.sendNotification(dbSbscrp, payload);
+                //통고를 보내는 부분이 아니라 모든 구독한 여정이 출발하거나 모든 여정에 통고를 보낸 경우 구독을 끝내는 것이다. 서비스워커 등록도 없앤다.
+                if (type === MESSAGE) {
+                    const payload = JSON.stringify({success, message: msg})
+                    await webpush.sendNotification(dbSbscrp, payload);
+                } else {
+                    const payload = JSON.stringify({success, message: {foundList, time, date}});
+                    await webpush.sendNotification(dbSbscrp, payload);
+                }
             } else {
                 const payload = JSON.stringify({success, message});
                 await webpush.sendNotification(dbSbscrp, payload);
@@ -97,11 +106,8 @@ app.post(`/save-subscription`, async (req, res) => {
         } catch(e) {
             console.error(e);
         }
-        
     });
     res.json({ message: `success to save in db`});
-
-
 });
 
 /**

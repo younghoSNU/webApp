@@ -29,8 +29,8 @@ const subscription2server = async payload => {
 
     return response.json();
 };
-console.log(self);
-console.dir(self);
+// console.log(self);
+// console.dir(self);
 self.addEventListener('activate', async () => {
     // This will be called only once when the service worker is activated.
     try {
@@ -38,7 +38,7 @@ self.addEventListener('activate', async () => {
         const applicationServerKey = urlB64ToUint8Array(PUBLIC_KEY);
         const options = { applicationServerKey, userVisibleOnly: true };
 
-        // main.js의 glbSwData에서 얻어온 것이다.
+        // main.js의 glbSwData에서 얻어온 것이d다.
         // {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]}
         const params = JSON.parse(new URL(location).searchParams.get(`config`));
         console.log(params);
@@ -63,6 +63,7 @@ self.addEventListener('activate', async () => {
 // 성공 시 event.data는 다음과 같다
 // {success: true, message: {foundList: [{dprtTime: "14:50", busCmp: "동양고속", busGrade: "고속", remain: "5 석"}, {...}], time: {hours, minutes, seconds}, date: '12'}}
 // 실패 시, {success, message: 실패이유}
+// 메시지 시, {success: true/false, message}
 self.addEventListener('push', event => {
     if (event.data) {
         console.log(`event data ${JSON.stringify(event.data)} ${typeof(event.data)}`);
@@ -71,7 +72,7 @@ self.addEventListener('push', event => {
         const payload = JSON.parse(event.data.text());
 
         console.log(`브라우저가 구독하고 있던 통고를 받은 상황`);
-
+     
         if (payload.success === true) {
             const { foundList, time, date } = payload.message;
             const hours = String(time.hours).padStart(2, `0`);
@@ -95,7 +96,38 @@ self.addEventListener('push', event => {
 
             showLocalNotification(title, body, self.registration);
         } else {
-            showLocalNotification('구독을 종료합니다.', payload.message, self.registration);
+            showLocalNotification('알림 종료', payload.message, self.registration);
+
+            //구독을 해지하는 작업을 한다.
+            self.registration.pushManager.getSubscription()
+                .then(pushSubscription => {
+                    pushSubscription.unsubscribe()
+                        .then(success => {
+                            if (success) {
+                                console.log(`성공적으로 구독해제`);
+                            } else {
+                                throw new Error(`구독해지 중 문제가 생겼습니다.`);
+                            }
+                        })
+                })
+                .catch(e => {
+                    console.log(e);
+                    alert(e);
+                })
+
+            //서비스워커 등록을 해지한다.
+            self.registration.unregister()
+                .then(boolean => {
+                    if (boolean) {
+                        console.log(`성공적으로 서비스워커 등록해지`);
+                    } else {
+                        throw new Error(`서비스워커 등록해지 중 문제`)
+                    }
+                })
+                .catch( e => {
+                    console.log(e);
+                    alert(e);
+                });
         }
     } else {
         console.log('Push event but no data');
