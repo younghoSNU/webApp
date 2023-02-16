@@ -224,7 +224,7 @@ function requestWithSto(postData, list, date, resIdx) {
             if (glbCount === 1) {
                 console.log(`count: ${glbCount} result:\n${JSON.stringify(result)}`);                
             } else {
-                console.log(`count: ${glbCount}`);
+                console.log(`count: ${glbCount}\n구독리 ${JSON.stringify(list)}`);
             }
             if (glbCount === DEBUG_COUNT) {
                 console.log(`\n\n자 잔여석 생기는 때입니다.\nresult:\n${JSON.stringify(result)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
@@ -250,6 +250,7 @@ function requestWithSto(postData, list, date, resIdx) {
                             foundList.push(tempEntry);
 
                             list = list.filter(e => e.dprtTime != tempDprtTime);
+                            console.log(`필터된 리스트입니다. ${JSON.stringify(list)}`);
                             break;
                         }
                     }
