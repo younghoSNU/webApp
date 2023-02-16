@@ -48,6 +48,29 @@ self.addEventListener('activate', async () => {
         // vapid와 userVisibleOnly 옵션을 적용한 subscription을 만든다.
         const subscription = await self.registration.pushManager.subscribe(options);
 
+
+        ////test////
+        self.registration.pushManager.getSubscription()
+                .then(pushSubscription => {
+                    console.log('pushSubscription')
+                    console.log(pushSubscription)
+                    console.dir(pushSubscription)
+                    pushSubscription.unsubscribe()
+                        .then(success => {
+                            console.log(success);
+                            if (success) {
+                                console.log(`성공적으로 구독해제`);
+                            } else {
+                                throw new Error(`구독해지 중 문제가 생겼습니다.`);
+                            }
+                        })
+                })
+                .catch(e => {
+                    console.log(e);
+                    alert(e);
+                })
+
+                
         const payload = {
             subscription: JSON.stringify(subscription),
             itnrData: params,
