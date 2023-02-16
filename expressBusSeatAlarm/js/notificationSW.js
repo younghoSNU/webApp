@@ -101,7 +101,22 @@ self.addEventListener('push', event => {
 
             showLocalNotification(title, body, self.registration);
         } else {
-            showLocalNotification('알림 종료', payload.message, self.registration);
+            showLocalNotification('알림 종료', payload.message, self.registration)
+                .then(_ => {
+                    //서비스워커 등록을 해지한다.
+                    self.registration.unregister()
+                    .then(boolean => {
+                        if (boolean) {
+                            console.log(`성공적으로 서비스워커 등록해지`);
+                        } else {
+                            throw new Error(`서비스워커 등록해지 중 문제`)
+                        }
+                    })
+                    .catch( e => {
+                        console.log(e);
+                        alert(e);
+                    });
+                }) 
 
             
             // //구독을 해지하는 작업을 한다.
@@ -125,19 +140,7 @@ self.addEventListener('push', event => {
             //         alert(e);
             //     })
 
-            //서비스워커 등록을 해지한다.
-            self.registration.unregister()
-                .then(boolean => {
-                    if (boolean) {
-                        console.log(`성공적으로 서비스워커 등록해지`);
-                    } else {
-                        throw new Error(`서비스워커 등록해지 중 문제`)
-                    }
-                })
-                .catch( e => {
-                    console.log(e);
-                    alert(e);
-                });
+            
         }
     } else {
         console.log('Push event but no data');
@@ -146,11 +149,12 @@ self.addEventListener('push', event => {
 });
 
 //알림을 보낼 때, 잔여좌석이 언제 생겼는지 기준 시각과 함게 화면에 띄운다.
-const showLocalNotification = (title, body, swRegistration) => {
+const showLocalNotification = async (title, body, swRegistration) => {
     const options = {
         body,
         // here you can add more properties like icon, image, vibrate, etc.
     }
-    swRegistration.showNotification(title, options)
+    await swRegistration.showNotification(title, options);
+    return true;
 }
 
