@@ -84,7 +84,7 @@ async function parentPortMsgCallback(msg) {
             console.log(`예상지 못한 에러가 발생했습니다. ${JSON.stringify(errorContainer)}`);
         } else {
             //predictedError: true면 type에 따라 케이스 분류
-            if (errorContainer.predictedError === errorType.NOTIFICATION) {
+            if (errorContainer.type === errorType.NOTIFICATION) {
                 const {type, content} = errorContainer;
                 parentPort.postMessage({success: false, type, message: content});
             } else {

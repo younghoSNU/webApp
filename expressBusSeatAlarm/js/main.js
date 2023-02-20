@@ -190,7 +190,7 @@ async function onSubmitChck (e) {
             alert(`등록할 알림이 선택되지 않았습니다.`);
         } else {
             //등록한 내용이 맞는지 confirm에서 확인 
-            let selectedItnrs = `"${chckSbmInput.fullDate} ${chckSbmInput.dprtNm}->${chckSbmInput.arvlNm}" 버스스케줄 중 다음을 구독합니다.\n`;
+            let selectedItnrs = `"${chckSbmInput.fullDate} ${chckSbmInput.dprtNm}->${chckSbmInput.arvlNm}" 스케줄 중 다음을 구독합니다.\n`;
             
             for (const idx of checkedList) {
                 const itnrEntry = glbItnrList[idx];
