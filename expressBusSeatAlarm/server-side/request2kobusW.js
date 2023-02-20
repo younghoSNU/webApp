@@ -302,47 +302,49 @@ function requestWithSi(postData, list, date, resIdx) {
                 }
             }
 
-            //list 변수를 업데이트 해준다. foundList에서 시간이 매칭되면 삭제한다. 
-            const foundDprtTime = foundList.map(entry => entry[DEPARTURE_TIME]);
-            list = list.filter(entry => !foundDprtTime.includes(entry[DEPARTURE_TIME]));
-            console.log(`updated list`);
-            console.log(list);
-
             // ####################################TEST#####################
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
             console.log(`foundList ${JSON.stringify(foundList)}`);
 
-            // if (glbCount == DEBUG_SBSCRPCNT) {
-            //     glbCount = 0;
-            //     //test
-            //     if (count === 1) {
-            //         list = partialZero;
-            //         console.log(`list = partialZero으로 만듬`)
-            //     } else if (count === 2) {
-            //         list = noZero;
-            //         console.log(`list = noZero로`);
-            //     }
-            //     count++;
+            if (glbCount == DEBUG_SBSCRPCNT) {
+                glbCount = 0;
+                //test
+                // if (count === 1) {
+                //     list = partialZero;
+                //     console.log(`list = partialZero으로 만듬`)
+                // } else if (count === 2) {
+                //     list = noZero;
+                //     console.log(`list = noZero로`);
+                // }
+                // count++;
                 
-            // }
+            }
 
             // ############################################################
-            
-            // if (foundList.length > 0) {
-            //     // resolve(foundList);
+            //foundTime으로 하지 말고 어차피 시간을 가져와서 시간 지난 여정은 처리할거니까 이 스코프에서 받는 편이 낫다고 본다.
 
-            //     const foundTime = new Date();
-            //     // success프로퍼티가 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
-            //     parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date}, type: `notification`});
+            if (foundList.length > 0) {
+                // resolve(foundList);
+
+                const foundTime = new Date();
+                // success프로퍼티가 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
+                parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date}, type: contentType.NOTIFICATION});
                 
-            //     //이후 추가적업 없나?
-            //     //일단 남아있는 리스트가 없다면 resolve 보내고 있으면 계속 sto
-            //     if (list.length === 0) {
-            //         console.log(`list.length === 0을 지나게 된다.`)
-            //         resolve({success: true, message: `구독한 모든 여정의 알림을 보냈습니다. 계속 알림을 원하시면 다시 구독해주세요.`});
-            //         return clearInterval(intrvl);  //clearInterval을 하더라도 resolve나 reject같이 아래 코드도 모두 실행되고 나가지 thorw처럼 예외를 만들어 즉시 함수를 나가지 않는다. 그래서 즉시 빠져나가려면 return을 앞에 추가했다.
-            //     } 
-            // } 
+                //이후 추가적업 없나?
+                //일단 남아있는 리스트가 없다면 resolve 보내고 있으면 계속 sto
+
+                  //list 변수를 업데이트 해준다. foundList에서 시간이 매칭되면 삭제한다. 
+                const foundDprtTime = foundList.map(entry => entry[DEPARTURE_TIME]);
+                list = list.filter(entry => !foundDprtTime.includes(entry[DEPARTURE_TIME]));
+                console.log(`updated list`);
+                console.log(list);
+                
+                if (list.length === 0) {
+                    console.log(`list.length === 0을 지나게 된다.`)
+                    resolve({success: true, message: `구독한 모든 여정의 알림을 보냈습니다. 계속 알림을 원하시면 다시 구독해주세요.`, type: contentType.NOTIFICATION});
+                    return clearInterval(intrvl);  //clearInterval을 하더라도 resolve나 reject같이 아래 코드도 모두 실행되고 나가지 thorw처럼 예외를 만들어 즉시 함수를 나가지 않는다. 그래서 즉시 빠져나가려면 return을 앞에 추가했다.
+                } 
+            } 
 
             // 구독하는 여정 일부 지우기: 다음날의 여정을 구독하는 거라면 상관없다 그러나 만약 오늘 여정인데 시간이 지나 출발했다면 list변수에서 지워줘야 한다
             //여정의 출발일이 오늘인지 확인

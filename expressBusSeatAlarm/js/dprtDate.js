@@ -1,8 +1,9 @@
 const dateSelect = document.querySelector('#date-select');
 
 const PLUS_A_DAY = 24*60*60*1000;
-let dayMapping = ['월', '화', '수', '목', '금', 
-'토', '일'];
+//요일(day)이 잘못 출력됐는데, 0이 월요일이 아닌 일요일이었다.
+let dayMapping = ['일', '월', '화', '수', '목', '금', 
+'토'];
 
 let date0 = new Date();
 const now = date0.getTime();
