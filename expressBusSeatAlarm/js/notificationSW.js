@@ -66,12 +66,6 @@ self.addEventListener('activate', async () => {
     }
 });
 
-// 알림이 클릭되었을 때 서비스 워커 등록 해지
-self.addEventListener('close', function() {
-    self.registration.unregister().then(function() {
-        console.log('Service Worker unregistered.');
-    });
-});
 
 // 성공 시 event.data는 다음과 같다
 // {success: true, message: {foundList: [{dprtTime: "14:50", busCmp: "동양고속", busGrade: "고속", remain: "5 석"}, {...}], time: {hours, minutes, seconds}, date: '12'}}
@@ -117,7 +111,11 @@ self.addEventListener('push', event => {
 
            
 
-            event.waitUntil(self.registration.showNotification(`pushNotification`, options));
+            event.waitUntil(self.registration.showNotification(`pushNotification`, options).then(_ => {
+                setTimeout(self.registration.unregister().then(_ => {
+                    alert(`모든 구독을 해지했습니다. 알림을 원할 경우, 다시 구독해 주세요.`)
+                }) ,1000*60);
+            }));
 
           
             // showLocalNotification('알림 종료', payload.message, self.registration)
