@@ -4,6 +4,7 @@ const { JSDOM } = require('jsdom');
 //#########################TEST##########################
 const { noZero, zero, partialZero } = require(`./dbgInput`);
 let glbCount = 0;
+let glbCount2 = 0;
 const DEBUG_SBSCRPCNT = 3;  //이 횟수에 따라 itinerayRequest2Kobus에서 프리세팅된 데이터가 리솔브된다.
 
 const contentType = {
@@ -155,8 +156,14 @@ function itineraryRequest2Kobus(postData) {
                     // 실제 서버의 데이터가 아니라 DEBUG_SBSCRPCNT에 따라 프리세팅된 noZero, zero 등을 리솔브한다.
                     let result = {error: false ,content: {contentMessage: null}};
                     if (glbCount === DEBUG_SBSCRPCNT) {
-                        result.content.contentMessage = noZero;
+                        if (glbCount2 === 1) {
+                            result.content.contentMessage = noZero;
+                            resolve(result);
+                            return ;
+                        }
+                        result.content.contentMessage = partialZero;
                         resolve(result);
+                        glbCount2++;
                         return;
                     } else {
                         result.content.contentMessage = zero;
@@ -230,11 +237,19 @@ function requestWithSi(postData, list, date, resIdx) {
             // #####################TEST###############
             glbCount++;
             // #############################################################
+            // 정상적으로 전달되면 {error: false, content: {contentMessage: [...]}}
             const result = await itineraryRequest2Kobus(postData);
-            
             let endT = new Date();
 
-            const resultLen = result.length;
+            const {error, predictedError, content} = result;
+
+            if (error === true) {
+                reject(result);
+                return clearInterval(intrvl);
+            }
+            
+            const data = content.contentMessage; 
+            const dataLen = data.length;
             let foundList = []; //잔여좌석이 생긴 여정을 담는다.
             
             // ############################TEST#############################
@@ -243,13 +258,13 @@ function requestWithSi(postData, list, date, resIdx) {
             console.log(endT-startT);   //1593
             
             if (glbCount === 1) {
-                console.log(`count: ${glbCount} result:\n${JSON.stringify(result)}\n구독리스트: ${JSON.stringify(list)}`);                
+                console.log(`count: ${glbCount} data:\n${JSON.stringify(data)}\n구독리스트: ${JSON.stringify(list)}`);                
             } else {
                 console.log(`count: ${glbCount}\n 구독리 ${JSON.stringify(list)}`);
             }
 
             if (glbCount === DEBUG_SBSCRPCNT) {
-                console.log(`\n\n자 잔여석 생기는 때입니다.\nresult:\n${JSON.stringify(result)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
+                console.log(`\n\n자 잔여석 생기는 때입니다.\ndata:\n${JSON.stringify(data)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
             }
             // ######################################################
 
@@ -263,12 +278,12 @@ function requestWithSi(postData, list, date, resIdx) {
                     console.log(`tempDprtTime ${tempDprtTime}`);
                 }
                 // #########################################################
-                for (let j=0; j<resultLen; ++j) {
-                    const tempEntry = result[j];
+                for (let j=0; j<dataLen; ++j) {
+                    const tempEntry = data[j];
 
                     // #########################################TEST########
                     if (glbCount == DEBUG_SBSCRPCNT) {
-                        console.log(`tempEntry of result ${JSON.stringify(tempEntry)}`);
+                        console.log(`tempEntry of data ${JSON.stringify(tempEntry)}`);
                     }
                     // #####################################################
 
@@ -293,16 +308,19 @@ function requestWithSi(postData, list, date, resIdx) {
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
             console.log(`foundList ${JSON.stringify(foundList)}`);
 
-            if (glbCount == DEBUG_SBSCRPCNT) {
-                glbCount = 0;
-                //test
-                if (count === 1) {
-                    list = [];
-                    console.log(`list = []으로 만듬`)
-                }
-                count++;
+            // if (glbCount == DEBUG_SBSCRPCNT) {
+            //     glbCount = 0;
+            //     //test
+            //     if (count === 1) {
+            //         list = partialZero;
+            //         console.log(`list = partialZero으로 만듬`)
+            //     } else if (count === 2) {
+            //         list = noZero;
+            //         console.log(`list = noZero로`);
+            //     }
+            //     count++;
                 
-            }
+            // }
 
             // ############################################################
             
