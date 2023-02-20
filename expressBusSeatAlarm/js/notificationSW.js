@@ -113,8 +113,12 @@ self.addEventListener('push', event => {
 
             event.waitUntil(self.registration.showNotification(`pushNotification`, options).then(_ => {
                 setTimeout(self.registration.unregister().then(_ => {
-                    alert(`모든 구독을 해지했습니다. 알림을 원할 경우, 다시 구독해 주세요.`)
-                }) ,1000*60);
+                    self.clients.matchAll().then(clients => {
+                        clients.forEach(client => {
+                            client.postMessage(`다시 알림을 받으시려면, 새롭게 등록해주세요!`);
+                        })
+                    })
+                }) ,1000*10);
             }));
 
           

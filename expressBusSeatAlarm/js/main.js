@@ -248,11 +248,13 @@ async function registerServiceWorker(swData) {
         throw new Error(`no push manager in browser`);
     }
 
+    navigator.serviceWorker.addEventListener(`message`, event => {
+        alert(event.data);
+    });
+
     const swRegistration = await navigator.serviceWorker.register(NOTIFICATION_SW_FILE+`?config=`+JSON.stringify(swData));
     console.log(swRegistration)
     console.log('registered service worker');
-
-
 }
 
 
