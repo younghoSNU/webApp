@@ -72,7 +72,8 @@ export function itineraryRequest(dprtNm, arvlNm, year, month, date, day) {
                 console.log(res);
                 resolve(res.message.contentMessage);
               } else {
-                console.log(`reject on exprmKobusRequest 처리중`);
+                // console.log(`reject on exprmKobusRequest 처리중`);
+                console.dir(xhr)
                 reject(res.message.contentMessage);
               }
 
