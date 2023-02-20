@@ -203,7 +203,8 @@ async function onSubmitChck (e) {
             
             if (confirm(selectedItnrs)) { //유저에게 원하는 여정(들)이 잘 선택됐는지 확인시켜준다. 
                 //체크버튼을 가린다
-                e.target.classList.add(HIDDEN_CLS_NM);
+                //근데 체크버튼을 가리지 않고 sw있는지 확인
+                // e.target.classList.add(HIDDEN_CLS_NM);
                 await reqNotificationPermission();
                 await registerServiceWorker(glbSwData);
                
@@ -256,9 +257,14 @@ async function registerServiceWorker(swData) {
     const pastSW = await navigator.serviceWorker.getRegistration(NOTIFICATION_SW_FILE);
     console.log(pastSW);
 
+    if (pastSW !== undefined) {
+        console.log(`이전 서비스워커 삭제 필요`);
+    }
+
     const swRegistration = await navigator.serviceWorker.register(NOTIFICATION_SW_FILE+`?config=`+JSON.stringify(swData));
     console.log(swRegistration)
-    console.log('registered service worker');
+    console.log('registered service worker');    
+
 }
 
 
