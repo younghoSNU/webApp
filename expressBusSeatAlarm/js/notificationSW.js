@@ -69,14 +69,15 @@ self.addEventListener('activate', async () => {
 // {success: true, message: {foundList: [{dprtTime: "14:50", busCmp: "동양고속", busGrade: "고속", remain: "5 석"}, {...}], time: {hours, minutes, seconds}, date: '12'}}
 // 실패 시, {success, message: 실패이유}
 // 메시지 시, {success: true/false, message}
-self.addEventListener('push', event => {
+self.addEventListener('push', async event => {
+    console.log(`브라우저가 구독하고 있던 통고를 받은 상황`);
+
     if (event.data) {
         console.log(`event data ${event.data.text()}} ${typeof(event.data)}`);
         console.dir(event);
 
         const payload = event.data.json();
 
-        console.log(`브라우저가 구독하고 있던 통고를 받은 상황`);
      
         if (payload.success === true && payload.type === NOTIFICATION) {
             const { foundList, time, date } = payload.message;
@@ -106,11 +107,12 @@ self.addEventListener('push', event => {
                 body: payload.message,
             };
 
-            event.waitUntil(self.registration.showNotification(`pushNotification`, options))
+            let wait = await event.waitUntil(self.registration.showNotification(`pushNotification`, options))
+            console.log(`wait ${wait}`);
 
-            self.registration.unregister().then(_ => {
-                console.log(`정상적으로 등록해지완료`)
-            })
+            // self.registration.unregister().then(_ => {
+            //     console.log(`정상적으로 등록해지완료`)
+            // })
             // showLocalNotification('알림 종료', payload.message, self.registration)
             //     .then(_ => {
             //         //서비스워커 등록을 해지한다.
