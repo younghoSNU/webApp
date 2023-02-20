@@ -338,10 +338,10 @@ function requestWithSi(postData, list, date, resIdx) {
                 list = list.filter(entry => !foundDprtTime.includes(entry[DEPARTURE_TIME]));
                 console.log(`updated list`);
                 console.log(list);
-                
+
                 if (list.length === 0) {
                     console.log(`list.length === 0을 지나게 된다.`)
-                    resolve({success: true, message: `구독한 모든 여정의 알림을 보냈습니다. 계속 알림을 원하시면 다시 구독해주세요.`, type: contentType.NOTIFICATION});
+                    parentPort.postMessage({success: true, message: `구독한 모든 여정의 알림을 보냈습니다. 계속 알림을 원하시면 다시 구독해주세요.`, type: contentType.NOTIFICATION});
                     return clearInterval(intrvl);  //clearInterval을 하더라도 resolve나 reject같이 아래 코드도 모두 실행되고 나가지 thorw처럼 예외를 만들어 즉시 함수를 나가지 않는다. 그래서 즉시 빠져나가려면 return을 앞에 추가했다.
                 } 
             } 
