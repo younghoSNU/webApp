@@ -112,16 +112,18 @@ self.addEventListener('push', event => {
            
 
             event.waitUntil(self.registration.showNotification(`pushNotification`, options).then(_ => {
-                setTimeout(self.registration.unregister().then(_ => {
-                    console.log(self)
-                    console.log(`시간경과`);
-                    self.clients.matchAll().then(clients => {
-                        clients.forEach(client => {
-                            console.log(`client id ${client.id}`);
-                            client.postMessage(`다시 알림을 받으시려면, 새롭게 등록해주세요!`);
+                setTimeout(() => {
+                    self.registration.unregister().then(_ => {
+                        console.log(self)
+                        console.log(`시간경과`);
+                        self.clients.matchAll().then(clients => {
+                            clients.forEach(client => {
+                                console.log(`client id ${client.id}`);
+                                client.postMessage(`다시 알림을 받으시려면, 새롭게 등록해주세요!`);
+                            })
                         })
                     })
-                }) ,1000*10);
+                } ,1000*10);
             }));
 
           
