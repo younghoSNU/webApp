@@ -255,16 +255,18 @@ async function registerServiceWorker(swData) {
     });
 
     const pastSW = await navigator.serviceWorker.getRegistration(NOTIFICATION_SW_FILE);
+    console.log(`past service worker`);
     console.log(pastSW);
 
     if (pastSW !== undefined) {
-        console.log(`이전 서비스워커 삭제 필요`);
+        if (confirm(`이전에 등록한 알림이 존재합니다.\n만약 새알림을 등록하면 이전 알림은 삭제됩니다.`)) {
+            await pastSW.unregister();
+        }
     }
 
     const swRegistration = await navigator.serviceWorker.register(NOTIFICATION_SW_FILE+`?config=`+JSON.stringify(swData));
     console.log(swRegistration)
-    console.log('registered service worker');    
-
+    console.log('registered service worker if it is new service worker');    
 }
 
 
