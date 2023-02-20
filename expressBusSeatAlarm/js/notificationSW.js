@@ -48,6 +48,8 @@ self.addEventListener('activate', async () => {
         const applicationServerKey = urlB64ToUint8Array(PUBLIC_KEY);
         const options = { applicationServerKey, userVisibleOnly: true };
 
+        let temp = await self.clients.matchAll();
+        console.log(temp);
         // main.js의 glbSwData에서 얻어온 것이d다.
         // {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]}
         const params = JSON.parse(new URL(location).searchParams.get(`config`));
@@ -127,8 +129,8 @@ self.addEventListener('push', async event => {
             // }));
             event.waitUntil(self.registration.showNotification(`모든 스케줄 출발`, options));
 
-            let temp = await self.clients.matchAll();
-            console.log(temp);
+            // let temp = await self.clients.matchAll();
+            // console.log(temp);
             // .then(clients => {
             //     clients.forEach(client => {
             //         console.log(client);
