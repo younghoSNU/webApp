@@ -248,10 +248,14 @@ async function registerServiceWorker(swData) {
         throw new Error(`no push manager in browser`);
     }
 
+    // 서비스워커로부터 postMessage로 메시지를 받으면 동작하는 이벤트이다.
     navigator.serviceWorker.addEventListener(`message`, event => {
         alert(event.data);
     });
 
+    pastSW = await navigator.serviceWorker.getRegistration(NOTIFICATION_SW_FILE);
+    console.log(pastSW);
+    
     const swRegistration = await navigator.serviceWorker.register(NOTIFICATION_SW_FILE+`?config=`+JSON.stringify(swData));
     console.log(swRegistration)
     console.log('registered service worker');

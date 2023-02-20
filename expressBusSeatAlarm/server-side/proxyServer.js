@@ -21,7 +21,7 @@ let cnt = 0;
 
 // ######################################TEST##############################
 // 에러 타입을 임시로 사용 중 
-const errorType = {
+const contentType = {
     NOTIFICATION: `notification`,
     ALERT: `alert`,
     SILENCE: `silence`,
@@ -117,8 +117,9 @@ app.post(`/save-subscription`, async (req, res) => {
                     await webpush.sendNotification(dbSbscrp, payload);
                 }
             } else {
-                if (errorType.NOTIFICATION) {
-                    const payload = JSON.stringify({success, message: contentMessage});
+                if (type === contentType.NOTIFICATION) {
+                    console.log(`contentType이 notification입니다.`)
+                    const payload = JSON.stringify({success, type, message: contentMessage});
                     await webpush.sendNotification(dbSbscrp, payload);
                 }
                 // if (type === MESSAGE) {

@@ -13,6 +13,15 @@ const urlB64ToUint8Array = base64String => {
     return outputArray
 };
 
+// ###################################################TEST##################
+// 컨텐츠타입을 의미
+const contentType = {
+    NOTIFICATION: `notification`,
+    ALERT: `alert`,
+    SILENCE: `silence`,
+};
+// #########################################################################
+
 /**
  * save subscription to the backend
  * @param {subscription} subscription 
@@ -103,19 +112,20 @@ self.addEventListener('push', event => {
             }
 
             showLocalNotification(title, body, self.registration);
-        } else {
-
+        } else if (payload.success === false && payload.type === contentType.NOTIFICATION){
+            console.log(`payload success false and type NOTIFICATION`);
             const options = {
                 body: payload.message,
             };
 
-            event.waitUntil(self.registration.showNotification(`pushNotification`, options).then(_ => {
-                setTimeout(() => {
-                    self.registration.unregister();
-                    console.log(`서비스워커 등록해지 성공`)
-                } ,1000*10);
-            }));
-
+            // 원래는 워커 등록을 해지하려고 했다. 워커를 등록할 때, 브라우저는 기존 워커와 비교하고 만약 같은 파일을 서비스워커로 등록하게 되면 브라우저는 이 등록을 무시한다. 그렇지만 문제는 등록해지와 동시에 보냈던 푸시통고도 같이 사라진다. 그래서 생각한 전략은 다시 등록을 main.js에서 진행할 때, 만약 기존 워커가 있으면 기존 서비스워커 등록을 해지하고 다시 등록한다. 
+            // event.waitUntil(self.registration.showNotification(`pushNotification`, options).then(_ => {
+            //     setTimeout(() => {
+            //         self.registration.unregister();
+            //         console.log(`서비스워커 등록해지 성공`)
+            //     } ,1000*10);
+            // }));
+            event.waitUntil(self.registration.showNotification(`title`, options));
           
             // showLocalNotification('알림 종료', payload.message, self.registration)
             //     .then(_ => {
@@ -160,7 +170,6 @@ self.addEventListener('push', event => {
         }
     } else {
         console.log('Push event but no data');
-        alert(`push event but without data`);
     }
 });
 

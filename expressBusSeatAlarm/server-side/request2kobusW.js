@@ -6,7 +6,7 @@ const { noZero, zero, partialZero } = require(`./dbgInput`);
 let glbCount = 0;
 const DEBUG_SBSCRPCNT = 3;  //이 횟수에 따라 itinerayRequest2Kobus에서 프리세팅된 데이터가 리솔브된다.
 
-const errorType = {
+const contentType = {
     NOTIFICATION: `notification`,
     ALERT: `alert`,
     SILENCE: `silence`,
@@ -84,7 +84,7 @@ async function parentPortMsgCallback(msg) {
             console.log(`예상지 못한 에러가 발생했습니다. ${JSON.stringify(errorContainer)}`);
         } else {
             //predictedError: true면 type에 따라 케이스 분류
-            if (errorContainer.type === errorType.NOTIFICATION) {
+            if (errorContainer.type === contentType.NOTIFICATION) {
                 const {type, content} = errorContainer;
                 parentPort.postMessage({success: false, type, message: content});
             } else {
@@ -147,7 +147,7 @@ function itineraryRequest2Kobus(postData) {
                 });
 
                 if (itineraryResult.length === 0) {
-                    reject({error: true, predictedError: true, type: errorType.ALERT, content: {contentMessage: `NO CONTENT: 해당 입력 조건에 대한 스케줄이 존재하지 않습니다.`}});
+                    reject({error: true, predictedError: true, type: contentType.ALERT, content: {contentMessage: `NO CONTENT: 해당 입력 조건에 대한 스케줄이 존재하지 않습니다.`}});
                     return;
                 } else {
                     // ##################################TEST#######
@@ -169,7 +169,7 @@ function itineraryRequest2Kobus(postData) {
         });
 
         req.on(`error`, (e) => {
-            reject({error: true, predictedError: false, type: errorType.ALERT, content: {contentMessage: `SERVER ERROR`+e}});
+            reject({error: true, predictedError: false, type: contentType.ALERT, content: {contentMessage: `SERVER ERROR`+e}});
         });
 
         req.write(postData);
@@ -222,7 +222,7 @@ function requestWithSi(postData, list, date, resIdx) {
             // #######################################TEST###########
             // 무조건 구독했던 여정에서 바로 reject하도록
             if (true) {
-                reject({error: true, predictedError: true, type: errorType.NOTIFICATION, content: {contentMessage: `NO MORE SUBSCRIPTION 구독했던 여정(들)에서 잔여석이 생기지 않고 출발했습니다.`, resIdx}});
+                reject({error: true, predictedError: true, type: contentType.NOTIFICATION, content: {contentMessage: `NO MORE SUBSCRIPTION 구독했던 여정(들)에서 잔여석이 생기지 않고 출발했습니다.`, resIdx}});
                 return clearInterval(intrvl);
             }
 
