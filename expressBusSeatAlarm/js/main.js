@@ -253,9 +253,9 @@ async function registerServiceWorker(swData) {
         alert(event.data);
     });
 
-    pastSW = await navigator.serviceWorker.getRegistration(NOTIFICATION_SW_FILE);
+    const pastSW = await navigator.serviceWorker.getRegistration(NOTIFICATION_SW_FILE);
     console.log(pastSW);
-    
+
     const swRegistration = await navigator.serviceWorker.register(NOTIFICATION_SW_FILE+`?config=`+JSON.stringify(swData));
     console.log(swRegistration)
     console.log('registered service worker');
