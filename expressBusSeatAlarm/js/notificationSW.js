@@ -125,7 +125,14 @@ self.addEventListener('push', event => {
             //         console.log(`서비스워커 등록해지 성공`)
             //     } ,1000*10);
             // }));
-            event.waitUntil(self.registration.showNotification(`title`, options));
+            event.waitUntil(self.registration.showNotification(`모든 스케줄 출발`, options));
+
+            self.clients.matchAll().then(clients => {
+                clients.forEach(client => {
+                    console.log(client);
+                    client.postMessage(`모든 스케줄 출발에 따른 알림등록버튼 생성`);
+                })
+            })  
           
             // showLocalNotification('알림 종료', payload.message, self.registration)
             //     .then(_ => {

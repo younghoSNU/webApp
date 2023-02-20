@@ -222,7 +222,7 @@ function requestWithSi(postData, list, date, resIdx) {
             // #######################################TEST###########
             // 무조건 구독했던 여정에서 바로 reject하도록
             if (true) {
-                reject({error: true, predictedError: true, type: contentType.NOTIFICATION, content: {contentMessage: `NO MORE SUBSCRIPTION 구독했던 여정(들)에서 잔여석이 생기지 않고 출발했습니다.`, resIdx}});
+                reject({error: true, predictedError: true, type: contentType.NOTIFICATION, content: {contentMessage: `구독했던 여정(들)에서 잔여석이 생기지 않고 출발했습니다.`, resIdx}});
                 return clearInterval(intrvl);
             }
 
