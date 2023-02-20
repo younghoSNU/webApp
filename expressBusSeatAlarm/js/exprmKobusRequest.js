@@ -70,9 +70,9 @@ export function itineraryRequest(dprtNm, arvlNm, year, month, date, day) {
               
               if (res.success) {
                 console.log(res);
-                resolve(res.message);
+                resolve(res.message.contentMessage);
               } else {
-                reject(res.message);
+                reject(res.message.contentMessage);
               }
 
 
