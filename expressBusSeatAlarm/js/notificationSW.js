@@ -71,10 +71,10 @@ self.addEventListener('activate', async () => {
 // 메시지 시, {success: true/false, message}
 self.addEventListener('push', event => {
     if (event.data) {
-        console.log(`event data ${JSON.stringify(event.data)} ${typeof(event.data)}`);
+        console.log(`event data ${event.data.text()}} ${typeof(event.data)}`);
         console.dir(event);
 
-        const payload = JSON.parse(event.data.text());
+        const payload = event.data.json();
 
         console.log(`브라우저가 구독하고 있던 통고를 받은 상황`);
      
@@ -101,22 +101,32 @@ self.addEventListener('push', event => {
 
             showLocalNotification(title, body, self.registration);
         } else {
-            showLocalNotification('알림 종료', payload.message, self.registration)
-                .then(_ => {
-                    //서비스워커 등록을 해지한다.
-                    self.registration.unregister()
-                    .then(boolean => {
-                        if (boolean) {
-                            console.log(`성공적으로 서비스워커 등록해지`);
-                        } else {
-                            throw new Error(`서비스워커 등록해지 중 문제`)
-                        }
-                    })
-                    .catch( e => {
-                        console.log(e);
-                        alert(e);
-                    });
-                }) 
+
+            const options = {
+                body: payload.message,
+            };
+
+            event.waitUntil(self.registration.showNotification(`pushNotification`, options))
+
+            self.registration.unregister().then(_ => {
+                console.log(`정상적으로 등록해지완료`)
+            })
+            // showLocalNotification('알림 종료', payload.message, self.registration)
+            //     .then(_ => {
+            //         //서비스워커 등록을 해지한다.
+            //         self.registration.unregister()
+            //         .then(boolean => {
+            //             if (boolean) {
+            //                 console.log(`성공적으로 서비스워커 등록해지`);
+            //             } else {
+            //                 throw new Error(`서비스워커 등록해지 중 문제`)
+            //             }
+            //         })
+            //         .catch( e => {
+            //             console.log(e);
+            //             alert(e);
+            //         });
+            //     }) 
 
             
             // //구독을 해지하는 작업을 한다.

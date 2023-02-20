@@ -18,6 +18,15 @@ const MAIL = `hois1998@snu.ac.kr`;
 let dummyDb = {};
 let cnt = 0;
 
+
+// ######################################TEST##############################
+// 에러 타입을 임시로 사용 중 
+const errorType = {
+    NOTIFICATION: `notification`,
+    ALERT: `alert`,
+    SILENCE: `silence`,
+};
+// #########################################################################
 app.use(cors());
 app.use(express.text({ type: `text/plain` }));
 app.use(express.json());
@@ -83,9 +92,17 @@ app.post(`/save-subscription`, async (req, res) => {
         try {  
             console.log(`워커에서 메인쓰레드로 잔여석있는 여정 보냈고 메인이 받았다.`)
             console.log(`워커에서 넘어온 메시지\n${JSON.stringify(msg)}`);
+    
+            //이렇게 먼저 케이스 분류하고 케이스에 따라 변수 선언을 하자.
+            // if (msg.success) {
+
+            // } else {
+
+            // }
 
             const {success, type, message} = msg;
-            const { foundList, resIdx, time, date, msg0} = message;
+            const { foundList, resIdx, time, date, msg0, contentMessage} = message;
+            //db에서 유저 구독 데이터를 가져온다.
             const dbSbscrp = dummyDb[String(resIdx)];
             //type을 명시하긴 했지만 라우팅이 달리 돼있어, 여기로 type: 'display'인 경우는 없다.
             console.log(`더미디비에서 가져온 구독정보\n${JSON.stringify(dbSbscrp)}`);
@@ -100,14 +117,17 @@ app.post(`/save-subscription`, async (req, res) => {
                     await webpush.sendNotification(dbSbscrp, payload);
                 }
             } else {
-
-                if (type === MESSAGE) {
-                    const payload = JSON.stringify({success, message: msg0, type})
-                    await webpush.sendNotification(dbSbscrp, payload);
-                } else {
-                    const payload = JSON.stringify({success, message, type});
+                if (errorType.NOTIFICATION) {
+                    const payload = JSON.stringify({success, message: contentMessage});
                     await webpush.sendNotification(dbSbscrp, payload);
                 }
+                // if (type === MESSAGE) {
+                //     const payload = JSON.stringify({success, message: msg0, type})
+                //     await webpush.sendNotification(dbSbscrp, payload);
+                // } else {
+                //     const payload = JSON.stringify({success, message, type});
+                //     await webpush.sendNotification(dbSbscrp, payload);
+                // }
             }
             
         } catch(e) {
