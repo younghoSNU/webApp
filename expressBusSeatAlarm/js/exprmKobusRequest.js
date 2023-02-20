@@ -66,18 +66,20 @@ export function itineraryRequest(dprtNm, arvlNm, year, month, date, day) {
           if (xhr.status === 200) {
               //res는 {success: true/false, type: `display`/`notification`, message: content}
               const res = JSON.parse(xhr.responseText);
-              console.log(`this is response from server`);
+              console.log(`this is response from server ${xhr.responseText}`);
               
               if (res.success) {
                 console.log(res);
                 resolve(res.message.contentMessage);
               } else {
+                console.log(`reject on exprmKobusRequest 처리중`);
                 reject(res.message.contentMessage);
               }
 
 
               //document를 건드려서 수정해주기
           } else {
+              console.dir(xhr);
               console.error(xhr.statusText);
               reject(xhr.statusText);
           }

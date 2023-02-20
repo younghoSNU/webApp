@@ -44,14 +44,15 @@ app.post('/exprm', (req, res) => {
     
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     worker.on('message', msg => {
-        if (msg.success === false) {
+        const {success, type, message} = msg;
+        if (success === false) {
             console.error(`kobus서버에서 여정 리스트를 불러오는 과정에서 에러가 발생했습니다.`);
         } else {
             console.log(`성공적으로 여정 리스트를 불러왔습니다.`);
         }
 
         res.send(JSON.stringify(msg));
-    })
+    });
 });
 
 /**
@@ -121,6 +122,8 @@ app.post(`/save-subscription`, async (req, res) => {
                     console.log(`contentType이 notification입니다.`)
                     const payload = JSON.stringify({success, type, message: contentMessage});
                     await webpush.sendNotification(dbSbscrp, payload);
+                } else if (type === contentType.ALERT) {
+                    console.log(`contentType is ALERT`);
                 }
                 // if (type === MESSAGE) {
                 //     const payload = JSON.stringify({success, message: msg0, type})

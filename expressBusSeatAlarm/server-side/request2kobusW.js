@@ -87,8 +87,9 @@ async function parentPortMsgCallback(msg) {
             if (errorContainer.type === contentType.NOTIFICATION) {
                 const {type, content} = errorContainer;
                 parentPort.postMessage({success: false, type, message: content});
-            } else {
-                //아직 미작성
+            } else if (errorContainer.type === contentType.ALERT) {
+                const {type, content} = errorContainer;
+                parentPort.postMessage({success: false, type, message: content});
             }
         }
     }
@@ -147,7 +148,7 @@ function itineraryRequest2Kobus(postData) {
                 });
 
                 if (itineraryResult.length === 0) {
-                    reject({error: true, predictedError: true, type: contentType.ALERT, content: {contentMessage: `NO CONTENT: 해당 입력 조건에 대한 스케줄이 존재하지 않습니다.`}});
+                    reject({error: true, predictedError: true, type: contentType.ALERT, content: {contentMessage: `해당 입력 조건에 대한 스케줄이 존재하지 않습니다.`}});
                     return;
                 } else {
                     // ##################################TEST#######
