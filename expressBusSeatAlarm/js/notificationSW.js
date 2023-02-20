@@ -60,9 +60,17 @@ self.addEventListener('activate', async () => {
         console.log(JSON.stringify(payload));
         const res = await subscription2server(payload);
         console.log(res)
+
     } catch (err) {
       console.log('Error', err);
     }
+});
+
+// 알림이 클릭되었을 때 서비스 워커 등록 해지
+self.addEventListener('notificationclose', function() {
+    self.registration.unregister().then(function() {
+        console.log('Service Worker unregistered.');
+    });
 });
 
 // 성공 시 event.data는 다음과 같다
@@ -107,12 +115,7 @@ self.addEventListener('push', event => {
                 body: payload.message,
             };
 
-            // 알림이 클릭되었을 때 서비스 워커 등록 해지
-            self.addEventListener('notificationclick', function() {
-                self.registration.unregister().then(function() {
-                    console.log('Service Worker unregistered.');
-                });
-            });
+           
 
             event.waitUntil(self.registration.showNotification(`pushNotification`, options));
 
