@@ -73,16 +73,13 @@ export function itineraryRequest(dprtNm, arvlNm, year, month, date, day) {
                 resolve(res.message.contentMessage);
               } else {
                 // console.log(`reject on exprmKobusRequest 처리중`);
-                console.dir(xhr)
                 reject(res.message.contentMessage);
               }
 
 
               //document를 건드려서 수정해주기
           } else {
-              console.dir(xhr);
-              console.error(xhr.statusText);
-              reject(xhr.statusText);
+              reject(`got error code:${xhr.status}`);
           }
       }
     }
