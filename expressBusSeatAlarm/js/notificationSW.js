@@ -67,7 +67,7 @@ self.addEventListener('activate', async () => {
 });
 
 // 알림이 클릭되었을 때 서비스 워커 등록 해지
-self.addEventListener('notificationclose', function() {
+self.addEventListener('close', function() {
     self.registration.unregister().then(function() {
         console.log('Service Worker unregistered.');
     });
