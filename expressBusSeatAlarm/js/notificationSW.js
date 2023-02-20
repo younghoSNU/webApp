@@ -109,20 +109,10 @@ self.addEventListener('push', event => {
                 body: payload.message,
             };
 
-           
-
             event.waitUntil(self.registration.showNotification(`pushNotification`, options).then(_ => {
                 setTimeout(() => {
-                    self.registration.unregister().then(_ => {
-                        console.log(self)
-                        console.log(`시간경과`);
-                        self.clients.matchAll().then(clients => {
-                            clients.forEach(client => {
-                                console.log(`client id ${client.id}`);
-                                client.postMessage(`다시 알림을 받으시려면, 새롭게 등록해주세요!`);
-                            })
-                        })
-                    })
+                    self.registration.unregister();
+                    console.log(`서비스워커 등록해지 성공`)
                 } ,1000*10);
             }));
 
