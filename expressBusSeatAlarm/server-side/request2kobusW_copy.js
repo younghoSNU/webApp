@@ -19,7 +19,6 @@ const DEPARTURE_TIME = 'dprtTime';
 const REMAIN = `remain`;
 const REQUEST_PERIOD = 3000;
 const LIST_ADD_PERIOD = 10000; //원래 300000예정
-const CMP_PERIOD = 40;  //여정이 오늘것이라면 여정들의 출발시간과 현재시간을 비교해서 list에서 삭제조치 해야 한다. CMP_PERIOD*REQUEST_PERIOID를 비교한다.
 const COUNT_PERIOD = 60;
 //kobus에 요청 보내는 바디에 필요한 코드 정보
 const Nm2Cd = {아산온양: `340`, 서울경부: `010`, 천안아산역: `343`, 배방정류소: `337`};
@@ -227,41 +226,15 @@ function requestWithSi(postData, list, date, resIdx) {
 
     return new Promise((resolve, reject) => {
         let countPeroid = 0;
-        let doCmpCount = 0;
+        let doCount = false;
         let isClearIntrvl = false;
-        let tempDeleted = [];    //통고를 보냈기에 임시로 구독여정에서 제외시키기 위한 
+        let tempDeleted = false;    //통고를 보냈기에 임시로 구독여정에서 제외시키기 위한 
 
         let intrvl = setInterval(async () => {
             const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
 
-            // ############################################################
-            //foundTime으로 하지 말고 어차피 시간을 가져와서 시간 지난 여정은 처리할거니까 이 스코프에서 받는 편이 낫다고 본다.
-            // 여기서 매 REQUEST_PERIOD마다 시간을 가져온다. 
-            const foundTime = new Date();
-            const ftDate = foundTime.getDate();
-            const ftHours = foundTime.getHours();
-            const ftMinutes = foundTime.getMinutes();
-            const ftSeconds = foundTime.getSeconds();
-            
-            doCmpCount++
-
-            //여기서 출발시간이 현재시간보다 일찍인 여정은 list에서 삭제
-            if (date === ftDate && doCmpCount === CMP_PERIOD) {
-                doCmpCount = 0;
-                
-                list.filter(entry => {
-                    const [entryHours, entryMinutes] = entry[DEPARTURE_TIME].split(`:`).map(e => +e);
-                    if (entryHours*60+entryMinutes < ftHours*60+ftMinutes) {
-                        console.log(`시간이 지나 리스트에서 ${JSON.stringify(entry)}는 삭제한다.`)
-                        return false;
-                    }
-
-                    return true;
-                });
-            }
-
             //길이가 0인 의미는 시간이 지나 살아있는 여정이 잔여석을 남기지 않고 출발했다는 의미
-            if (listLen === 0 && tempDeleted.length === 0) {
+            if (listLen === 0) {
                 reject({error: true, predictedError: true, type: contentType.NOTIFICATION, content: {contentMessage: `등록했던 스케줄(들)에서 잔여석이 생기지 않고 출발했습니다.`, resIdx}});
                 return clearInterval(intrvl);
             }
@@ -303,9 +276,8 @@ function requestWithSi(postData, list, date, resIdx) {
             // ######################################################
 
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
-            for (let i=0; i<listLen; ++i) {     
-                const listEntry = list[i];           
-                const tempDprtTime = listEntry[DEPARTURE_TIME];
+            for (let i=0; i<listLen; ++i) {                
+                const tempDprtTime = list[i].dprtTime;
                 // ################################TEST#####################
                 if (glbCount === DEBUG_SBSCRPCNT) {
                     console.log(`tempDprtTime ${tempDprtTime}`);
@@ -324,12 +296,7 @@ function requestWithSi(postData, list, date, resIdx) {
                         const tempRemain = +(tempEntry[REMAIN].slice(0,2));
                          
                         if (tempRemain > 0) {
-                            //foundList에 넣고 list에서 빼고, setTimeout진행시키고, tempDeleted에 푸시하고
                             foundList.push(tempEntry);
-                            list = list.filter((_, idx) => idx !== i);
-                            addListWithSto(tempEntry);
-                            tempDeleted.push(1);
-
                             break;
                         }
                     }
@@ -340,7 +307,7 @@ function requestWithSi(postData, list, date, resIdx) {
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
             console.log(`foundList ${JSON.stringify(foundList)}`);
 
-            if (glbCount === DEBUG_SBSCRPCNT) {
+            if (glbCount == DEBUG_SBSCRPCNT) {
                 glbCount = 0;
                 //test
                 // if (count === 1) {
@@ -354,9 +321,43 @@ function requestWithSi(postData, list, date, resIdx) {
                 
             }
 
+            // ############################################################
+            //foundTime으로 하지 말고 어차피 시간을 가져와서 시간 지난 여정은 처리할거니까 이 스코프에서 받는 편이 낫다고 본다.
+            // 여기서 매 REQUEST_PERIOD마다 시간을 가져온다. 
+            const foundTime = new Date();
+            const ftDate = foundTime.getDate();
+            const ftHours = foundTime.getHours();
+            const ftMinutes = foundTime.getMinutes();
+            const ftSeconds = foundTime.getSeconds();
+
             if (foundList.length > 0) {
                 // success프로퍼티가 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
                 parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: ftHours, minutes: ftMinutes, seconds: ftSeconds}, date}, type: contentType.NOTIFICATION});
+                
+                //이후 추가적업 없나?
+                //일단 남아있는 리스트가 없다면 resolve 보내고 있으면 계속 sto
+
+                //list 변수를 업데이트 해준다. foundList에서 시간이 매칭되면 삭제한다. 
+                const foundDprtTime = foundList.map(entry => entry[DEPARTURE_TIME]);
+                list = list.filter(entry => {
+                    const found = foundDprtTime.includes(entry[DEPARTURE_TIME]);
+
+                    if (found === true) {
+                        tempDeleted = true;
+                        addListWithSto(entry);
+                        return false;
+                    }
+
+                    return true;
+                });
+                console.log(`updated list`);
+                console.log(list);
+
+                if (list.length === 0 && tempDeleted === false) {
+                    console.log(`list.length === 0을 지나게 된다.`)
+                    // parentPort.postMessage({success: false, message: {contnetMessage: `구독한 모든 여정의 알림을 보냈습니다. 계속 알림을 원하시면 다시 구독해주세요.`, resIdx}, type: contentType.NOTIFICATION});
+                    // return clearInterval(intrvl);  //clearInterval을 하더라도 resolve나 reject같이 아래 코드도 모두 실행되고 나가지 thorw처럼 예외를 만들어 즉시 함수를 나가지 않는다. 그래서 즉시 빠져나가려면 return을 앞에 추가했다.
+                } 
             } 
 
             // 구독하는 여정 일부 지우기: 다음날의 여정을 구독하는 거라면 상관없다 그러나 만약 오늘 여정인데 시간이 지나 출발했다면 list변수에서 지워줘야 한다
@@ -392,15 +393,12 @@ function requestWithSi(postData, list, date, resIdx) {
             //     }
             // }
         }, REQUEST_PERIOD);
-
-        function addListWithSto(entry) {
-            setTimeout(() => {
-                console.log(`list에 제거된 엔트리 ${JSON.stringify(entry)} 다시 추가합니다.`);
-                tempDeleted.shift();
-                list.push(entry);
-            }, LIST_ADD_PERIOD);
-        }
     });
 
-    
+    function addListWithSto(entry) {
+        setTimeout(() => {
+            console.log(`list에 제거된 엔트리 ${JSON.stringify(entry)} 다시 추가합니다.`);
+            list.push(entry);
+        }, LIST_ADD_PERIOD);
+    }
 }
