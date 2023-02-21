@@ -228,7 +228,8 @@ function requestWithSi(postData, list, date, resIdx) {
         let tempDeleted = [];    //통고를 보냈기에 임시로 구독여정에서 제외시키기 위한 
 
         let intrvl = setInterval(async () => {
-            // ############################################################
+            try {
+// ############################################################
             //foundTime으로 하지 말고 어차피 시간을 가져와서 시간 지난 여정은 처리할거니까 이 스코프에서 받는 편이 낫다고 본다.
             // 여기서 매 REQUEST_PERIOD마다 시간을 가져온다. 
             const foundTime = new Date();
@@ -270,13 +271,6 @@ function requestWithSi(postData, list, date, resIdx) {
             // 정상적으로 전달되면 {error: false, content: {contentMessage: [...]}}
             const result = await itineraryRequest2Kobus(postData);
             let endT = new Date();
-
-            const {error, predictedError, content} = result;
-
-            if (error === true) {
-                reject(result);
-                return clearInterval(intrvl);
-            }
             
             const data = content.contentMessage; 
             const dataLen = data.length;
@@ -359,7 +353,14 @@ function requestWithSi(postData, list, date, resIdx) {
                 // success프로퍼티가 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
                 parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: ftHours, minutes: ftMinutes, seconds: ftSeconds}, date}, type: contentType.NOTIFICATION});
             } 
+            } catch (errorContainer) {
+                const {error, predictedError, content} = errorContainer;
 
+                if (error === true) {
+                    reject(result);
+                    return clearInterval(intrvl);
+                }
+            }
         }, REQUEST_PERIOD);
 
         function addListWithSto(entry) {
