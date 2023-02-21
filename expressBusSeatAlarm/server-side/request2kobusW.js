@@ -354,8 +354,9 @@ function requestWithSi(postData, list, date, resIdx) {
                 parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: ftHours, minutes: ftMinutes, seconds: ftSeconds}, date}, type: contentType.NOTIFICATION});
             } 
             } catch (errorContainer) {
-                const {error, predictedError, content} = errorContainer;
-                errorContainer.content.resIdx = resIdx;
+                let result = {...errorContainer};
+                result.content.resIdx = resIdx;
+                console.log(`result ${JSON.stringify(result)}`);
                 
                 if (error === true) {
                     reject(errorContainer);
