@@ -303,39 +303,43 @@ function requestWithSi(postData, list, date, resIdx) {
             // ######################################################
             console.log(list)
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
-            // for (let i=0; i<listLen; ++i) {     
-            //     const listEntry = list[i];
-            //     console.log(JSON.stringify(listEntry));           
-            //     const tempDprtTime = listEntry.dprtTime;
-            //     // ################################TEST#####################
-            //     if (glbCount === DEBUG_SBSCRPCNT) {
-            //         console.log(`tempDprtTime ${tempDprtTime}`);
-            //     }
-            //     // #########################################################
-            //     for (let j=0; j<dataLen; ++j) {
-            //         const tempEntry = data[j];
-
-            //         //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
-            //         if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
-            //             // #########################################TEST########
-            //             if (glbCount == DEBUG_SBSCRPCNT) {
-            //                 console.log(`tempEntry of data ${JSON.stringify(tempEntry)}`);
-            //             }
-            //             // #####################################################
-            //             const tempRemain = +(tempEntry[REMAIN].slice(0,2));
-                         
-            //             if (tempRemain > 0) {
-            //                 //foundList에 넣고 list에서 빼고, setTimeout진행시키고, tempDeleted에 푸시하고
-            //                 foundList.push(tempEntry);
-            //                 list = list.filter((_, idx) => idx !== i);
-            //                 addListWithSto(listEntry);
-            //                 tempDeleted.push(1);
-
-            //                 break;
-            //             }
-            //         }
-            //     }
-            // }
+            for (let i=0; i<listLen; ++i) {     
+                const listEntry = list[i];
+                console.log(JSON.stringify(listEntry));           
+                const tempDprtTime = listEntry.dprtTime;
+                // ################################TEST#####################
+                if (glbCount === DEBUG_SBSCRPCNT) {
+                    console.log(`tempDprtTime ${tempDprtTime}`);
+                }
+                // #########################################################
+                // ################################################TEST###############
+                if (glbCount === DEBUG_SBSCRPCNT) {
+                    for (let j=0; j<dataLen; ++j) {
+                        const tempEntry = data[j];
+    
+                        //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
+                        if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
+                            // #########################################TEST########
+                            if (glbCount == DEBUG_SBSCRPCNT) {
+                                console.log(`tempEntry of data ${JSON.stringify(tempEntry)}`);
+                            }
+                            // #####################################################
+                            const tempRemain = +(tempEntry[REMAIN].slice(0,2));
+                             
+                            if (tempRemain > 0) {
+                                //foundList에 넣고 list에서 빼고, setTimeout진행시키고, tempDeleted에 푸시하고
+                                foundList.push(tempEntry);
+                                list = list.filter((_, idx) => idx !== i);
+                                addListWithSto(listEntry);
+                                tempDeleted.push(1);
+    
+                                break;
+                            }
+                        }
+                    }
+                }
+                // ########################################################################
+            }
 
             // ####################################TEST#####################
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
