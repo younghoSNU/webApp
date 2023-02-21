@@ -303,17 +303,19 @@ function requestWithSi(postData, list, date, resIdx) {
             // ######################################################
             console.log(list)
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
-            for (let i=0; i<listLen; ++i) {     
-                const listEntry = list[i];
-                console.log(JSON.stringify(listEntry));           
-                const tempDprtTime = listEntry.dprtTime;
-                // ################################TEST#####################
-                if (glbCount === DEBUG_SBSCRPCNT) {
-                    console.log(`tempDprtTime ${tempDprtTime}`);
-                }
-                // #########################################################
-                // ################################################TEST###############
-                if (glbCount === DEBUG_SBSCRPCNT) {
+            setTimeout(() => {
+                for (let i=0; i<listLen; ++i) {     
+                    const listEntry = list[i];
+                    console.log(JSON.stringify(listEntry));           
+                    const tempDprtTime = listEntry.dprtTime;
+                    // ################################TEST#####################
+                    if (glbCount === DEBUG_SBSCRPCNT) {
+                        console.log(`tempDprtTime ${tempDprtTime}`);
+                    }
+                    // #########################################################
+                    if (glbCount === DEBUG_SBSCRPCNT) {
+                        
+                    }
                     for (let j=0; j<dataLen; ++j) {
                         const tempEntry = data[j];
     
@@ -337,9 +339,9 @@ function requestWithSi(postData, list, date, resIdx) {
                             }
                         }
                     }
-                }
-                // ########################################################################
-            }
+                }   
+            }, 1000)  
+            
 
             // ####################################TEST#####################
             //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
