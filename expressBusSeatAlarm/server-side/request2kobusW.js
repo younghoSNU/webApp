@@ -232,8 +232,6 @@ function requestWithSi(postData, list, date, resIdx) {
         let tempDeleted = [];    //통고를 보냈기에 임시로 구독여정에서 제외시키기 위한 
 
         let intrvl = setInterval(async () => {
-            const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
-
             // ############################################################
             //foundTime으로 하지 말고 어차피 시간을 가져와서 시간 지난 여정은 처리할거니까 이 스코프에서 받는 편이 낫다고 본다.
             // 여기서 매 REQUEST_PERIOD마다 시간을 가져온다. 
@@ -259,6 +257,8 @@ function requestWithSi(postData, list, date, resIdx) {
                     return true;
                 });
             }
+
+            const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
 
             //길이가 0인 의미는 시간이 지나 살아있는 여정이 잔여석을 남기지 않고 출발했다는 의미
             if (listLen === 0 && tempDeleted.length === 0) {
@@ -304,7 +304,8 @@ function requestWithSi(postData, list, date, resIdx) {
 
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
             for (let i=0; i<listLen; ++i) {     
-                const listEntry = list[i];           
+                const listEntry = list[i];
+                console.log(JSON.stringify(listEntry));           
                 const tempDprtTime = listEntry[DEPARTURE_TIME];
                 // ################################TEST#####################
                 if (glbCount === DEBUG_SBSCRPCNT) {
