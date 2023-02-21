@@ -357,7 +357,7 @@ function requestWithSi(postData, list, date, resIdx) {
                 const {error, predictedError, content} = errorContainer;
 
                 if (error === true) {
-                    reject(result);
+                    reject(errorContainer);
                     return clearInterval(intrvl);
                 }
             }
