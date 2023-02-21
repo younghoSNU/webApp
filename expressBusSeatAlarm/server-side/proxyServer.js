@@ -3,15 +3,15 @@ const express = require('express');
 const cors = require('cors');
 const webpush = require('web-push');
 const { PUBLIC_KEY, PRIVATE_KEY } = require(`./secureInfo.js`)
+
 // 꼭 워커가 필요한 것은 아니지만 연습삼아
-const { Worker } = require('worker_threads');
+// 막상 생각해보면, 유저 한 명마다 하나의 프로세스를 사용하고 
+const { Worker } = require('node:worker_threads');
 
 const app = express();
 
 const PORT = 3000;
 const WORKERDIR = __dirname + "/request2kobusW.js";
-const DISPLAY = `display`;
-const NOTIFICATION = `notification`;
 const MESSAGE = `message`;
 const MAIL = `hois1998@snu.ac.kr`;
 
@@ -36,10 +36,9 @@ webpush.setVapidDetails(`mailto:`+MAIL, PUBLIC_KEY, PRIVATE_KEY);
 
 app.post('/exprm', (req, res) => {
     //req가 올바는 형식인지 확인 아니면 res로 invalid 전송
-
     console.log(`request from /exprm is accepted to server!`);
+    
     const worker = new Worker(WORKERDIR);
-    console.log(`made worker done on ${WORKERDIR}`);
     worker.postMessage(req.body);
     
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
@@ -62,17 +61,21 @@ app.post('/exprm', (req, res) => {
 app.post(`/save-subscription`, async (req, res) => {
     console.log(`enter /save-subscription`);
 
-    let { subscription, itnrData } = req.body;
+    const { subscription, itnrData } = req.body;
 	subscription = JSON.parse(subscription);
 
-    console.log(`subscription\n${JSON.stringify(subscription)}`);
-    console.log(`itnrData\n${JSON.stringify(itnrData)}`);
+    // console.log(`subscription\n${JSON.stringify(subscription)}`);
+    // console.log(`itnrData\n${JSON.stringify(itnrData)}`);
 
     const sbscrpWorker = new Worker(WORKERDIR);
+
+    //임시로 데이터베이스와 상호작용함을 나타내기 위해 await을 사용
     let resIdx = await saveSbscrp2DB(subscription);
+    
     let [year, month, tempDate] = itnrData.fullDate.split(`/`);
     let date = tempDate.slice(0,2);
     let day = tempDate.slice(3,4);
+    
     const postData = {
         dprtNm: itnrData.dprtNm,
         arvlNm: itnrData.arvlNm,
@@ -138,6 +141,7 @@ app.post(`/save-subscription`, async (req, res) => {
             console.error(e);
         }
     });
+    
     res.json({ message: `success to save in db`});
 });
 

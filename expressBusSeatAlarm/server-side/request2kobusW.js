@@ -18,6 +18,7 @@ const contentType = {
 const DEPARTURE_TIME = 'dprtTime';
 const REMAIN = `remain`;
 const REQUEST_PERIOD = 3000;
+const LIST_ADD_PERIOD = 10000; //원래 300000예정
 const COUNT_PERIOD = 60;
 //kobus에 요청 보내는 바디에 필요한 코드 정보
 const Nm2Cd = {아산온양: `340`, 서울경부: `010`, 천안아산역: `343`, 배방정류소: `337`};
@@ -56,8 +57,8 @@ function makePostData(dprtNm, arvlNm, year, month, date, day) {
  */
 async function parentPortMsgCallback(msg) {
     try {
-        console.log(`r2k worker received request:`);    //r2k: request to kobus server
-        console.log(`check validation of msg\n${JSON.stringify(msg)}`);
+        // console.log(`r2k worker received request:`);    //r2k: request to kobus server
+        // console.log(`check validation of msg\n${JSON.stringify(msg)}`);
 
         const {dprtNm, arvlNm, year, month, date, day, list, resIdx} = msg;
         const postData = makePostData(dprtNm, arvlNm, year, month, date, day);
@@ -227,12 +228,14 @@ function requestWithSi(postData, list, date, resIdx) {
         let countPeroid = 0;
         let doCount = false;
         let isClearIntrvl = false;
+        let tempDeleted = false;    //통고를 보냈기에 임시로 구독여정에서 제외시키기 위한 
 
         let intrvl = setInterval(async () => {
             const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
 
+            //길이가 0인 의미는 시간이 지나 살아있는 여정이 잔여석을 남기지 않고 출발했다는 의미
             if (listLen === 0) {
-                reject({error: true, predictedError: true, type: contentType.NOTIFICATION, content: {contentMessage: `구독했던 여정(들)에서 잔여석이 생기지 않고 출발했습니다.`, resIdx}});
+                reject({error: true, predictedError: true, type: contentType.NOTIFICATION, content: {contentMessage: `등록했던 스케줄(들)에서 잔여석이 생기지 않고 출발했습니다.`, resIdx}});
                 return clearInterval(intrvl);
             }
 
@@ -273,9 +276,7 @@ function requestWithSi(postData, list, date, resIdx) {
             // ######################################################
 
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
-            for (let i=0; i<listLen; ++i) {
-				console.log(JSON.stringify(list));
-                
+            for (let i=0; i<listLen; ++i) {                
                 const tempDprtTime = list[i].dprtTime;
                 // ################################TEST#####################
                 if (glbCount === DEBUG_SBSCRPCNT) {
@@ -285,15 +286,15 @@ function requestWithSi(postData, list, date, resIdx) {
                 for (let j=0; j<dataLen; ++j) {
                     const tempEntry = data[j];
 
-                    // #########################################TEST########
-                    if (glbCount == DEBUG_SBSCRPCNT) {
-                        console.log(`tempEntry of data ${JSON.stringify(tempEntry)}`);
-                    }
-                    // #####################################################
-
                     //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
                     if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
+                        // #########################################TEST########
+                        if (glbCount == DEBUG_SBSCRPCNT) {
+                            console.log(`tempEntry of data ${JSON.stringify(tempEntry)}`);
+                        }
+                        // #####################################################
                         const tempRemain = +(tempEntry[REMAIN].slice(0,2));
+                         
                         if (tempRemain > 0) {
                             foundList.push(tempEntry);
                             break;
@@ -333,9 +334,13 @@ function requestWithSi(postData, list, date, resIdx) {
                 //이후 추가적업 없나?
                 //일단 남아있는 리스트가 없다면 resolve 보내고 있으면 계속 sto
 
-                  //list 변수를 업데이트 해준다. foundList에서 시간이 매칭되면 삭제한다. 
+                //list 변수를 업데이트 해준다. foundList에서 시간이 매칭되면 삭제한다. 
                 const foundDprtTime = foundList.map(entry => entry[DEPARTURE_TIME]);
-                list = list.filter(entry => !foundDprtTime.includes(entry[DEPARTURE_TIME]));
+                list = list.filter(entry => {
+                    //addListWithSto를 하게 되면 
+                    addListWithSto(entry);
+                    !foundDprtTime.includes(entry[DEPARTURE_TIME]);
+                });
                 console.log(`updated list`);
                 console.log(list);
 
@@ -380,4 +385,11 @@ function requestWithSi(postData, list, date, resIdx) {
             // }
         }, REQUEST_PERIOD);
     });
+
+    function addListWithSto(entry) {
+        setTimeout(() => {
+            console.log(`list에 제거된 엔트리 ${JSON.stringify(entry)} 다시 추가합니다.`);
+            list.push(entry);
+        }, LIST_ADD_PERIOD);
+    }
 }

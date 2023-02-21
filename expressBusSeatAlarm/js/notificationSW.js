@@ -184,6 +184,19 @@ self.addEventListener('push', async event => {
     }
 });
 
+// This is a somewhat contrived example of using client.postMessage() to originate a message from
+// the service worker to each client (i.e. controlled page).
+// Here, we send a message when the service worker starts up, prior to when it's ready to start
+// handling events.
+self.clients.matchAll().then(function(clients) {
+    console.log(`matchALL ${clients}`);
+    clients.forEach(function(client) {
+      console.log(client);
+      client.postMessage('The service worker just started up.');
+    });
+  });
+
+
 //알림을 보낼 때, 잔여좌석이 언제 생겼는지 기준 시각과 함게 화면에 띄운다.
 const showLocalNotification = async (title, body, swRegistration) => {
     const options = {
