@@ -114,7 +114,7 @@ self.addEventListener('push', async event => {
             }
 
             showLocalNotification(title, body, self.registration);
-        } else if (payload.success === false && payload.type === contentType.NOTIFICATION){
+        } else if (payload.success === false && (payload.type === contentType.NOTIFICATION || payload.type === contentType.ALERT)){
             console.log(`payload success false and type NOTIFICATION`);
             const options = {
                 body: payload.message,

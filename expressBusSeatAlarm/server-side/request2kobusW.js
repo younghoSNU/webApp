@@ -63,18 +63,13 @@ async function parentPortMsgCallback(msg) {
 
         const {dprtNm, arvlNm, year, month, date, day, list, resIdx} = msg;
         const postData = makePostData(dprtNm, arvlNm, year, month, date, day);
-        let isList = false; // 이건 임시로 만든 것인데, catch블록에서 구독과 리스트 리솔브를 구분한다.
 
         //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
         if (list !== undefined) {
             //do something
             //message = {message: `...`, success: true/false}
-            const messageContainer = await itineraryRequest2KobusSbscrp(postData, list, date, resIdx);
-            const {success, message} = messageContainer;
-
-            parentPort.postMessage({success, message: {msg0: message, resIdx}, type: `message`});
+            await itineraryRequest2KobusSbscrp(postData, list, date, resIdx);
         } else {
-            isList = true;
             let result = await itineraryRequest2Kobus(postData);
 
             parentPort.postMessage({success: true, message: result.content, type: `display`});
@@ -82,16 +77,16 @@ async function parentPortMsgCallback(msg) {
     } catch(errorContainer) {
         console.log(`error(perhaps rejects from try block) occured on parentPortMsgCallback`);
         console.log(errorContainer);
+        const {predictedError, type, content} = errorContainer;
 
-        if (errorContainer.predictedError === false) {
+        if (predictedError === false) {
             console.log(`예상지 못한 에러가 발생했습니다. ${JSON.stringify(errorContainer)}`);
+            parentPort.postMessage({success: false, type, message: content});
         } else {
             //predictedError: true면 type에 따라 케이스 분류
             if (errorContainer.type === contentType.NOTIFICATION) {
-                const {type, content} = errorContainer;
                 parentPort.postMessage({success: false, type, message: content});
             } else if (errorContainer.type === contentType.ALERT) {
-                const {type, content} = errorContainer;
                 parentPort.postMessage({success: false, type, message: content});
             }
         }
@@ -104,8 +99,8 @@ async function parentPortMsgCallback(msg) {
  * 실제로 kobus에 요청을 보내는 함수이다. https 모듈을 사용한다. 응답으로 받은 html을 파싱해서 object를 리턴한다.
  * @param {string} postData 
  * @returns {Promise} 
- * resolve: 여정데이터 
- * reject: 요청 응답 중에 에러 발생 또는 여정 리스트 길이가 0으로 선택된 조건에 대한 여정이 없거나
+ * resolve: 여정데이터 {error: false, content: {contentMessage}}
+ * reject: 요청 응답 중에 에러 발생 또는 여정 리스트 길이가 0으로 선택된 조건에 대한 여정이 없거나 {error: true, predictedError, type: contentType.ALERT, content: {contentMesage}}
  * 여정데이터는 아래 오브젝트들을 담은 배열
  *  {
         "dprtTime": "14:50",
@@ -150,7 +145,7 @@ function itineraryRequest2Kobus(postData) {
                     itineraryResult.push({dprtTime, busCmp, busGrade, remain});
                 });
 
-                if (itineraryResult.length === 0) {
+                if (/*itineraryResult.length === 0*/glbCount === 2) {
                     reject({error: true, predictedError: true, type: contentType.ALERT, content: {contentMessage: `해당 입력 조건에 대한 스케줄이 존재하지 않습니다.`}});
                     return;
                 } else {
@@ -158,25 +153,26 @@ function itineraryRequest2Kobus(postData) {
                     // 실제 서버의 데이터가 아니라 DEBUG_SBSCRPCNT에 따라 프리세팅된 noZero, zero 등을 리솔브한다.
                     let result = {error: false ,content: {contentMessage: null}};
                     console.log(`glbCount ${glbCount}, glbCount2 ${glbCount2}`);
-                    if (glbCount === DEBUG_SBSCRPCNT) {
-                        if (glbCount2 === 1) {
-                            result.content.contentMessage = noZero;
-                            console.log(`서버에서 nonZero가져왔`)
-                            resolve(result);
-                            return ;
-                        }
-                        result.content.contentMessage = partialZero;
-                        console.log(`서버에서 partialZero`)
-                        resolve(result);
-                        glbCount2++;
-                        return;
-                    } else {
-                        result.content.contentMessage = zero;
-                        console.log(`서버에서 zero`)
-                        resolve(result);
-                        return;
-                    }
-                    // resolve(itineraryResult);
+                    // if (glbCount === DEBUG_SBSCRPCNT) {
+                    //     if (glbCount2 === 1) {
+                    //         result.content.contentMessage = noZero;
+                    //         console.log(`서버에서 nonZero가져왔`)
+                    //         resolve(result);
+                    //         return ;
+                    //     }
+                    //     result.content.contentMessage = partialZero;
+                    //     console.log(`서버에서 partialZero`)
+                    //     resolve(result);
+                    //     glbCount2++;
+                    //     return;
+                    // } else {
+                    //     result.content.contentMessage = zero;
+                    //     console.log(`서버에서 zero`)
+                    //     resolve(result);
+                    //     return;
+                    // }
+                    result.content.contentMessage = itineraryResult;
+                    resolve(result);
                     // ##############################################
                 }
             })
@@ -247,7 +243,7 @@ function requestWithSi(postData, list, date, resIdx) {
             if (date === ftDate && doCmpCount === CMP_PERIOD) {
                 doCmpCount = 0;
                 
-                list.filter(entry => {
+                list = list.filter(entry => {
                     const [entryHours, entryMinutes] = entry[DEPARTURE_TIME].split(`:`).map(e => +e);
                     if (entryHours*60+entryMinutes < ftHours*60+ftMinutes) {
                         console.log(`시간이 지나 리스트에서 ${JSON.stringify(entry)}는 삭제한다.`)
@@ -301,18 +297,17 @@ function requestWithSi(postData, list, date, resIdx) {
                 console.log(`\n\n자 잔여석 생기는 때입니다.\ndata:\n${JSON.stringify(data)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
             }
             // ######################################################
-            console.log(list)
-            console.log(listLen)
-            //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
-            let tempList = list;
+            
+            let tempList = list;    //tempList를 필터하고 for루프 끝나면 list = tempList한다.
 
+            //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
             for (let i=0; i<listLen; ++i) {     
                 const listEntry = list[i];
                 const tempDprtTime = listEntry[DEPARTURE_TIME];
                 // ################################TEST#####################
-                if (glbCount === DEBUG_SBSCRPCNT) {
-                    console.log(`tempDprtTime ${tempDprtTime}`);
-                }
+                // if (glbCount === DEBUG_SBSCRPCNT) {
+                //     console.log(`tempDprtTime ${tempDprtTime}`);
+                // }
                 // #########################################################
                 
                 for (let j=0; j<dataLen; ++j) {
@@ -321,9 +316,9 @@ function requestWithSi(postData, list, date, resIdx) {
                     //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
                     if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
                         // #########################################TEST########
-                        if (glbCount == DEBUG_SBSCRPCNT) {
-                            console.log(`tempEntry of data ${JSON.stringify(tempEntry)}`);
-                        }
+                        // if (glbCount == DEBUG_SBSCRPCNT) {
+                        //     console.log(`tempEntry of data ${JSON.stringify(tempEntry)}`);
+                        // }
                         // #####################################################
                         const tempRemain = +(tempEntry[REMAIN].slice(0,2));
                          
@@ -365,38 +360,6 @@ function requestWithSi(postData, list, date, resIdx) {
                 parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: ftHours, minutes: ftMinutes, seconds: ftSeconds}, date}, type: contentType.NOTIFICATION});
             } 
 
-            // 구독하는 여정 일부 지우기: 다음날의 여정을 구독하는 거라면 상관없다 그러나 만약 오늘 여정인데 시간이 지나 출발했다면 list변수에서 지워줘야 한다
-            //여정의 출발일이 오늘인지 확인
-            //만약 오늘이면 지우는 작업 진행
-            //시간 지나 진짜 출발한 여정이면 지움
-            // const d = new Date();
-
-            // if (!doCount) {
-            //     currentDate = d.getDate();
-            //     if (date === currentDate) {
-            //         doCount = true;
-            //         console.log(`\n\n구독일이 오늘일과 같으므로 doCount true합니다.\n\n`);
-            //     }    
-            // } else {
-            //     countPeroid++;
-            //     // countPeroid에 따라 lists에서 시간 지난 list는 삭제한다.
-            //     // 삭제는 COUNT_PERIOD*REQUEST_PERIOD/1000(s) 마다 한다.
-            //     if (countPeroid === COUNT_PERIOD) {
-            //         countPeroid = 0;
-    
-            //         const currentHour = d.getHours();
-            //         const currentMinute = d.getMinutes();
-                    
-            //         for (let i=0; i<listLen; ++i) {
-            //             const [listHour, listMinute] = lists[i].dprtTime.split(`:`).map(e => +e);
-    
-            //             if ((listHour < currentHour) && (listHour === currentHour && listMinute <= currentMinute)) {
-            //                 console.log(`이미 출발한 ${listHour}:${listMinute} 여정은 구독 리스트에서 삭제합니다.`)
-            //                 list = list.filter((_, idx) => i !== idx);
-            //             } 
-            //         }
-            //     }
-            // }
         }, REQUEST_PERIOD);
 
         function addListWithSto(entry) {

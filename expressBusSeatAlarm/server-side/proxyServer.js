@@ -94,7 +94,6 @@ app.post(`/save-subscription`, async (req, res) => {
     // {success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date: '1'}, type: `notification`}
     sbscrpWorker.on(`message`, async (msg) => {
         try {  
-            console.log(`워커에서 메인쓰레드로 잔여석있는 여정 보냈고 메인이 받았다.`)
             console.log(`워커에서 넘어온 메시지\n${JSON.stringify(msg)}`);
     
             //이렇게 먼저 케이스 분류하고 케이스에 따라 변수 선언을 하자.
@@ -105,7 +104,7 @@ app.post(`/save-subscription`, async (req, res) => {
             // }
 
             const {success, type, message} = msg;
-            const { foundList, resIdx, time, date, msg0, contentMessage} = message;
+            const { foundList, resIdx, time, date, contentMessage} = message;
             //db에서 유저 구독 데이터를 가져온다.
             const dbSbscrp = dummyDb[String(resIdx)];
             //type을 명시하긴 했지만 라우팅이 달리 돼있어, 여기로 type: 'display'인 경우는 없다.
@@ -113,12 +112,13 @@ app.post(`/save-subscription`, async (req, res) => {
             
             if (success) {
                 //통고를 보내는 부분이 아니라 모든 구독한 여정이 출발하거나 모든 여정에 통고를 보낸 경우 구독을 끝내는 것이다. 서비스워커 등록도 없앤다.
-                if (type === MESSAGE) {
-                    const payload = JSON.stringify({success, message: msg0, type})
-                    await webpush.sendNotification(dbSbscrp, payload);
-                } else {
+                if (type === contentType.NOTIFICATION) {
                     const payload = JSON.stringify({success, message: {foundList, time, date}, type});
                     await webpush.sendNotification(dbSbscrp, payload);
+                } else {                    
+                    // const payload = JSON.stringify({success, message: msg0, type})
+                    // await webpush.sendNotification(dbSbscrp, payload);
+
                 }
             } else {
                 if (type === contentType.NOTIFICATION) {
@@ -126,7 +126,9 @@ app.post(`/save-subscription`, async (req, res) => {
                     const payload = JSON.stringify({success, type, message: contentMessage});
                     await webpush.sendNotification(dbSbscrp, payload);
                 } else if (type === contentType.ALERT) {
-                    console.log(`contentType is ALERT`);
+                    console.log(`contentType is ALERT 그렇지만 alert불가능이라 통고로`);
+                    const payload = JSON.stringify({success, type, message: contentMessage});
+                    await webpush.sendNotification(dbSbscrp, payload);
                 }
                 // if (type === MESSAGE) {
                 //     const payload = JSON.stringify({success, message: msg0, type})
