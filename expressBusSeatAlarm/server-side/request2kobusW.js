@@ -354,14 +354,16 @@ function requestWithSi(postData, list, date, resIdx) {
                 parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: ftHours, minutes: ftMinutes, seconds: ftSeconds}, date}, type: contentType.NOTIFICATION});
             } 
             } catch (errorContainer) {
-                let result = {...errorContainer};
-                result.content.resIdx = resIdx;
-                console.log(`result ${JSON.stringify(result)}`);
-                
-                if (error === true) {
-                    reject(errorContainer);
-                    return clearInterval(intrvl);
-                }
+                const {error, predictedError, type, content} = errorContainer;
+                console.log(error, predictedError, type, content);
+                // let result = {...errorContainer};
+                // result.content.resIdx = resIdx;
+                // console.log(`result ${JSON.stringify(result)}`);
+
+                // if (error === true) {
+                //     reject(errorContainer);
+                //     return clearInterval(intrvl);
+                // }
             }
         }, REQUEST_PERIOD);
 
