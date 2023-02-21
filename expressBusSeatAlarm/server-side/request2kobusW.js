@@ -229,131 +229,132 @@ function requestWithSi(postData, list, date, resIdx) {
 
         let intrvl = setInterval(async () => {
             try {
-// ############################################################
-            //foundTime으로 하지 말고 어차피 시간을 가져와서 시간 지난 여정은 처리할거니까 이 스코프에서 받는 편이 낫다고 본다.
-            // 여기서 매 REQUEST_PERIOD마다 시간을 가져온다. 
-            const foundTime = new Date();
-            const ftDate = foundTime.getDate();
-            const ftHours = foundTime.getHours();
-            const ftMinutes = foundTime.getMinutes();
-            const ftSeconds = foundTime.getSeconds();
-            
-            doCmpCount++
-
-            //여기서 출발시간이 현재시간보다 일찍인 여정은 list에서 삭제
-            if (date === ftDate && doCmpCount === CMP_PERIOD) {
-                doCmpCount = 0;
-                
-                list = list.filter(entry => {
-                    const [entryHours, entryMinutes] = entry[DEPARTURE_TIME].split(`:`).map(e => +e);
-                    if (entryHours*60+entryMinutes < ftHours*60+ftMinutes) {
-                        console.log(`시간이 지나 리스트에서 ${JSON.stringify(entry)}는 삭제한다.`)
-                        return false;
-                    }
-
-                    return true;
-                });
-            }
-
-            const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
-            
-            //길이가 0인 의미는 시간이 지나 살아있는 여정이 잔여석을 남기지 않고 출발했다는 의미
-            if (listLen === 0 && tempDeleted.length === 0) {
-                reject({error: true, predictedError: true, type: contentType.NOTIFICATION, content: {contentMessage: `등록했던 스케줄(들)에서 잔여석이 생기지 않고 출발했습니다.`, resIdx}});
-                return clearInterval(intrvl);
-            }
-
-            // startT와 endT는 한번요청으로 ec2 프리티어 서버에서 얼마나 걸려서 응답을 받는지 확인한다.
-            let startT =  new Date();
-            // #####################TEST###############
-            glbCount++;
-            // #############################################################
-            // 정상적으로 전달되면 {error: false, content: {contentMessage: [...]}}
-            const result = await itineraryRequest2Kobus(postData);
-            let endT = new Date();
-            
-            const data = content.contentMessage; 
-            const dataLen = data.length;
-            let foundList = []; //잔여좌석이 생긴 여정을 담는다.
-            
-            // ############################TEST#############################
-            // 구독 카운트따라 리스트와 result가 잘 나오는지 확인
-            console.log(`한번 kobus요청에 걸리는 시간`);
-            console.log(endT-startT);   //1593
-            
-            if (glbCount === 1) {
-                console.log(`count: ${glbCount} data:\n${JSON.stringify(data)}\n구독리스트: ${JSON.stringify(list)}`);                
-            } else {
-                console.log(`count: ${glbCount}\n 구독리 ${JSON.stringify(list)}`);
-            }
-
-            if (glbCount === DEBUG_SBSCRPCNT) {
-                console.log(`\n\n자 잔여석 생기는 때입니다.\ndata:\n${JSON.stringify(data)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
-            }
-            // ######################################################
-            
-            let tempList = list;    //tempList를 필터하고 for루프 끝나면 list = tempList한다.
-
-            //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
-            for (let i=0; i<listLen; ++i) {     
-                const listEntry = list[i];
-                const tempDprtTime = listEntry[DEPARTURE_TIME];
-                // ################################TEST#####################
-                // if (glbCount === DEBUG_SBSCRPCNT) {
-                //     console.log(`tempDprtTime ${tempDprtTime}`);
-                // }
                 // #########################################################
+                //foundTime으로 하지 말고 어차피 시간을 가져와서 시간 지난 여정은 처리할거니까 이 스코프에서 받는 편이 낫다고 본다.
+                // 여기서 매 REQUEST_PERIOD마다 시간을 가져온다. 
+                const foundTime = new Date();
+                const ftDate = foundTime.getDate();
+                const ftHours = foundTime.getHours();
+                const ftMinutes = foundTime.getMinutes();
+                const ftSeconds = foundTime.getSeconds();
                 
-                for (let j=0; j<dataLen; ++j) {
-                    const tempEntry = data[j];
+                doCmpCount++
 
-                    //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
-                    if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
-                        // #########################################TEST########
-                        // if (glbCount == DEBUG_SBSCRPCNT) {
-                        //     console.log(`tempEntry of data ${JSON.stringify(tempEntry)}`);
-                        // }
-                        // #####################################################
-                        const tempRemain = +(tempEntry[REMAIN].slice(0,2));
-                         
-                        if (tempRemain > 0) {
-                            //foundList에 넣고 list에서 빼고, setTimeout진행시키고, tempDeleted에 푸시하고
-                            foundList.push(tempEntry);
-                            tempList = tempList.filter(entry => entry[DEPARTURE_TIME] !== tempEntry[DEPARTURE_TIME]);
-                            addListWithSto(listEntry);
-                            tempDeleted.push(1);
+                //여기서 출발시간이 현재시간보다 일찍인 여정은 list에서 삭제
+                if (date === ftDate && doCmpCount === CMP_PERIOD) {
+                    doCmpCount = 0;
+                    
+                    list = list.filter(entry => {
+                        const [entryHours, entryMinutes] = entry[DEPARTURE_TIME].split(`:`).map(e => +e);
+                        if (entryHours*60+entryMinutes < ftHours*60+ftMinutes) {
+                            console.log(`시간이 지나 리스트에서 ${JSON.stringify(entry)}는 삭제한다.`)
+                            return false;
+                        }
 
-                            break;
+                        return true;
+                    });
+                }
+
+                const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
+                
+                //길이가 0인 의미는 시간이 지나 살아있는 여정이 잔여석을 남기지 않고 출발했다는 의미
+                if (listLen === 0 && tempDeleted.length === 0) {
+                    reject({error: true, predictedError: true, type: contentType.NOTIFICATION, content: {contentMessage: `등록했던 스케줄(들)에서 잔여석이 생기지 않고 출발했습니다.`, resIdx}});
+                    return clearInterval(intrvl);
+                }
+
+                // startT와 endT는 한번요청으로 ec2 프리티어 서버에서 얼마나 걸려서 응답을 받는지 확인한다.
+                let startT =  new Date();
+                // #####################TEST###############
+                glbCount++;
+                // #############################################################
+                // 정상적으로 전달되면 {error: false, content: {contentMessage: [...]}}
+                const result = await itineraryRequest2Kobus(postData);
+                let endT = new Date();
+                
+                const data = content.contentMessage; 
+                const dataLen = data.length;
+                let foundList = []; //잔여좌석이 생긴 여정을 담는다.
+                
+                // ############################TEST#############################
+                // 구독 카운트따라 리스트와 result가 잘 나오는지 확인
+                console.log(`한번 kobus요청에 걸리는 시간`);
+                console.log(endT-startT);   //1593
+                
+                if (glbCount === 1) {
+                    console.log(`count: ${glbCount} data:\n${JSON.stringify(data)}\n구독리스트: ${JSON.stringify(list)}`);                
+                } else {
+                    console.log(`count: ${glbCount}\n 구독리 ${JSON.stringify(list)}`);
+                }
+
+                if (glbCount === DEBUG_SBSCRPCNT) {
+                    console.log(`\n\n자 잔여석 생기는 때입니다.\ndata:\n${JSON.stringify(data)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
+                }
+                // ######################################################
+                
+                let tempList = list;    //tempList를 필터하고 for루프 끝나면 list = tempList한다.
+
+                //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
+                for (let i=0; i<listLen; ++i) {     
+                    const listEntry = list[i];
+                    const tempDprtTime = listEntry[DEPARTURE_TIME];
+                    // ################################TEST#####################
+                    // if (glbCount === DEBUG_SBSCRPCNT) {
+                    //     console.log(`tempDprtTime ${tempDprtTime}`);
+                    // }
+                    // #########################################################
+                    
+                    for (let j=0; j<dataLen; ++j) {
+                        const tempEntry = data[j];
+
+                        //만약 실시간으로 요청한 여정에 잔여좌석이 있다면 foundList에 넣는다.
+                        if (tempEntry[DEPARTURE_TIME] === tempDprtTime) {
+                            // #########################################TEST########
+                            // if (glbCount == DEBUG_SBSCRPCNT) {
+                            //     console.log(`tempEntry of data ${JSON.stringify(tempEntry)}`);
+                            // }
+                            // #####################################################
+                            const tempRemain = +(tempEntry[REMAIN].slice(0,2));
+                            
+                            if (tempRemain > 0) {
+                                //foundList에 넣고 list에서 빼고, setTimeout진행시키고, tempDeleted에 푸시하고
+                                foundList.push(tempEntry);
+                                tempList = tempList.filter(entry => entry[DEPARTURE_TIME] !== tempEntry[DEPARTURE_TIME]);
+                                addListWithSto(listEntry);
+                                tempDeleted.push(1);
+
+                                break;
+                            }
                         }
                     }
-                }
-            }    
-            
-            list = tempList;
-
-            // ####################################TEST#####################
-            //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
-            console.log(`foundList ${JSON.stringify(foundList)}`);
-
-            if (glbCount === DEBUG_SBSCRPCNT) {
-                glbCount = 0;
-                //test
-                // if (count === 1) {
-                //     list = partialZero;
-                //     console.log(`list = partialZero으로 만듬`)
-                // } else if (count === 2) {
-                //     list = noZero;
-                //     console.log(`list = noZero로`);
-                // }
-                // count++;
+                }    
                 
-            }
+                list = tempList;
 
-            if (foundList.length > 0) {
-                // success프로퍼티가 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
-                parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: ftHours, minutes: ftMinutes, seconds: ftSeconds}, date}, type: contentType.NOTIFICATION});
-            } 
+                // ####################################TEST#####################
+                //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
+                console.log(`foundList ${JSON.stringify(foundList)}`);
+
+                if (glbCount === DEBUG_SBSCRPCNT) {
+                    glbCount = 0;
+                    //test
+                    // if (count === 1) {
+                    //     list = partialZero;
+                    //     console.log(`list = partialZero으로 만듬`)
+                    // } else if (count === 2) {
+                    //     list = noZero;
+                    //     console.log(`list = noZero로`);
+                    // }
+                    // count++;
+                    
+                }
+
+                if (foundList.length > 0) {
+                    // success프로퍼티가 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
+                    parentPort.postMessage({success: true, message: {foundList, resIdx, time: {hours: ftHours, minutes: ftMinutes, seconds: ftSeconds}, date}, type: contentType.NOTIFICATION});
+                } 
             } catch (errorContainer) {
+                console.log(JSON.stringify(errorContainer));
                 const {error, predictedError, type, content} = errorContainer;
                 console.log(error, predictedError, type, content);
                 // let result = {...errorContainer};
