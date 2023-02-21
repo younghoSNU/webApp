@@ -402,6 +402,7 @@ function requestWithSi(postData, list, date, resIdx) {
         }, REQUEST_PERIOD);
 
         function addListWithSto(entry) {
+            console.log(`들어왔다 addList`)
             setTimeout(() => {
                 console.log(`list에 제거된 엔트리 ${JSON.stringify(entry)} 다시 추가합니다.`);
                 tempDeleted.shift();
