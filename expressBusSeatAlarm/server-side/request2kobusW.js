@@ -302,6 +302,7 @@ function requestWithSi(postData, list, date, resIdx) {
             }
             // ######################################################
             console.log(list)
+            console.log(listLen)
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
             setTimeout(() => {
                 for (let i=0; i<listLen; ++i) {     
