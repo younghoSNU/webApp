@@ -259,7 +259,7 @@ function requestWithSi(postData, list, date, resIdx) {
             }
 
             const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
-
+            console.log(list)
             //길이가 0인 의미는 시간이 지나 살아있는 여정이 잔여석을 남기지 않고 출발했다는 의미
             if (listLen === 0 && tempDeleted.length === 0) {
                 reject({error: true, predictedError: true, type: contentType.NOTIFICATION, content: {contentMessage: `등록했던 스케줄(들)에서 잔여석이 생기지 않고 출발했습니다.`, resIdx}});
@@ -328,7 +328,7 @@ function requestWithSi(postData, list, date, resIdx) {
                             //foundList에 넣고 list에서 빼고, setTimeout진행시키고, tempDeleted에 푸시하고
                             foundList.push(tempEntry);
                             list = list.filter((_, idx) => idx !== i);
-                            addListWithSto(tempEntry);
+                            addListWithSto(listEntry);
                             tempDeleted.push(1);
 
                             break;
