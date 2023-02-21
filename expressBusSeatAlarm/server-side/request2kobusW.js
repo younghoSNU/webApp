@@ -306,7 +306,7 @@ function requestWithSi(postData, list, date, resIdx) {
             for (let i=0; i<listLen; ++i) {     
                 const listEntry = list[i];
                 console.log(JSON.stringify(listEntry));           
-                const tempDprtTime = listEntry[DEPARTURE_TIME];
+                const tempDprtTime = listEntry.dprtTime;
                 // ################################TEST#####################
                 if (glbCount === DEBUG_SBSCRPCNT) {
                     console.log(`tempDprtTime ${tempDprtTime}`);
