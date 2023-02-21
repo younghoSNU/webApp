@@ -306,9 +306,9 @@ function requestWithSi(postData, list, date, resIdx) {
             //매칭되는 여정이 있다면 즉시 푸쉬알림이 목표다.
             setTimeout(() => {
                 for (let i=0; i<listLen; ++i) {     
-                    const listEntry = list[i];
+                    let listEntry = list[i];
                     console.log(JSON.stringify(listEntry));           
-                    const tempDprtTime = listEntry.dprtTime;
+                    const tempDprtTime = list[i].dprtTime;
                     // ################################TEST#####################
                     if (glbCount === DEBUG_SBSCRPCNT) {
                         console.log(`tempDprtTime ${tempDprtTime}`);
