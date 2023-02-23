@@ -150,7 +150,8 @@ function itineraryRequest2Kobus(postData) {
                     return;
                 } else {
                     // ##################################TEST#######
-                    // 실제 서버의 데이터가 아니라 DEBUG_SBSCRPCNT에 따라 프리세팅된 noZero, zero 등을 리솔브한다.                    
+                    // 실제 서버의 데이터가 아니라 DEBUG_SBSCRPCNT에 따라 프리세팅된 noZero, zero 등을 리솔브한다.           
+                    let result = {error: false, content: {contentMessage: null}};         
                     if (glbCount > DEBUG_SBSCRPCNT) {
                         result.content.contentMessage = noZero;
                         console.log(`서버에서 nonZero가져왔`)
