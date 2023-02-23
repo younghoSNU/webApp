@@ -2,9 +2,7 @@
 // '검색'버튼을 누르면 데이터가 kobus서버로 전송되고 출력을 
 // 받는다.
 
-import { itineraryRequest } from "./exprmKobusRequest.js";
-
-// console.log(zero);
+import { listRequest } from "./listRequest.js";
 
 const HIDDEN_CLS_NM = `hidden`;
 const NOTIFICATION_SW_FILE = `/js/notificationSW.js`
@@ -67,7 +65,7 @@ async function onSubmitInput(e) {
         chckSbmInput.dprtNm = dprtNm;
         chckSbmInput.arvlNm = arvlNm;
 
-        let itnrList = await itineraryRequest(dprtNm, arvlNm, year, month, date, day);  //디버깅때문에 임시로 let사용
+        let itnrList = await listRequest(dprtNm, arvlNm, year, month, date, day);  //디버깅때문에 임시로 let사용
 
         // console.log(`successfully got response in client`);
         // console.log(itnrList);
