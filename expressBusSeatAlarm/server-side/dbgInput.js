@@ -135,7 +135,7 @@ const zero = [
         "remain": "3 석"
     },
     {
-        "dprtTime": "15:12",
+        "dprtTime": "15:18",
         "busCmp": "(주)동양고속",
         "busGrade": "고속",
         "remain": "0 석"

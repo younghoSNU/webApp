@@ -19,7 +19,7 @@ const DEPARTURE_TIME = 'dprtTime';
 const REMAIN = `remain`;
 const REQUEST_PERIOD = 3000;
 const LIST_ADD_PERIOD = 10000; //원래 300000예정
-const CMP_PERIOD = 40;  //여정이 오늘것이라면 여정들의 출발시간과 현재시간을 비교해서 list에서 삭제조치 해야 한다. CMP_PERIOD*REQUEST_PERIOID를 비교한다.
+const CMP_PERIOD = 10;  //여정이 오늘것이라면 여정들의 출발시간과 현재시간을 비교해서 list에서 삭제조치 해야 한다. CMP_PERIOD*REQUEST_PERIOID를 비교한다.
 const COUNT_PERIOD = 60;
 //kobus에 요청 보내는 바디에 필요한 코드 정보
 const Nm2Cd = {아산온양: `340`, 서울경부: `010`, 천안아산역: `343`, 배방정류소: `337`};
@@ -246,11 +246,12 @@ function requestWithSi(postData, list, date, resIdx) {
                 console.log(`glbCount ${glbCount}`);
                 console.log(date, ftDate, doCmpCount, CMP_PERIOD);
 
-                if (date === ftDate && doCmpCount === CMP_PERIOD) {
+                if ((+date === ftDate) && (doCmpCount === CMP_PERIOD)) {
                     doCmpCount = 0;
                     
                     list = list.filter(entry => {
                         const [entryHours, entryMinutes] = entry[DEPARTURE_TIME].split(`:`).map(e => +e);
+                        console.log(`entry's ${entryHours}:${entryMinutes}`);
                         if (entryHours*60+entryMinutes < ftHours*60+ftMinutes) {
                             console.log(`시간이 지나 리스트에서 ${JSON.stringify(entry)}는 삭제한다.`)
                             return false;
