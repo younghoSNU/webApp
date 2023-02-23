@@ -3,6 +3,7 @@
 // 받는다.
 
 import { listRequest } from "./listRequest.js";
+import { terminalCode } from "./terminalCode.js";
 
 const HIDDEN_CLS_NM = `hidden`;
 const NOTIFICATION_SW_FILE = `/js/notificationSW.js`
@@ -28,6 +29,15 @@ let glbSwData = Object.create({});  //서비스워커에게 전달할 변수들�
 // {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]}
 glbSwData.list = [];
 itnrDiv.updated = false;
+
+let tempHTML = ``;
+for (const name of Object.keys(terminalCode)) {
+    tempHTML += `<option value="${name}">${name}</option>\n`;
+}
+
+dprtSelect.innerHTML += tempHTML;
+arvlSelect.innerHTML += tempHTML
+
 
 searchForm.addEventListener('submit', onSubmitInput);
 

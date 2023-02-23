@@ -135,4 +135,4 @@ const terminalCode = {
     '횡성(휴)상행': 239
   };
 
-  export { terminalCode };
+  module.exports = { terminalCode };
