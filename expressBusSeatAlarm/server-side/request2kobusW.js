@@ -40,8 +40,8 @@ parentPort.once('message', parentPortMsgCallback);
  * @returns {stirng}
  */
 function makePostData(dprtNm, arvlNm, year, month, date, day) {
-    const dprtCd = terminalCode[dprtNm];
-    const arvlCd = terminalCode[arvlNm];
+    const dprtCd = String(terminalCode[dprtNm]).padStart(3, '0');
+    const arvlCd = String(terminalCode[arvlNm]).padStart(3, `0`);
 
     if (dprtCd === undefined || arvlCd === undefined) {
         throw new Error(`해당 여정에 대한 코드가 존재하지 않습니다.`);
