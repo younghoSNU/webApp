@@ -140,7 +140,8 @@ function itineraryRequest2Kobus(postData) {
             res.on(`end`, () => {
                 const { document } = (new JSDOM(str2Cnctn)).window;
                 const itinerary = document.querySelectorAll(`p[data-time]`);
-
+                console.log('wow');
+                console.log(itinerary.innerHTML);
                 itinerary.forEach(el => {
                     console.log(el.innerHTML);
                     const dprtTime = el.querySelector(`.start_time`).innerHTML.split(' : ').join(`:`);
