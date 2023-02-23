@@ -63,8 +63,11 @@ async function parentPortMsgCallback(msg) {
         // console.log(`check validation of msg\n${JSON.stringify(msg)}`);
 
         const {dprtNm, arvlNm, year, month, date, day, list, resIdx} = msg;
-        const postData = `deprCd=500&deprNm=광주(유·스퀘어)&arvlCd=020&arvlNm=센트럴시티(서울)&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230223&deprDtmAll=2023.+2.+23.+목&arvlDtm=20230223&arvlDtmAll=2023.+2.+23.+목&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;//makePostData(dprtNm, arvlNm, year, month, date, day);
-
+        const postData = `deprCd=500&deprNm=%EA%B4%91%EC%A3%BC%28%EC%9C%A0%C2%B7%EC%8A%A4%ED%80%98%EC%96%B4%29&arvlCd=020&arvlNm=%EC%84%BC%ED%8A%B8%EB%9F%B4%EC%8B%9C%ED%8B%B0%28%EC%84%9C%EC%9A%B8%29&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&deprDtm=20230223&deprDtmAll=2023.+2.+23.+%EB%AA%A9&arvlDtm=20230223&arvlDtmAll=2023.+2.+23.+%EB%AA%A9&busClsCd=0&takeDrtmOrg=200&distOrg=290.8&rtrpChc=1&timeLinkMin=15&timeLinkMax=23&deprTime=&alcnDeprTime=&alcnDeprTrmlNo=&alcnArvlTrmlNo=&indVBusClsCd=&cacmCd=&prmmDcDvsCd=&rtrpDtl1=&pcpyNoAll1=&satsNoAll1=&alcnTrmlNoInfo=&deprDtmOrg=20230223&deprDtmAllOrg=2023.+2.+23.+%EB%AA%A9&arvlDtmOrg=20230223&arvlDtmAllOrg=2023.+2.+23.+%EB%AA%A9&rtrpStep2DtYn=Y&prvtBbizEmpAcmtRt=&chldSftySatsYn=&dsprSatsYn=&spexp=&dcDvsCd=&extrComp=&stdDtm=&endDtm=`
+        
+        // `deprCd=500&deprNm=광주(유·스퀘어)&arvlCd=020&arvlNm=센트럴시티(서울)&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230223&deprDtmAll=2023.+2.+23.+목&arvlDtm=20230223&arvlDtmAll=2023.+2.+23.+목&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;
+        // //makePostData(dprtNm, arvlNm, year, month, date, day);
+        // `deprCd=500&deprNm=%EA%B4%91%EC%A3%BC%28%EC%9C%A0%C2%B7%EC%8A%A4%ED%80%98%EC%96%B4%29&arvlCd=020&arvlNm=%EC%84%BC%ED%8A%B8%EB%9F%B4%EC%8B%9C%ED%8B%B0%28%EC%84%9C%EC%9A%B8%29&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&deprDtm=20230223&deprDtmAll=2023.+2.+23.+%EB%AA%A9&arvlDtm=20230223&arvlDtmAll=2023.+2.+23.+%EB%AA%A9&busClsCd=0&takeDrtmOrg=200&distOrg=290.8&rtrpChc=1&timeLinkMin=15&timeLinkMax=23&deprTime=&alcnDeprTime=&alcnDeprTrmlNo=&alcnArvlTrmlNo=&indVBusClsCd=&cacmCd=&prmmDcDvsCd=&rtrpDtl1=&pcpyNoAll1=&satsNoAll1=&alcnTrmlNoInfo=&deprDtmOrg=20230223&deprDtmAllOrg=2023.+2.+23.+%EB%AA%A9&arvlDtmOrg=20230223&arvlDtmAllOrg=2023.+2.+23.+%EB%AA%A9&rtrpStep2DtYn=Y&prvtBbizEmpAcmtRt=&chldSftySatsYn=&dsprSatsYn=&spexp=&dcDvsCd=&extrComp=&stdDtm=&endDtm=`
         //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
         if (list !== undefined) {
             //do something
