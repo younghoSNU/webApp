@@ -224,8 +224,8 @@ function requestWithSi(postData, list, date, resIdx) {
     let count = 0;
 
     return new Promise((resolve, reject) => {
-        let countPeroid = 0;
-        let doCmpCount = 0;
+        let countPeroid = 0;    
+        let doCmpCount = 0; //일정 주기로 시간을 비교하고 출발시간이 지나면 리스트에서 삭제할 때 사용한다.
         let isClearIntrvl = false;
         let tempDeleted = [];    //통고를 보냈기에 임시로 구독여정에서 제외시키기 위한 
 
@@ -243,6 +243,9 @@ function requestWithSi(postData, list, date, resIdx) {
                 doCmpCount++
 
                 //여기서 출발시간이 현재시간보다 일찍인 여정은 list에서 삭제
+                console.log(`glbCount ${glbCount}`);
+                console.log(date, ftDate, doCmpCount, CMP_PERIOD);
+
                 if (date === ftDate && doCmpCount === CMP_PERIOD) {
                     doCmpCount = 0;
                     
@@ -284,15 +287,15 @@ function requestWithSi(postData, list, date, resIdx) {
                 console.log(`한번 kobus요청에 걸리는 시간`);
                 console.log(endT-startT);   //1593
                 
-                if (glbCount === 1) {
-                    console.log(`count: ${glbCount} data:\n${JSON.stringify(data)}\n구독리스트: ${JSON.stringify(list)}`);                
-                } else {
-                    console.log(`count: ${glbCount}\n 구독리 ${JSON.stringify(list)}`);
-                }
+                // if (glbCount === 1) {
+                //     console.log(`count: ${glbCount} data:\n${JSON.stringify(data)}\n구독리스트: ${JSON.stringify(list)}`);                
+                // } else {
+                //     console.log(`count: ${glbCount}\n 구독리 ${JSON.stringify(list)}`);
+                // }
 
-                if (glbCount === DEBUG_SBSCRPCNT) {
-                    console.log(`\n\n자 잔여석 생기는 때입니다.\ndata:\n${JSON.stringify(data)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
-                }
+                // if (glbCount === DEBUG_SBSCRPCNT) {
+                //     console.log(`\n\n자 잔여석 생기는 때입니다.\ndata:\n${JSON.stringify(data)}\n참고로 구독중인 리스트는\n${JSON.stringify(list)}`)
+                // }
                 // ######################################################
                 
                 let tempList = list;    //tempList를 필터하고 for루프 끝나면 list = tempList한다.
@@ -337,20 +340,6 @@ function requestWithSi(postData, list, date, resIdx) {
                 // ####################################TEST#####################
                 //foundList에 담겨 있다면 유저가 구독 하는 여정 중에 잔여석있는 여정이 생긴 것이다. 즉시 메시지를 보내야 한다.
                 console.log(`foundList ${JSON.stringify(foundList)}`);
-
-                if (glbCount === DEBUG_SBSCRPCNT) {
-                    glbCount = 0;
-                    //test
-                    // if (count === 1) {
-                    //     list = partialZero;
-                    //     console.log(`list = partialZero으로 만듬`)
-                    // } else if (count === 2) {
-                    //     list = noZero;
-                    //     console.log(`list = noZero로`);
-                    // }
-                    // count++;
-                    
-                }
 
                 if (foundList.length > 0) {
                     // success프로퍼티가 true인 것은 에러가 발생하지 않고 데이터를 전달한다는 것
