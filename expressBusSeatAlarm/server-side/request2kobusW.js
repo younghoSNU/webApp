@@ -4,7 +4,6 @@ const { JSDOM } = require('jsdom');
 //#########################TEST##########################
 const { noZero, zero, partialZero } = require(`./dbgInput`);
 let glbCount = 0;
-let glbCount2 = 0;
 const DEBUG_SBSCRPCNT = 3;  //이 횟수에 따라 itinerayRequest2Kobus에서 프리세팅된 데이터가 리솔브된다.
 
 const contentType = {
@@ -18,9 +17,9 @@ const contentType = {
 const DEPARTURE_TIME = 'dprtTime';
 const REMAIN = `remain`;
 const REQUEST_PERIOD = 3000;
-const LIST_ADD_PERIOD = 10000; //원래 300000예정
-const CMP_PERIOD = 10;  //여정이 오늘것이라면 여정들의 출발시간과 현재시간을 비교해서 list에서 삭제조치 해야 한다. CMP_PERIOD*REQUEST_PERIOID를 비교한다.
-const COUNT_PERIOD = 60;
+const LIST_ADD_PERIOD = 300000; 
+const CMP_PERIOD = 40;  //여정이 오늘것이라면 여정들의 출발시간과 현재시간을 비교해서 list에서 삭제조치 해야 한다. CMP_PERIOD*REQUEST_PERIOID를 비교한다.
+
 //kobus에 요청 보내는 바디에 필요한 코드 정보
 const Nm2Cd = {아산온양: `340`, 서울경부: `010`, 천안아산역: `343`, 배방정류소: `337`};
 Nm2Cd[`아산서부(호서대)`] = `341`;
@@ -46,6 +45,8 @@ function makePostData(dprtNm, arvlNm, year, month, date, day) {
         throw new Error(`해당 여정에 대한 코드가 존재하지 않습니다.`);
     }
 
+    // const postData = `deprCd=340&deprNm=%EC%95%84%EC%82%B0%EC%98%A8%EC%96%91&arvlCd=010&arvlNm=%EC%84%9C%EC%9A%B8%EA%B2%BD%EB%B6%80&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230204&deprDtmAll=2023.+2.+4.+%ED%86%A0&arvlDtm=20230204&arvlDtmAll=2023.+2.+4.+%ED%86%A0&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;
+
     return `deprCd=${Nm2Cd[dprtNm]}&deprNm=${dprtNm}&arvlCd=${Nm2Cd[arvlNm]}&arvlNm=${arvlNm}&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=Y&deprDtm=${year+month+date}&deprDtmAll=${year}.+${month}.+${date}}.+${day}&arvlDtm=${year+month+date}&arvlDtmAll=${year}.+${month}.+${date}.+${day}&busClsCd=0&abnrData=&prmmDcYn=N`;
 }
 
@@ -62,7 +63,7 @@ async function parentPortMsgCallback(msg) {
         // console.log(`check validation of msg\n${JSON.stringify(msg)}`);
 
         const {dprtNm, arvlNm, year, month, date, day, list, resIdx} = msg;
-        const postData = makePostData(dprtNm, arvlNm, year, month, date, day);
+        const postData = `deprCd=500&deprNm=%EC%95%84%EC%82%B0%EC%98%A8%EC%96%91&arvlCd=020&arvlNm=%EC%84%9C%EC%9A%B8%EA%B2%BD%EB%B6%80&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230223&deprDtmAll=2023.+2.+23.+%ED%86%A0&arvlDtm=20230223&arvlDtmAll=2023.+2.+23.+%ED%86%A0&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;//makePostData(dprtNm, arvlNm, year, month, date, day);
 
         //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
         if (list !== undefined) {
@@ -113,8 +114,6 @@ function itineraryRequest2Kobus(postData) {
     return new Promise((resolve, reject) => {
         let str2Cnctn = ''; 
         let itineraryResult = [];
-
-        // const postData = `deprCd=340&deprNm=%EC%95%84%EC%82%B0%EC%98%A8%EC%96%91&arvlCd=010&arvlNm=%EC%84%9C%EC%9A%B8%EA%B2%BD%EB%B6%80&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230204&deprDtmAll=2023.+2.+4.+%ED%86%A0&arvlDtm=20230204&arvlDtmAll=2023.+2.+4.+%ED%86%A0&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;
 
         const options = {
             port: 443,
