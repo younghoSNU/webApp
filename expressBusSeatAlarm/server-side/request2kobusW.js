@@ -150,29 +150,18 @@ function itineraryRequest2Kobus(postData) {
                     return;
                 } else {
                     // ##################################TEST#######
-                    // 실제 서버의 데이터가 아니라 DEBUG_SBSCRPCNT에 따라 프리세팅된 noZero, zero 등을 리솔브한다.
-                    let result = {error: false ,content: {contentMessage: null}};
-                    result.content.contentMessage = zero;
-                    resolve(result);
-                    // console.log(`glbCount ${glbCount}, glbCount2 ${glbCount2}`);
-                    // if (glbCount === DEBUG_SBSCRPCNT) {
-                    //     if (glbCount2 === 1) {
-                    //         result.content.contentMessage = noZero;
-                    //         console.log(`서버에서 nonZero가져왔`)
-                    //         resolve(result);
-                    //         return ;
-                    //     }
-                    //     result.content.contentMessage = partialZero;
-                    //     console.log(`서버에서 partialZero`)
-                    //     resolve(result);
-                    //     glbCount2++;
-                    //     return;
-                    // } else {
-                    //     result.content.contentMessage = zero;
-                    //     console.log(`서버에서 zero`)
-                    //     resolve(result);
-                    //     return;
-                    // }
+                    // 실제 서버의 데이터가 아니라 DEBUG_SBSCRPCNT에 따라 프리세팅된 noZero, zero 등을 리솔브한다.                    
+                    if (glbCount > DEBUG_SBSCRPCNT) {
+                        result.content.contentMessage = noZero;
+                        console.log(`서버에서 nonZero가져왔`)
+                        resolve(result);
+                        return;
+                    } else {
+                        result.content.contentMessage = zero;
+                        console.log(`서버에서 zero`)
+                        resolve(result);
+                        return;
+                    }
                     // result.content.contentMessage = itineraryResult;
                     // resolve(result);
                     // ##############################################
@@ -329,7 +318,7 @@ function requestWithSi(postData, list, date, resIdx) {
                                 tempList = tempList.filter(entry => entry[DEPARTURE_TIME] !== tempEntry[DEPARTURE_TIME]);
                                 addListWithSto(listEntry);
                                 tempDeleted.push(1);
-
+                                console.log(`tempDeleted에 넣음`, tempDeleted);
                                 break;
                             }
                         }
