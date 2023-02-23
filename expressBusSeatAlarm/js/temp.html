@@ -559,25 +559,25 @@ $(function(){
 <script type="text/javascript" src="/js/kor/mrs/tckmrs/AlcnSrch.js?v=0.14"></script>
 
 <form name="alcnSrchFrm" id="alcnSrchFrm" method="post"  action="/mrs/alcnSrch.do" >
-	<input type="hidden" name="deprCd"         id="deprCd"         value="340" /><!-- 출발지코드 -->
-	<input type="hidden" name="deprNm"         id="deprNm"         value="아산온양" /><!-- 출발지명 -->
-	<input type="hidden" name="arvlCd"         id="arvlCd"         value="010" /><!-- 도착지코드 -->
-	<input type="hidden" name="arvlNm"         id="arvlNm"         value="서울경부" /><!-- 도착지명 -->
+	<input type="hidden" name="deprCd"         id="deprCd"         value="500" /><!-- 출발지코드 -->
+	<input type="hidden" name="deprNm"         id="deprNm"         value="광주(유·스퀘어)" /><!-- 출발지명 -->
+	<input type="hidden" name="arvlCd"         id="arvlCd"         value="020" /><!-- 도착지코드 -->
+	<input type="hidden" name="arvlNm"         id="arvlNm"         value="센트럴시티(서울)" /><!-- 도착지명 -->
 	<input type="hidden" name="tfrCd"          id="tfrCd"          value="" /><!-- 환승지코드 -->
 	<input type="hidden" name="tfrNm"          id="tfrNm"          value="" /><!-- 환승지명 -->
 	<input type="hidden" name="tfrArvlFullNm"  id="tfrArvlFullNm"  value="" /><!-- 환승지포함 도착지 명 -->
 	<input type="hidden" name="pathDvs"        id="pathDvs"        value="sngl" /><!-- 직통sngl,환승trtr,왕복rtrp -->
 	<input type="hidden" name="pathStep"       id="pathStep"       value="1" /><!-- 왕복,환승 가는편순번 -->
-	<input type="hidden" name="deprDtm"        id="deprDtm"        value="20230124" /><!-- 가는날(편도,왕복) -->
-	<input type="hidden" name="deprDtmAll"     id="deprDtmAll"     value="2023. 01. 24}. 화" /><!-- 가는날(편도,왕복) -->
-	<input type="hidden" name="arvlDtm"        id="arvlDtm"        value="20230124" /><!-- 오는날(왕복) -->
-	<input type="hidden" name="arvlDtmAll"     id="arvlDtmAll"     value="2023. 01. 24. 화" /><!-- 오는날(왕복) -->
+	<input type="hidden" name="deprDtm"        id="deprDtm"        value="20230223" /><!-- 가는날(편도,왕복) -->
+	<input type="hidden" name="deprDtmAll"     id="deprDtmAll"     value="2023. 2. 23. 목" /><!-- 가는날(편도,왕복) -->
+	<input type="hidden" name="arvlDtm"        id="arvlDtm"        value="20230223" /><!-- 오는날(왕복) -->
+	<input type="hidden" name="arvlDtmAll"     id="arvlDtmAll"     value="2023. 2. 23. 목" /><!-- 오는날(왕복) -->
 	<input type="hidden" name="busClsCd"       id="busClsCd"       value="0" /><!-- 버스등급 -->
-	<input type="hidden" name="takeDrtmOrg"    id="takeDrtmOrg"    value="90" /><!-- 소요시간 -->
-	<input type="hidden" name="distOrg"        id="distOrg"        value="99.8" /><!-- 거리 -->
+	<input type="hidden" name="takeDrtmOrg"    id="takeDrtmOrg"    value="200" /><!-- 소요시간 -->
+	<input type="hidden" name="distOrg"        id="distOrg"        value="290.8" /><!-- 거리 -->
 	<input type="hidden" name="rtrpChc"        id="rtrpChc"        value="1" /><!-- 왕편 복편 설정 -->
-	<input type="hidden" name="timeLinkMin"    id="timeLinkMin"    value="17" /><!-- 시간링크 최소값 -->
-	<input type="hidden" name="timeLinkMax"    id="timeLinkMax"    value="21" /><!-- 식간링크 최대값 -->
+	<input type="hidden" name="timeLinkMin"    id="timeLinkMin"    value="15" /><!-- 시간링크 최소값 -->
+	<input type="hidden" name="timeLinkMax"    id="timeLinkMax"    value="23" /><!-- 식간링크 최대값 -->
 	
 	<!-- 출발일자:deprDtm or arvlDtm, 출발터미널번호:deprCd, 도착터미널번호:arvlCd  -->
 	<input type="hidden" name="deprTime"       id="deprTime"    value="" /><!-- 출발시각 -->
@@ -595,10 +595,10 @@ $(function(){
 	<input type="hidden" name="alcnTrmlNoInfo" id="alcnTrmlNoInfo" value="" /><!-- 왕편출도착지 터미널코드 -->
 	
 	<!-- 사전데이터 체크용  -->
-	<input type="hidden" name="deprDtmOrg"        id="deprDtmOrg"        value="20230124" /><!-- 가는날(편도,왕복) -->
-	<input type="hidden" name="deprDtmAllOrg"     id="deprDtmAllOrg"     value="2023. 01. 24}. 화" /><!-- 가는날(편도,왕복) -->
-	<input type="hidden" name="arvlDtmOrg"        id="arvlDtmOrg"        value="20230124" /><!-- 오는날(왕복) -->
-	<input type="hidden" name="arvlDtmAllOrg"     id="arvlDtmAllOrg"     value="2023. 01. 24. 화" /><!-- 오는날(왕복) -->
+	<input type="hidden" name="deprDtmOrg"        id="deprDtmOrg"        value="20230223" /><!-- 가는날(편도,왕복) -->
+	<input type="hidden" name="deprDtmAllOrg"     id="deprDtmAllOrg"     value="2023. 2. 23. 목" /><!-- 가는날(편도,왕복) -->
+	<input type="hidden" name="arvlDtmOrg"        id="arvlDtmOrg"        value="20230223" /><!-- 오는날(왕복) -->
+	<input type="hidden" name="arvlDtmAllOrg"     id="arvlDtmAllOrg"     value="2023. 2. 23. 목" /><!-- 오는날(왕복) -->
 	
 	<input type="hidden" name="rtrpStep2DtYn"     id="rtrpStep2DtYn"     value="Y" /><!-- 오늘날 데이터 여부 -->
 	
@@ -833,16 +833,14 @@ $(document).ready(function(){
 								
 									
 										<dt class="">우등</dt>
-										<dd >10,100 원</dd>
-									
-								
+										<dd >29,300 원</dd>
 									
 								
 									
 								
 									
 										<dt class="">고속</dt>
-										<dd >7,700 원</dd>
+										<dd >19,800 원</dd>
 									
 								
 									
@@ -851,16 +849,12 @@ $(document).ready(function(){
 								
 									
 										<dt class="">심야우등</dt>
-										<dd >11,100 원</dd>
+										<dd >32,200 원</dd>
 									
 								
 									
 										<dt class="">심야우등할증</dt>
-										<dd >12,100 원</dd>
-									
-								
-									
-								
+										<dd >35,100 원</dd>
 									
 								
 									
@@ -869,16 +863,37 @@ $(document).ready(function(){
 								
 									
 										<dt class="">심야고속</dt>
-										<dd >8,400 원</dd>
+										<dd >21,700 원</dd>
 									
 								
 									
 										<dt class="">심야고속할증</dt>
-										<dd >9,200 원</dd>
+										<dd >23,700 원</dd>
 									
 								
 									
 								
+									
+								
+									
+								
+									
+								
+									
+										<dt class="">프리미엄</dt>
+										<dd >38,000 원</dd>
+									
+								
+									
+								
+									
+										<dt class="">심야프리미엄</dt>
+										<dd >41,800 원</dd>
+									
+								
+									
+										<dt class="">심야프리미엄할증</dt>
+										<dd >45,600 원</dd>
 									
 								
 									
@@ -1047,7 +1062,7 @@ $(document).ready(function(){
 													
 											<!-- 2021 05 / 10 class 추가  -->		
 											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
-											<p class="" data-time="17">
+											<p class="" data-time="15">
 
 
 											
@@ -1058,7 +1073,7 @@ $(document).ready(function(){
 													
 												
 												
-													<span class="start_time">17 : 10</span>
+													<span class="start_time">15 : 55</span>
 													
 													
 														
@@ -1068,14 +1083,14 @@ $(document).ready(function(){
 															  
 															  
 															  	<span class="bus_info ">
-															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="kumho">금호익스프레스(주)</span>
 															  		<span class="grade_mo">고속</span>
 															  		
 															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
 															  
 															
 															
-															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
 														
 													
 
@@ -1097,7 +1112,318 @@ $(document).ready(function(){
 														
 													</span>
 													
-													<span class="remain">4 석</span>
+													<span class="remain">25 석</span>
+													<span class="status">
+														
+															
+															
+																출발임박
+															
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+													
+														<a href="#" class="noselect">
+													
+												
+												
+													<span class="start_time">16 : 15</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="jabus">(주)중앙고속</span>
+															  		<span class="grade_mo">고속</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="jabus">(주)중앙고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">고속 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">26 석</span>
+													<span class="status">
+														
+															
+															
+																출발임박
+															
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="premium" data-time="">
+
+
+											
+												
+													
+													
+														<a href="#" class="noselect">
+													
+												
+												
+													<span class="start_time">16 : 30</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="kumho">금호익스프레스(주)</span>
+															  		<span class="grade_mo">프리미엄</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">프리미엄 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+															<span class="sale_color">10% 할인</span>
+															(34,200원)
+														
+													</span>
+													
+													<span class="remain">7 석</span>
 													<span class="status">
 														
 															
@@ -1177,8 +1503,6 @@ $(document).ready(function(){
 												
 													<!-- yahan 20201019 응답값 기준으로 변경 -->
 													
-															
-													
 												
 											 
 											
@@ -1207,24 +1531,31 @@ $(document).ready(function(){
 											
 											
 											
-												
-											
 													
 													
 											<!-- 2021 05 / 10 class 추가  -->		
 											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
-											<p class="" data-time="">
+											<p class="premium" data-time="17">
 
 
 											
 												
 													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','170000','170000','500','020','7','06','0','Y','N','500','020','N','N','N','N');">
+															
+														
 													
-														<a href="#" class="noselect">
 													
 												
 												
-													<span class="start_time">18 : 00</span>
+													<span class="start_time">17 : 00</span>
 													
 													
 														
@@ -1233,17 +1564,15 @@ $(document).ready(function(){
 															  
 															  
 															  
-															  	<span class="bus_info via">
-															  		<span class="dyexpress">(주)동양고속</span>
-															  		<span class="grade_mo">우등</span>
-															  		
-															  			<span class="via_mo">(아산둔포경유)</span>
+															  	<span class="bus_info ">
+															  		<span class="jabus">(주)중앙고속</span>
+															  		<span class="grade_mo">프리미엄</span>
 															  		
 															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
 															  
 															
 															
-															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+															<span class="bus_com"><span class="jabus">(주)중앙고속</span></span> <!-- pc 사이즈에서만 보임 -->
 														
 													
 
@@ -1252,8 +1581,8 @@ $(document).ready(function(){
 													  
 													  
 													  
-														<span class="grade">우등 
-															<span class="via">(아산둔포경유)
+														<span class="grade">프리미엄 
+															<span class="via">
 																
 																
 															</span>
@@ -1263,15 +1592,19 @@ $(document).ready(function(){
 													<span class="temp">
 														
 														
+															<span class="sale_color">10% 할인</span>
+															(34,200원)
+														
 													</span>
 													
-													<span class="remain">0 석</span>
+													<span class="remain">14 석</span>
 													<span class="status">
 														
 															
-																매진
 															
 															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
 															
 														
 													</span>
@@ -1382,7 +1715,666 @@ $(document).ready(function(){
 															
 															
 															
-																<a href="#" class=""  onclick="fnSatsChc('20230124','183000','183000','340','010','2','03','0','Y','N','340','010','N','N','N','N');">
+																<a href="#" class=""  onclick="fnSatsChc('20230223','171000','171000','500','020','1','01','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">17 : 10</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="kumho">금호익스프레스(주)</span>
+															  		<span class="grade_mo">우등</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">우등 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">23 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','172000','172000','500','020','1','06','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">17 : 20</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="jabus">(주)중앙고속</span>
+															  		<span class="grade_mo">우등</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="jabus">(주)중앙고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">우등 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">19 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="premium" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','180000','180000','500','020','7','01','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">18 : 00</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="kumho">금호익스프레스(주)</span>
+															  		<span class="grade_mo">프리미엄</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">프리미엄 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+															<span class="sale_color">10% 할인</span>
+															(34,200원)
+														
+													</span>
+													
+													<span class="remain">12 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','181000','181000','500','020','2','01','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">18 : 10</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="kumho">금호익스프레스(주)</span>
+															  		<span class="grade_mo">고속</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">고속 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">38 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="premium" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','183000','183000','500','020','7','06','0','Y','N','500','020','N','N','N','N');">
 															
 														
 													
@@ -1399,14 +2391,14 @@ $(document).ready(function(){
 															  
 															  
 															  	<span class="bus_info ">
-															  		<span class="dyexpress">(주)동양고속</span>
-															  		<span class="grade_mo">고속</span>
+															  		<span class="jabus">(주)중앙고속</span>
+															  		<span class="grade_mo">프리미엄</span>
 															  		
 															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
 															  
 															
 															
-															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+															<span class="bus_com"><span class="jabus">(주)중앙고속</span></span> <!-- pc 사이즈에서만 보임 -->
 														
 													
 
@@ -1415,7 +2407,7 @@ $(document).ready(function(){
 													  
 													  
 													  
-														<span class="grade">고속 
+														<span class="grade">프리미엄 
 															<span class="via">
 																
 																
@@ -1426,173 +2418,12 @@ $(document).ready(function(){
 													<span class="temp">
 														
 														
-													</span>
-													
-													<span class="remain">4 석</span>
-													<span class="status">
-														
-															
-															
-															
-																<span class="accent btn_arrow">선택</span>
-																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
-															
-														
-													</span>
-												</a>
-											</p>
-											
-										
-										
-											
-												
-												
-												
-
-												
-												
-												
-
-												
-												
-												
-												
-												
-												
-												
-												
-												
-
-												
-													
-												
-											
-
-
-											
-											
-												
-												
-												
-											
-											
-												
-												
-											
-											
-												
-												
-											
-											
-												
-												
-															
-												
-											
-											
-											
-											
-											
-											
-											
-											
-											
-												
-												
-													<!-- yahan 20201019 응답값 기준으로 변경 -->
-													
-												
-											 
-											
-											
-											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
-												
-												
-											
-											
-											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
-												
-													
-												
-											
-											
-											<!-- 동대구(801)-용인(150) (19.09.09) -->
-												
-												
-											
-											
-											
-											
-											
-												
-
-											
-											
-											
-													
-													
-											<!-- 2021 05 / 10 class 추가  -->		
-											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
-											<p class="" data-time="19">
-
-
-											
-												
-													
-														
-															
-															
-															
-															
-															
-															
-																<a href="#" class=""  onclick="fnSatsChc('20230124','192000','192000','340','010','1','03','0','Y','N','340','010','N','N','N','N');">
-															
-														
-													
-													
-												
-												
-													<span class="start_time">19 : 20</span>
-													
-													
-														
-														
-															
-															  
-															  
-															  
-															  	<span class="bus_info ">
-															  		<span class="dyexpress">(주)동양고속</span>
-															  		<span class="grade_mo">우등</span>
-															  		
-															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
-															  
-															
-															
-															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
-														
-													
-
-													
-													
-													  
-													  
-													  
-														<span class="grade">우등 
-															<span class="via">
-																
-																
-															</span>
-														</span><!-- pc 사이즈에서만 보임 -->
-													  
-													
-													<span class="temp">
-														
+															<span class="sale_color">10% 할인</span>
+															(34,200원)
 														
 													</span>
 													
-													<span class="remain">1 석</span>
+													<span class="remain">19 석</span>
 													<span class="status">
 														
 															
@@ -1710,14 +2541,14 @@ $(document).ready(function(){
 															
 															
 															
-																<a href="#" class=""  onclick="fnSatsChc('20230124','201000','201000','340','010','2','03','0','Y','N','340','010','N','N','N','N');">
+																<a href="#" class=""  onclick="fnSatsChc('20230223','183500','183500','500','020','2','06','0','Y','N','500','020','N','N','N','N');">
 															
 														
 													
 													
 												
 												
-													<span class="start_time">20 : 10</span>
+													<span class="start_time">18 : 35</span>
 													
 													
 														
@@ -1727,14 +2558,14 @@ $(document).ready(function(){
 															  
 															  
 															  	<span class="bus_info ">
-															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="jabus">(주)중앙고속</span>
 															  		<span class="grade_mo">고속</span>
 															  		
 															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
 															  
 															
 															
-															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+															<span class="bus_com"><span class="jabus">(주)중앙고속</span></span> <!-- pc 사이즈에서만 보임 -->
 														
 													
 
@@ -1756,7 +2587,7 @@ $(document).ready(function(){
 														
 													</span>
 													
-													<span class="remain">3 석</span>
+													<span class="remain">33 석</span>
 													<span class="status">
 														
 															
@@ -1861,7 +2692,7 @@ $(document).ready(function(){
 													
 											<!-- 2021 05 / 10 class 추가  -->		
 											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
-											<p class="" data-time="21">
+											<p class="" data-time="">
 
 
 											
@@ -1874,14 +2705,14 @@ $(document).ready(function(){
 															
 															
 															
-																<a href="#" class=""  onclick="fnSatsChc('20230124','210000','210000','340','010','2','03','0','Y','N','340','010','N','N','N','N');">
+																<a href="#" class=""  onclick="fnSatsChc('20230223','185500','185500','500','020','1','01','0','Y','N','500','020','N','N','N','N');">
 															
 														
 													
 													
 												
 												
-													<span class="start_time">21 : 00</span>
+													<span class="start_time">18 : 55</span>
 													
 													
 														
@@ -1891,14 +2722,509 @@ $(document).ready(function(){
 															  
 															  
 															  	<span class="bus_info ">
-															  		<span class="dyexpress">(주)동양고속</span>
+															  		<span class="kumho">금호익스프레스(주)</span>
+															  		<span class="grade_mo">우등</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">우등 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">28 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="premium" data-time="19">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','190000','190000','500','020','7','01','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">19 : 00</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="kumho">금호익스프레스(주)</span>
+															  		<span class="grade_mo">프리미엄</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">프리미엄 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+															<span class="sale_color">10% 할인</span>
+															(34,200원)
+														
+													</span>
+													
+													<span class="remain">14 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','191000','191000','500','020','1','06','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">19 : 10</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="jabus">(주)중앙고속</span>
+															  		<span class="grade_mo">우등</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="jabus">(주)중앙고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">우등 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">25 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','194000','194000','500','020','2','01','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">19 : 40</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="kumho">금호익스프레스(주)</span>
 															  		<span class="grade_mo">고속</span>
 															  		
 															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
 															  
 															
 															
-															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
 														
 													
 
@@ -1917,6 +3243,832 @@ $(document).ready(function(){
 													
 													<span class="temp">
 														
+														
+													</span>
+													
+													<span class="remain">36 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','203000','203000','500','020','1','01','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">20 : 30</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="kumho">금호익스프레스(주)</span>
+															  		<span class="grade_mo">우등</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">우등 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">28 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','204500','204500','500','020','1','06','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">20 : 45</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="jabus">(주)중앙고속</span>
+															  		<span class="grade_mo">우등</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="jabus">(주)중앙고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">우등 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">26 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="premium" data-time="21">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','210000','210000','500','020','7','01','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">21 : 00</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="kumho">금호익스프레스(주)</span>
+															  		<span class="grade_mo">프리미엄</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">프리미엄 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+															<span class="sale_color">10% 할인</span>
+															(34,200원)
+														
+													</span>
+													
+													<span class="remain">20 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="" data-time="">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','220000','220000','500','020','3','01','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">22 : 00</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="kumho">금호익스프레스(주)</span>
+															  		<span class="grade_mo">심야우등</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">심야우등 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+													</span>
+													
+													<span class="remain">27 석</span>
+													<span class="status">
+														
+															
+															
+															
+																<span class="accent btn_arrow">선택</span>
+																<!-- fnSatsChc(deprTime,alcnDeprTime,alcnDeprTrmlNo,alcnArvlTrmlNo,indVBusClsCd,cacmCd) -->
+															
+														
+													</span>
+												</a>
+											</p>
+											
+										
+										
+											
+												
+												
+												
+
+												
+												
+												
+
+												
+												
+												
+												
+												
+												
+												
+												
+												
+
+												
+													
+												
+											
+
+
+											
+											
+												
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+											
+											
+												
+												
+															
+												
+											
+											
+											
+											
+											
+											
+											
+											
+											
+												
+												
+													<!-- yahan 20201019 응답값 기준으로 변경 -->
+													
+												
+											 
+											
+											
+											<!-- 서울경부-구미 (노선 분리 되어있지 않아 출발시간으로 체크) -->
+												
+												
+											
+											
+											<!-- 평택용이동-서울경부,평택대-서울경부 (출발지표기) -->
+												
+													
+												
+											
+											
+											<!-- 동대구(801)-용인(150) (19.09.09) -->
+												
+												
+											
+											
+											
+											
+											
+												
+
+											
+											
+											
+													
+													
+											<!-- 2021 05 / 10 class 추가  -->		
+											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
+											<p class="premium2" data-time="23">
+
+
+											
+												
+													
+														
+															
+															
+															
+															
+															
+															
+																<a href="#" class=""  onclick="fnSatsChc('20230223','232000','232000','500','020','8','06','0','Y','N','500','020','N','N','N','N');">
+															
+														
+													
+													
+												
+												
+													<span class="start_time">23 : 20</span>
+													
+													
+														
+														
+															
+															  
+															  
+															  
+															  	<span class="bus_info ">
+															  		<span class="jabus">(주)중앙고속</span>
+															  		<span class="grade_mo">심야프리미엄</span>
+															  		
+															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
+															  
+															
+															
+															<span class="bus_com"><span class="jabus">(주)중앙고속</span></span> <!-- pc 사이즈에서만 보임 -->
+														
+													
+
+													
+													
+													  
+													  
+													  
+														<span class="grade">심야프리미엄 
+															<span class="via">
+																
+																
+															</span>
+														</span><!-- pc 사이즈에서만 보임 -->
+													  
+													
+													<span class="temp">
+														
+														
+															<span class="sale_color">10% 할인</span>
+															(37,600원)
 														
 													</span>
 													
@@ -2025,7 +4177,7 @@ $(document).ready(function(){
 													
 											<!-- 2021 05 / 10 class 추가  -->		
 											<!-- <p class="noselect premium all_bus" data-time="09"> --> <!-- 선택할수 목록(1. 시간이 지났을경우, 2. 잔여좌석이 0일경우) 에 class = 'noselect', 등급이 프리미엄일 경우 class = "premium" -->
-											<p class="" data-time="">
+											<p class="premium2" data-time="">
 
 
 											
@@ -2038,14 +4190,14 @@ $(document).ready(function(){
 															
 															
 															
-																<a href="#" class=""  onclick="fnSatsChc('20230124','214500','214500','340','010','2','03','0','Y','N','340','010','N','N','N','N');">
+																<a href="#" class=""  onclick="fnSatsChc('20230223','240000','240000','500','020','8','01','0','Y','N','500','020','N','N','N','N');">
 															
 														
 													
 													
 												
 												
-													<span class="start_time">21 : 45</span>
+													<span class="start_time">24 : 00</span>
 													
 													
 														
@@ -2055,14 +4207,14 @@ $(document).ready(function(){
 															  
 															  
 															  	<span class="bus_info ">
-															  		<span class="dyexpress">(주)동양고속</span>
-															  		<span class="grade_mo">고속</span>
+															  		<span class="kumho">금호익스프레스(주)</span>
+															  		<span class="grade_mo">심야프리미엄</span>
 															  		
 															  	</span> <!-- tablet / mobile 사이즈에서 보임 -->
 															  
 															
 															
-															<span class="bus_com"><span class="dyexpress">(주)동양고속</span></span> <!-- pc 사이즈에서만 보임 -->
+															<span class="bus_com"><span class="kumho">금호익스프레스(주)</span></span> <!-- pc 사이즈에서만 보임 -->
 														
 													
 
@@ -2071,7 +4223,7 @@ $(document).ready(function(){
 													  
 													  
 													  
-														<span class="grade">고속 
+														<span class="grade">심야프리미엄 
 															<span class="via">
 																
 																
@@ -2082,9 +4234,12 @@ $(document).ready(function(){
 													<span class="temp">
 														
 														
+															<span class="sale_color">10% 할인</span>
+															(37,600원)
+														
 													</span>
 													
-													<span class="remain">40 석</span>
+													<span class="remain">18 석</span>
 													<span class="status">
 														
 															
