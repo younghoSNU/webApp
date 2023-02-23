@@ -63,7 +63,7 @@ async function parentPortMsgCallback(msg) {
         // console.log(`check validation of msg\n${JSON.stringify(msg)}`);
 
         const {dprtNm, arvlNm, year, month, date, day, list, resIdx} = msg;
-        const postData = `deprCd=500&deprNm=광주(유·스퀘어)&arvlCd=020&arvlNm=센트럴시티(서울)&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230223&deprDtmAll=2023.+2.+23.+목&arvlDtm=20230223&arvlDtmAll=2023.+2.+23.+목&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;
+        const postData = `deprCd=500&deprNm=광주&arvlCd=020&arvlNm=센트럴시티&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230223&deprDtmAll=2023.+2.+23.+목&arvlDtm=20230223&arvlDtmAll=2023.+2.+23.+목&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;
         //makePostData(dprtNm, arvlNm, year, month, date, day);
         
         
