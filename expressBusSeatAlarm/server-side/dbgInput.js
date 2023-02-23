@@ -36,6 +36,12 @@ const noZero = [
         "remain": "28 석"
     },
     {
+        "dprtTime": "15:05",
+        "busCmp": "(주)동양고속",
+        "busGrade": "고속",
+        "remain": "38 석"
+    },
+    {
         "dprtTime": "15:40",
         "busCmp": "(주)동양고속",
         "busGrade": "고속",
@@ -127,6 +133,12 @@ const zero = [
         "busCmp": "(주)동양고속",
         "busGrade": "고속",
         "remain": "3 석"
+    },
+    {
+        "dprtTime": "15:05",
+        "busCmp": "(주)동양고속",
+        "busGrade": "고속",
+        "remain": "0 석"
     },
     {
         "dprtTime": "15:40",

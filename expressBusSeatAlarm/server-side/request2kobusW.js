@@ -145,33 +145,33 @@ function itineraryRequest2Kobus(postData) {
                     itineraryResult.push({dprtTime, busCmp, busGrade, remain});
                 });
 
-                if (/*itineraryResult.length === 0*/glbCount === 2) {
-                    console.log(`glbcont가 2가 되어`)
+                if (itineraryResult.length === 0) {
                     reject({error: true, predictedError: true, type: contentType.ALERT, content: {contentMessage: `해당 입력 조건에 대한 스케줄이 존재하지 않습니다.`}});
                     return;
                 } else {
                     // ##################################TEST#######
                     // 실제 서버의 데이터가 아니라 DEBUG_SBSCRPCNT에 따라 프리세팅된 noZero, zero 등을 리솔브한다.
                     let result = {error: false ,content: {contentMessage: null}};
-                    console.log(`glbCount ${glbCount}, glbCount2 ${glbCount2}`);
-                    if (glbCount === DEBUG_SBSCRPCNT) {
-                        if (glbCount2 === 1) {
-                            result.content.contentMessage = noZero;
-                            console.log(`서버에서 nonZero가져왔`)
-                            resolve(result);
-                            return ;
-                        }
-                        result.content.contentMessage = partialZero;
-                        console.log(`서버에서 partialZero`)
-                        resolve(result);
-                        glbCount2++;
-                        return;
-                    } else {
-                        result.content.contentMessage = zero;
-                        console.log(`서버에서 zero`)
-                        resolve(result);
-                        return;
-                    }
+                    result.content.contentMessage = zero;
+                    // console.log(`glbCount ${glbCount}, glbCount2 ${glbCount2}`);
+                    // if (glbCount === DEBUG_SBSCRPCNT) {
+                    //     if (glbCount2 === 1) {
+                    //         result.content.contentMessage = noZero;
+                    //         console.log(`서버에서 nonZero가져왔`)
+                    //         resolve(result);
+                    //         return ;
+                    //     }
+                    //     result.content.contentMessage = partialZero;
+                    //     console.log(`서버에서 partialZero`)
+                    //     resolve(result);
+                    //     glbCount2++;
+                    //     return;
+                    // } else {
+                    //     result.content.contentMessage = zero;
+                    //     console.log(`서버에서 zero`)
+                    //     resolve(result);
+                    //     return;
+                    // }
                     // result.content.contentMessage = itineraryResult;
                     // resolve(result);
                     // ##############################################
@@ -255,7 +255,7 @@ function requestWithSi(postData, list, date, resIdx) {
                         return true;
                     });
                 }
-
+                console.log(`right after filterd ${JSON.stringify(list)}`);
                 const listLen = list.length;    //시간이 지나면서 list에서 이미 출발한 여정은 버리기 때문에 인터벌마다 리스트 길이가 달라진다.
                 
                 //길이가 0인 의미는 시간이 지나 살아있는 여정이 잔여석을 남기지 않고 출발했다는 의미
