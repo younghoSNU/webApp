@@ -146,6 +146,7 @@ function itineraryRequest2Kobus(postData) {
                 });
 
                 if (/*itineraryResult.length === 0*/glbCount === 2) {
+                    console.log(`glbcont가 2가 되어`)
                     reject({error: true, predictedError: true, type: contentType.ALERT, content: {contentMessage: `해당 입력 조건에 대한 스케줄이 존재하지 않습니다.`}});
                     return;
                 } else {
@@ -272,6 +273,7 @@ function requestWithSi(postData, list, date, resIdx) {
                 const result = await itineraryRequest2Kobus(postData);
                 let endT = new Date();
                 
+                const {error, content} = result;
                 const data = content.contentMessage; 
                 const dataLen = data.length;
                 let foundList = []; //잔여좌석이 생긴 여정을 담는다.

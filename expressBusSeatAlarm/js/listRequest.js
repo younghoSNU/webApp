@@ -62,7 +62,7 @@ export function listRequest(dprtNm, arvlNm, year, month, date, day) {
           if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status >= 200 && xhr.status < 300) {
                 // Request finished. Do processing here.
-                console.log(`xhr request sent successfully`);
+                console.log(`xhr request and response succeed`);
             } else {
                 reject(`상태코드 에러: ${xhr.status}\n300번대 요청에러\n500번대 응답에러`);
             }
@@ -73,7 +73,7 @@ export function listRequest(dprtNm, arvlNm, year, month, date, day) {
         xhr.addEventListener(`load`, () => {
             //res는 {success: true/false, type: `display`/`notification`, message: content}
             const res = JSON.parse(xhr.responseText);
-            console.log(`this is response from server \n${res}}`);
+            console.log(`server response data\n${xhr.responseText}}`);
             
             if (res.success) {
               resolve(res.message.contentMessage);
