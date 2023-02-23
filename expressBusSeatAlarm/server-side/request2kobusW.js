@@ -63,7 +63,7 @@ async function parentPortMsgCallback(msg) {
         // console.log(`check validation of msg\n${JSON.stringify(msg)}`);
 
         const {dprtNm, arvlNm, year, month, date, day, list, resIdx} = msg;
-        const postData = `deprCd=500&deprNm=광주(유·스퀘어)&arvlCd=020&arvlNm=센트럴시티(서울)&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230223&deprDtmAll=2023.+2.+23.+%ED%86%A0&arvlDtm=20230223&arvlDtmAll=2023.+2.+23.+%ED%86%A0&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;//makePostData(dprtNm, arvlNm, year, month, date, day);
+        const postData = `deprCd=500&deprNm=광주(유·스퀘어)&arvlCd=020&arvlNm=센트럴시티(서울)&tfrCd=&tfrNm=&tfrArvlFullNm=&pathDvs=sngl&pathStep=1&pathStepRtn=1&crchDeprArvlYn=N&deprDtm=20230223&deprDtmAll=2023.+2.+23.+목&arvlDtm=20230223&arvlDtmAll=2023.+2.+23.+목&busClsCd=0&abnrData=&prmmDcYn=N&takeTime=0&extrComp=&stdDtm=&endDtm=`;//makePostData(dprtNm, arvlNm, year, month, date, day);
 
         //구독을 하는 건지 아니면 리스트를 디스플레이하는 건지
         if (list !== undefined) {
