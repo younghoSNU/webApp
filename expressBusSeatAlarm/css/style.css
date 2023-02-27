@@ -171,6 +171,20 @@ select {
     vertical-align: middle;
 }
 
+.time {
+    width: 15%;
+}
+
+.busCmp {
+    width: 20%;
+}
+
+.busGrd {
+    width: 20%;
+}
+
+
+
 .time,
 .busCmp,
 .remain,
