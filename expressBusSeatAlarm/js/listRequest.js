@@ -64,7 +64,7 @@ export function listRequest(dprtNm, arvlNm, year, month, date, day) {
                 // Request finished. Do processing here.
                 console.log(`xhr request and response succeed`);
             } else {
-                reject(`상태코드 에러: ${xhr.status}\n300번대 요청에러\n500번대 응답에러`);
+                reject(`상태코드 에러: ${xhr.status}\n0: XMLHttpRequest에러\n300번대: 요청에러\n500번대: 응답에러\n지속적인 에러 발생시 hois1998@snu.ac.kr 로 알려주세요!`);
             }
           } 
         });

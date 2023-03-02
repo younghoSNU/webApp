@@ -1,7 +1,6 @@
 //입력으로 출발날짜, 출발지, 도착지를 모두 선택한 상태에서 
 // '검색'버튼을 누르면 데이터가 kobus서버로 전송되고 출력을 
 // 받는다.
-
 import { listRequest } from "./listRequest.js";
 import { terminalCode } from "./terminalCode.js";
 
@@ -19,7 +18,8 @@ const itnrForm = document.querySelector(`.itnr-form`);
 const itnrDiv = itnrForm.querySelector(`.itnr-content-container`);
 //아래 두 엘리먼트는 빈좌석이 있을 때만 활성화된다.
 const notifSpan = itnrForm.querySelector(`#notif-span`);
-const chckSbmInput = itnrForm.querySelector(`input[type="button"]`);
+const subscribeButton = itnrForm.querySelector(`.subscribe-button`);
+const deleteSbscrpButton = itnrForm.querySelector(`.delete-subscription-button`);
 
 //제출버튼을 다시 누르면 원래 html템플릿 위에서 dom에 의해 새 템플릿이 만들어져야 하므로
 const itnrDivTemplate = itnrDiv.innerHTML;
@@ -32,11 +32,32 @@ itnrDiv.updated = false;
 
 let tempHTML = ``;
 for (const name of Object.keys(terminalCode)) {
-    tempHTML += `<option value="${name}">${name}</option>\n`;
+    // ############################################################################
+    // tempHTML += `<option value="${name}">${name}</option>\n`;
+    let SELECTED;
+    if (name == `아산온양`) {
+        SELECTED = `selected`;
+    }
+    tempHTML += `<option value="${name}" ${SELECTED}>${name}</option>\n`;
+
+    // ############################################################################
 }
 
 dprtSelect.innerHTML += tempHTML;
-arvlSelect.innerHTML += tempHTML
+
+tempHTML = ``;
+for (const name of Object.keys(terminalCode)) {
+    // ############################################################################
+    // tempHTML += `<option value="${name}">${name}</option>\n`;
+    let SELECTED;
+    if (name == `서울경부`) {
+        SELECTED = `selected`;
+    }
+    tempHTML += `<option value="${name}" ${SELECTED}>${name}</option>\n`;
+
+    // ############################################################################
+}
+arvlSelect.innerHTML += tempHTML;
 
 
 searchForm.addEventListener('submit', onSubmitInput);
@@ -49,7 +70,8 @@ async function onSubmitInput(e) {
             itnrDiv.updated = false;
             itnrDiv.innerHTML = itnrDivTemplate;
             notifSpan.classList.add(HIDDEN_CLS_NM);
-            chckSbmInput.classList.add(HIDDEN_CLS_NM);
+            subscribeButton.classList.add(HIDDEN_CLS_NM);
+            deleteSbscrpButton.classList.add(HIDDEN_CLS_NM);
         }
 
         //itnrForm에서 itnr-content-contain클래스는 안보이더라도 폼의 틀은 보여지도록 한다.
@@ -71,9 +93,9 @@ async function onSubmitInput(e) {
         const day = dateNday.slice(3, 4);
 
         // chckSbmInput에서 confirm을 할 때 date도 보여준다.
-        chckSbmInput.fullDate = fullDate;
-        chckSbmInput.dprtNm = dprtNm;
-        chckSbmInput.arvlNm = arvlNm;
+        subscribeButton.fullDate = fullDate;
+        subscribeButton.dprtNm = dprtNm;
+        subscribeButton.arvlNm = arvlNm;
 
         let itnrList = await listRequest(dprtNm, arvlNm, year, month, date, day);  //디버깅때문에 임시로 let사용
 
@@ -94,7 +116,7 @@ async function onSubmitInput(e) {
         const dsp = displayItnrList(itnrList);  //알림등록버튼 활성화 여부를 결정한다.
 
         if (dsp) {
-            chckSbmInput.addEventListener(`click`, onSubmitChck);
+            subscribeButton.addEventListener(`click`, onClickSubscribeButton);
         }
            
     } catch (e) {
@@ -130,24 +152,28 @@ function displayItnrList(itnrList) {
         const spanBusCmp = document.createElement(`span`);
         const spanBusGrd = document.createElement(`span`);
         const spanRmn = document.createElement(`span`);
-        let inputChck = null;
+        let inputCheckbox = null;
 
         p.classList.add(`itnr-item-container`);
         spanTime.classList.add(`time`);
+        spanTime.style.width = `30%`;
         spanTime.innerText = dprtTime;
         spanBusCmp.classList.add(`busCmp`);
-        spanBusCmp.innerText = busCmp.padEnd(8, `_`);
+        spanBusCmp.style.width = `25%`;
+        spanBusCmp.innerText = busCmp;
         spanBusGrd.classList.add(`busGrd`);
+        spanBusGrd.style.width = `35%`
         spanBusGrd.innerText = busGrade;
         spanRmn.classList.add(`remain`);
         spanRmn.innerText = remain.padStart(4, `0`);
 
+        //매진된 여정이 있다.
         if (remain[0] === '0') {
             isRmnZero = true;
-            inputChck = document.createElement(`input`);
-            inputChck.type = `checkbox`;
-            inputChck.classList.add(`checkbox`);
-            inputChck.value = idx;
+            inputCheckbox = document.createElement(`input`);
+            inputCheckbox.type = `checkbox`;
+            inputCheckbox.classList.add(`checkbox`);
+            inputCheckbox.value = idx;
         }
 
         p.appendChild(spanTime);
@@ -155,8 +181,8 @@ function displayItnrList(itnrList) {
         p.appendChild(spanBusGrd);
         p.appendChild(spanRmn);
 
-        if (inputChck) {
-            p.appendChild(inputChck);
+        if (inputCheckbox) {
+            p.appendChild(inputCheckbox);
         }
         
         document.querySelector(`#loader`).classList.add(HIDDEN_CLS_NM);
@@ -166,7 +192,18 @@ function displayItnrList(itnrList) {
 
     if (isRmnZero) {
         notifSpan.classList.remove(HIDDEN_CLS_NM);
-        chckSbmInput.classList.remove(HIDDEN_CLS_NM);
+        subscribeButton.classList.remove(HIDDEN_CLS_NM);
+
+        //여정 리스트의 table-cell width를 조정한다.
+        let spanTimeArr = document.getElementsByClassName('time');
+        let spanBusGrdArr = document.getElementsByClassName('busGrd');
+        const len = spanTimeArr.length;
+        
+        //로딩시 만약 isRmnZero == true면 매진 스케줄이 있다는 의미이고 그러면 width조정
+        for (let i=0; i<len; ++i) {
+            spanTimeArr[i].style.width = `22%`;
+            spanBusGrdArr[i].style.width = `20%`;   
+        }
     }
 
     itnrDiv.updated = true;
@@ -178,7 +215,7 @@ function displayItnrList(itnrList) {
  * 알림등록버튼을 눌렀을 때 동작한다
  * @param {Event} e 
  */
-async function onSubmitChck (e) {
+async function onClickSubscribeButton (e) {
     try {
         const chckList = document.querySelectorAll(`.checkbox`);
         let checkedList = [];
@@ -197,7 +234,7 @@ async function onSubmitChck (e) {
             alert(`등록할 알림이 선택되지 않았습니다.`);
         } else {
             //등록한 내용이 맞는지 confirm에서 확인 
-            let selectedItnrs = `"${chckSbmInput.fullDate} ${chckSbmInput.dprtNm}->${chckSbmInput.arvlNm}" 스케줄 중 다음을 구독합니다.\n`;
+            let selectedItnrs = `"${subscribeButton.fullDate} ${subscribeButton.dprtNm}->${subscribeButton.arvlNm}" 스케줄 중 다음을 구독합니다.\n`;
             
             for (const idx of checkedList) {
                 const itnrEntry = glbItnrList[idx];
@@ -214,7 +251,10 @@ async function onSubmitChck (e) {
                 // e.target.classList.add(HIDDEN_CLS_NM);
                 await reqNotificationPermission();
                 await registerServiceWorker(glbSwData);
-               
+                deleteSbscrpButton.classList.remove(HIDDEN_CLS_NM);
+                deleteSbscrpButton.addEventListener('click', onClickDeleteSbscrpButton);
+                
+                alert(`성공적으로 등록했습니다.\n빈자리가 생기면 바로 알림드릴게요!`)
             } else {
                 alert(`사용자가 취소했습니다.`);
             }
@@ -280,6 +320,19 @@ async function registerServiceWorker(swData) {
         console.log(swRegistration)
         console.log('registered service worker if it is new service worker');    
     }
+}
+
+async function onClickDeleteSbscrpButton() {
+    const pastSW = await navigator.serviceWorker.getRegistration(NOTIFICATION_SW_FILE);
+
+    if (pastSW === undefined) {
+        alert(`등록된 알림이 존재하지 않습니다.`)
+    } else {
+        await pastSW.unregister();
+        alert(`등록된 알림을 제거했습니다.\n서비스 나쁘지 않죠?`)
+        //좋아요 싫어요 모아서 서버에 저장하기
+    }
+
 }
 
 

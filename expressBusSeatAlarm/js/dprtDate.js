@@ -21,8 +21,13 @@ let frmDates = '';
 
 for (const [idx, date] of dateArr.entries()) {
     const formatted = `${date.getFullYear()}/${String(date.getMonth()+1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}(${dayMapping[date.getDay()]})`;
+    // ##############################################################
+    let SELECTED;
 
-    frmDates += `<option value="${formatted}">${formatted}</option>`;
+    if (idx === 2) {
+        SELECTED = `selected`;
+    }
+    frmDates += `<option value="${formatted}" ${SELECTED}>${formatted}</option>`;
 }
 
 dateSelect.innerHTML += frmDates;
