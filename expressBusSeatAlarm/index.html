@@ -23,18 +23,21 @@
 <body>
     <header class="header-container">
         <img id="bus-image" src="img/bus.png" alt="bus logo: front of bus"/>
-        <h1 id="title">고속버스 좌석 알림 서비스</h1>
+        <h1 id="title">고속버스 빈좌석 알림 서비스</h1>
     </header>
-    <div class="main-content">
-        <div class="explan-content">
+    <div class="main-container">
+        <div class="explain-container">
+            <div class="explain-content">
+                <span style="font-size: 2em; font-weight: 600;">고속버스 탈 때, 좌석 매진돼서 곤란했던 경험 다들 한번쯤 있으시죠?</span> <br>계속 새로고침해서 취소된 좌석있는지 확인해야 했고요. <br>이 서비스는 <span style="font-weight: 600; text-decoration: underline;">매진된 스케줄을 구독해 잔여석이 생기면 사용자에게 즉시, 알림을 제공합니다.</span> 얼마나 빨리 제공하냐구요? 여러분이 이 서비스를 계속 쓰고 싶을 정도로 빨리요.^^
+            </div>
             <h2>
                 사용방법
             </h2>
             <ol>
                 <li>출발날짜, 출발지, 도착지를 선택하고 검색버튼을 누릅니다.</li>
                 <li>만약 매진된 스케줄이 있다면, 체크박스가 보이게 됩니다.</li>
-                <li>알림을 받을 스케줄을 체크하고 '알림등록버튼'을 누르면 잔여석이 생겼을 때, 알림을 보냅니다.(※브라우저의 알림을 허용해 줘야 합니다.)</li>
-                <li>만약 더이상 알림을 받고 싶지 않을 때는 알림등록해제 버튼을 누르면 됩니다.</li>
+                <li>알림을 받을 스케줄을 체크하고 '알림등록' 버튼을 누르면 빈좌석이 생겼을 때, 알림을 보냅니다.(※브라우저의 알림을 허용해 줘야 합니다.)</li>
+                <li>만약 더이상 알림을 받고 싶지 않을 때는 '알림등록해제' 버튼을 누르면 됩니다. <span style="font-weight: 600;">간단하죠?</span></li>
             </ol>
         </div>
         <form class="search-menu">
@@ -83,7 +86,10 @@
                 <span class="table-cell">잔여석</span>
                 <span class="hidden table-cell" id="notif-span" >알림등록</span>
             </p>
-            <input class="hidden" type="button" value="알림등록하기">
+            <div class="itnr-form-button">
+                <input class="hidden delete-subscription-button" type="button" value="등록된 알림 삭제하기">
+                <input class="hidden subscribe-button" type="button" value="알림등록하기">
+            </div>
             <div class="itnr-content-container">
                 <div id="loader"></div>
             </div>
