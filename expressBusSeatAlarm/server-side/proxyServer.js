@@ -105,9 +105,9 @@ app.post(`/save-subscription`, async (req, res) => {
         list: itnrData.list,
         resIdx
     };
-
-    sbscrpWorker.postMessage(postData);
-
+    //##########################################################
+    // sbscrpWorker.postMessage(postData);
+    //########################################################3
     
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     //구독 성공 msg
