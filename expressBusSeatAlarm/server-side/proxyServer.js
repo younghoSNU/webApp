@@ -93,9 +93,7 @@ app.post(`/save-subscription`, async (req, res) => {
 
     sbscrpWorker.postMessage(postData);
 
-    setTimeout(() => {
-        sbscrpWorker.terminate()
-    }, 3000)
+    
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     //구독 성공 msg
     // {success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date: '1'}, type: `notification`}
