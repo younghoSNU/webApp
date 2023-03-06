@@ -323,17 +323,54 @@ async function registerServiceWorker(swData) {
 }
 
 async function onClickDeleteSbscrpButton() {
-    const pastSW = await navigator.serviceWorker.getRegistration(NOTIFICATION_SW_FILE);
+    try {
+        const pastSW = await navigator.serviceWorker.getRegistration(NOTIFICATION_SW_FILE);
 
-    if (pastSW === undefined) {
-        alert(`등록된 알림이 존재하지 않습니다.`)
-    } else {
-        await pastSW.unregister();
-        alert(`등록된 알림을 제거했습니다.\n서비스 나쁘지 않죠?`)
-        //좋아요 싫어요 모아서 서버에 저장하기
+        if (pastSW === undefined) {
+            alert(`등록된 알림이 존재하지 않습니다.`)
+        } else {
+            //서버에 존재하는 pid를 삭제한다. 
+    
+            //이전에 등록했던 알림이 존재하고 그럼면 서버에서 이 알림을 삭제한다. 
+            const deleted = await deleteSbscrpRequest(pastSW);
+            await pastSW.unregister();
+            alert(`등록된 알림을 제거했습니다.\n서비스 나쁘지 않죠?`)
+            //좋아요 싫어요 모아서 서버에 저장하기
+        }
+    } catch (e) {
+        console.log(`onClickDeleteSbscrpButton입니다만 아직 catch를 handle하지 않았어요.`)
     }
-
 }
 
+const SERVER_URL = `https://youngho.click`;
+
+async function deleteSbscrpRequest(subscription) {
+    return new Promise((resolve, reject) => {
+        const deleteSbscrpXhr = new XMLHttpRequest();
+        const location = `/deleteSbscrp`;
+    
+        deleteSbscrpXhr.open('POST', SERVER_URL+location, true);
+    
+        deleteSbscrpXhr.setRequestHeader('Content-Type', `application/json`);
+    
+        // 만약에 성공적으로 서버의 해당 워커를 삭제했으면 alter를 보낸다
+        deleteSbscrpXhr.addEventListener(`readystatechange`, () => {
+            if (deleteSbscrpXhr.readyState === XMLHttpRequest.Done) {
+                if (deleteSbscrpXhr.status >= 200 && deleteSbscrpXhr.status < 300) {
+                    // 성공적으로 응답을 받은 것이다. 그러니 alert로 성공 메시지 보내자.
+                    alert(`성공적으로 알림 삭제를 마쳤습니다.`);
+                    resolve(true);
+                } else {
+                    alert(`상태코드 에러: ${deleteSbscrpXhr.status}\n0: XMLHttpRequest에러\n300번대: 요청에러\n500번대: 응답에러\n지속적인 에러 발생시 hois1998@snu.ac.kr 로 알려주세요!`);
+                    reject(true);
+                }
+            } 
+        })
+    
+    
+        deleteSbscrpXhr.send(subscription);
+    });
+    
+}
 
 

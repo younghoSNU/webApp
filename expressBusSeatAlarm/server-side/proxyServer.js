@@ -7,6 +7,7 @@ const { PUBLIC_KEY, PRIVATE_KEY } = require(`./secureInfo.js`)
 // 꼭 워커가 필요한 것은 아니지만 연습삼아
 // 막상 생각해보면, 유저 한 명마다 하나의 프로세스를 사용하고 
 const { Worker } = require('node:worker_threads');
+const fs = require(`node:fs`);
 
 const app = express();
 
@@ -68,7 +69,10 @@ app.post(`/save-subscription`, async (req, res) => {
     // console.log(`itnrData\n${JSON.stringify(itnrData)}`);
 
     const sbscrpWorker = new Worker(WORKERDIR);
+    const sbscrpWorkerId = sbscrpWorker.threadId;
 
+    console.log(`워커의 아이디는 ${sbscrpWorkerId}`);
+    
     //임시로 데이터베이스와 상호작용함을 나타내기 위해 await을 사용
     let resIdx = await saveSbscrp2DB(subscription);
     
@@ -147,6 +151,14 @@ app.post(`/save-subscription`, async (req, res) => {
     res.json({ message: `success to save in db`});
 });
 
+/**
+ * 유저가 보낸 특정 subscription정보를 바탕으로 특정 워커(서비스 워커 아님 주의)를 삭제할 겁니다. 
+ */
+app.post(`/deleteSbscrp`, async (req, res) => {
+    const {subscription} = req.body;
+
+    //나중에는 여기에 파일만들어서 db처럼 활용할거다. 
+})
 /**
  * 임시 데이터베이스 접속 함수
  * @param {subscription from pushManager} subscription 

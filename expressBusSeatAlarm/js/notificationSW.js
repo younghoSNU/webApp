@@ -22,14 +22,21 @@ const contentType = {
 };
 // #########################################################################
 
+const SERVER_URL = `https://youngho.click`;
+
 /**
  * save subscription to the backend
- * @param {subscription} subscription 
+ * @param {string} subscription 
+ * @param {string} itnrData
+ * payload = {
+        subscription: JSON.stringify(subscription),
+        itnrData: params,
+    };
  */
 const subscription2server = async payload => {
-    const SERVER_URL = 'https://youngho.click/save-subscription';
+    const location = '/save-subscription';
 
-    const response = await fetch(SERVER_URL, {
+    const response = await fetch(SERVER_URL+location, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -48,9 +55,7 @@ self.addEventListener('activate', async () => {
         const applicationServerKey = urlB64ToUint8Array(PUBLIC_KEY);
         const options = { applicationServerKey, userVisibleOnly: true };
 
-        let temp = await self.clients.matchAll();
-        console.log(temp);
-        // main.js의 glbSwData에서 얻어온 것이d다.
+        // main.js의 glbSwData에서 얻어온 것이다.
         // {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]}
         const params = JSON.parse(new URL(location).searchParams.get(`config`));
         console.log(params);
@@ -59,8 +64,6 @@ self.addEventListener('activate', async () => {
         // vapid와 userVisibleOnly 옵션을 적용한 subscription을 만든다.
         const subscription = await self.registration.pushManager.subscribe(options);
 
-
-        ////test////
         // 여기서 구독해지하면 해지된다.
         
         const payload = {
