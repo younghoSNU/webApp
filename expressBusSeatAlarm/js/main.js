@@ -336,9 +336,9 @@ async function onClickDeleteSbscrpButton() {
             console.log(`endpoint`);
             console.log(endpoint);
             //서버에 존재하는 pid를 삭제한다. 
-    
+            console.log(typeof(endpoint))
             //이전에 등록했던 알림이 존재하고 그럼면 서버에서 이 알림을 삭제한다. 
-            const deleted = await deleteSbscrpRequest(endpoint);
+            const deleted = await deleteSbscrpRequest(JSON.stringify(endpoint));
             await pastSW.unregister();
             alert(`등록된 알림을 제거했습니다.\n서비스 나쁘지 않죠?`)
             //좋아요 싫어요 모아서 서버에 저장하기

@@ -194,7 +194,7 @@ app.post(`/deleteSbscrp`, async (req, res) => {
         res(`db에 ${endpoint}가 없다.`);
     }
     //나중에는 여기에 파일만들어서 db처럼 활용할거다. 
-})
+});
 /**
  * 임시 데이터베이스 접속 함수
  * @param {subscription from pushManager} subscription 
