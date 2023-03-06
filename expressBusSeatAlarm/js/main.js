@@ -353,29 +353,35 @@ const SERVER_URL = `https://youngho.click`;
 
 async function deleteSbscrpRequest(auth) {
     return new Promise((resolve, reject) => {
-        const deleteSbscrpXhr = new XMLHttpRequest();
-        const location = `/deleteSbscrp`;
-    
-        deleteSbscrpXhr.open('POST', SERVER_URL+location, true);
+        try{
+            const deleteSbscrpXhr = new XMLHttpRequest();
+            const location = `/deleteSbscrp`;
         
-        deleteSbscrpXhr.setRequestHeader('Content-Type', `application/json`);
+            deleteSbscrpXhr.open('POST', SERVER_URL+location, true);
+            
+            deleteSbscrpXhr.setRequestHeader('Content-Type', `application/json`);
+            
+            // 만약에 성공적으로 서버의 해당 워커를 삭제했으면 alter를 보낸다
+            deleteSbscrpXhr.addEventListener(`readystatechange`, () => {
+                if (deleteSbscrpXhr.readyState === XMLHttpRequest.Done) {
+                    if (deleteSbscrpXhr.status >= 200 && deleteSbscrpXhr.status < 300) {
+                        // 성공적으로 응답을 받은 것이다. 그러니 alert로 성공 메시지 보내자.
+                        alert(`성공적으로 알림 삭제를 마쳤습니다.`);
+                        resolve(true);
+                    } else {
+                        alert(`상태코드 에러: ${deleteSbscrpXhr.status}\n0: XMLHttpRequest에러\n300번대: 요청에러\n500번대: 응답에러\n지속적인 에러 발생시 hois1998@snu.ac.kr 로 알려주세요!`);
+                        reject(true);
+                    }
+                } 
+            })
         
-        // 만약에 성공적으로 서버의 해당 워커를 삭제했으면 alter를 보낸다
-        deleteSbscrpXhr.addEventListener(`readystatechange`, () => {
-            if (deleteSbscrpXhr.readyState === XMLHttpRequest.Done) {
-                if (deleteSbscrpXhr.status >= 200 && deleteSbscrpXhr.status < 300) {
-                    // 성공적으로 응답을 받은 것이다. 그러니 alert로 성공 메시지 보내자.
-                    alert(`성공적으로 알림 삭제를 마쳤습니다.`);
-                    resolve(true);
-                } else {
-                    alert(`상태코드 에러: ${deleteSbscrpXhr.status}\n0: XMLHttpRequest에러\n300번대: 요청에러\n500번대: 응답에러\n지속적인 에러 발생시 hois1998@snu.ac.kr 로 알려주세요!`);
-                    reject(true);
-                }
-            } 
-        })
-    
-    
-        deleteSbscrpXhr.send(auth);
+            console.log(auth);
+            console.log(typeof(auth));
+            deleteSbscrpXhr.send(auth);
+        } catch (e) {
+            console.log(e)
+        }
+        
     });
     
 }
