@@ -12,10 +12,10 @@ const fs = require(`node:fs`);
 const app = express();
 
 const PORT = 3000;
-const WORKERDIR = __dirname + "/request2kobusW.js";
+const WORKER_FILE = __dirname + "/request2kobusW.js";
 const MESSAGE = `message`;
 const MAIL = `hois1998@snu.ac.kr`;
-const DB_FILE = `./db.txt`;
+const DB_FILE = __dirname + `/db.txt`;
 
 let dummyDb = {};
 let cnt = 0;
@@ -42,7 +42,7 @@ app.post('/exprm', (req, res) => {
     //req가 올바는 형식인지 확인 아니면 res로 invalid 전송
     console.log(`request from /exprm is accepted to server!`);
     
-    const worker = new Worker(WORKERDIR);
+    const worker = new Worker(WORKER_FILE);
     worker.postMessage(req.body);
     
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
@@ -71,7 +71,7 @@ app.post(`/save-subscription`, async (req, res) => {
     // console.log(`subscription\n${JSON.stringify(subscription)}`);
     // console.log(`itnrData\n${JSON.stringify(itnrData)}`);
 
-    const sbscrpWorker = new Worker(WORKERDIR);
+    const sbscrpWorker = new Worker(WORKER_FILE);
     const sbscrpWorkerId = sbscrpWorker.threadId;
 
     console.log(`워커의 아이디는 ${sbscrpWorkerId}`);
@@ -83,7 +83,7 @@ app.post(`/save-subscription`, async (req, res) => {
     console.log(`db 상황`);
     console.log(db);
 
-    db[subscription.keys.auth] = {threadId: sbscrpWorkerId};
+    db[subscription.keys.endpoint] = {threadId: sbscrpWorkerId};
 
     console.log(db);
 
@@ -171,16 +171,16 @@ app.post(`/save-subscription`, async (req, res) => {
  * 유저가 보낸 특정 subscription정보를 바탕으로 특정 워커(서비스 워커 아님 주의)를 삭제할 겁니다. 
  */
 app.post(`/deleteSbscrp`, async (req, res) => {
-    const {auth} = req.body;
+    const {endpoint} = req.body;
 
-    console.log('body auth')
-    console.log(auth)
+    console.log('body endpoint')
+    console.log(endpoint)
 
     const db = JSON.parse(fs.readFileSync(DB_FILE).toString().trim());
 
-    if (db.auth) {
+    if (db.endpoint) {
         //쓰레드 아이디로 삭제해줘야 한다.
-        const threadId = db.auth.threadId;
+        const threadId = db.endpoint.threadId;
         let worker = WORKER_LISTS.get(threadId);
 
         // 선택된 worker 스레드 종료
@@ -191,7 +191,7 @@ app.post(`/deleteSbscrp`, async (req, res) => {
         res(`잘 삭제함`)
         
     } else {
-        res(`db에 ${auth}가 없다.`);
+        res(`db에 ${endpoint}가 없다.`);
     }
     //나중에는 여기에 파일만들어서 db처럼 활용할거다. 
 })
