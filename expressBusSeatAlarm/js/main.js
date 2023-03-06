@@ -334,9 +334,8 @@ async function onClickDeleteSbscrpButton() {
             const subscription = await pastSW.pushManager.getSubscription();
             const auth = subscription.getKey(`auth`).toString();
             console.log(`key`)
-            let decoder = new TextDecoder(`utf-8`);
-            let authArr = new Uint8Array(auth);
-            console.log(decoder(authArr));
+            let decoder = new TextDecoder();
+            console.log(decoder.decode(auth));
             //서버에 존재하는 pid를 삭제한다. 
     
             //이전에 등록했던 알림이 존재하고 그럼면 서버에서 이 알림을 삭제한다. 
@@ -347,6 +346,7 @@ async function onClickDeleteSbscrpButton() {
         }
     } catch (e) {
         console.log(`onClickDeleteSbscrpButton입니다만 아직 catch를 handle하지 않았어요.`)
+        console.log(e);
     }
 }
 
