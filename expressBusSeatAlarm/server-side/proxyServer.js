@@ -72,7 +72,7 @@ app.post(`/save-subscription`, async (req, res) => {
     const sbscrpWorkerId = sbscrpWorker.threadId;
 
     console.log(`워커의 아이디는 ${sbscrpWorkerId}`);
-    
+
     //임시로 데이터베이스와 상호작용함을 나타내기 위해 await을 사용
     let resIdx = await saveSbscrp2DB(subscription);
     
@@ -93,6 +93,9 @@ app.post(`/save-subscription`, async (req, res) => {
 
     sbscrpWorker.postMessage(postData);
 
+    setTimeout(() => {
+        sbscrpWorker.terminate()
+    }, 3000)
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     //구독 성공 msg
     // {success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date: '1'}, type: `notification`}
