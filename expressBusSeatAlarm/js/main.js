@@ -377,7 +377,7 @@ async function deleteSbscrpRequest(auth) {
         
             console.log(auth);
             console.log(typeof(auth));
-            deleteSbscrpXhr.send(auth);
+            deleteSbscrpXhr.send("abc");
         } catch (e) {
             console.log(e)
         }
