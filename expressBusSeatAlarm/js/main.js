@@ -35,7 +35,7 @@ for (const name of Object.keys(terminalCode)) {
     // ############################################################################
     // tempHTML += `<option value="${name}">${name}</option>\n`;
     let SELECTED;
-    if (name == `아산온양`) {
+    if (name == `서울경부`) {
         SELECTED = `selected`;
     }
     tempHTML += `<option value="${name}" ${SELECTED}>${name}</option>\n`;
@@ -50,7 +50,7 @@ for (const name of Object.keys(terminalCode)) {
     // ############################################################################
     // tempHTML += `<option value="${name}">${name}</option>\n`;
     let SELECTED;
-    if (name == `서울경부`) {
+    if (name == `아산온양`) {
         SELECTED = `selected`;
     }
     tempHTML += `<option value="${name}" ${SELECTED}>${name}</option>\n`;

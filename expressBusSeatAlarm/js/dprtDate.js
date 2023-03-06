@@ -24,7 +24,7 @@ for (const [idx, date] of dateArr.entries()) {
     // ##############################################################
     let SELECTED;
 
-    if (idx === 2) {
+    if (idx === 6) {
         SELECTED = `selected`;
     }
     frmDates += `<option value="${formatted}" ${SELECTED}>${formatted}</option>`;
