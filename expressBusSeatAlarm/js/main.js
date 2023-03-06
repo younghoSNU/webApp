@@ -359,7 +359,7 @@ async function deleteSbscrpRequest(auth) {
         
             deleteSbscrpXhr.open('POST', SERVER_URL+location, true);
             
-            deleteSbscrpXhr.setRequestHeader('Content-Type', `application/json`);
+            deleteSbscrpXhr.setRequestHeader('Content-Type', `text/plain`);
             
             // 만약에 성공적으로 서버의 해당 워커를 삭제했으면 alter를 보낸다
             deleteSbscrpXhr.addEventListener(`readystatechange`, () => {
