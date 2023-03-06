@@ -332,10 +332,11 @@ async function onClickDeleteSbscrpButton() {
             alert(`등록된 알림이 존재하지 않습니다.`)
         } else {
             const subscription = await pastSW.pushManager.getSubscription();
-            const auth = subscription.getKey(`auth`);
+            const key = subscription.getKey(`auth`);
             console.log(`key`)
-            let decoder = new TextDecoder();
-            console.log(decoder.decode(auth));
+            const keyBase64 = btoa(String.fromCharCode.apply(null, new Uint8Array(key)));
+            const keyString = atob(keyBase64);
+            console.log(keyString);
             //서버에 존재하는 pid를 삭제한다. 
     
             //이전에 등록했던 알림이 존재하고 그럼면 서버에서 이 알림을 삭제한다. 
