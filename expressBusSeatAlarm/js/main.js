@@ -332,7 +332,7 @@ async function onClickDeleteSbscrpButton() {
             alert(`등록된 알림이 존재하지 않습니다.`)
         } else {
             const subscription = await pastSW.pushManager.getSubscription();
-            const auth = subscription.getKey(`auth`).toString();
+            const auth = subscription.getKey(`auth`);
             console.log(`key`)
             let decoder = new TextDecoder();
             console.log(decoder.decode(auth));
