@@ -326,11 +326,11 @@ async function onClickDeleteSbscrpButton() {
     try {
         const pastSW = await navigator.serviceWorker.getRegistration(NOTIFICATION_SW_FILE);
 
-        console.log(pastSW)
         
         if (pastSW === undefined) {
             alert(`등록된 알림이 존재하지 않습니다.`)
         } else {
+            console.log(await pastSW.pushManager.getSubscription())
             //서버에 존재하는 pid를 삭제한다. 
     
             //이전에 등록했던 알림이 존재하고 그럼면 서버에서 이 알림을 삭제한다. 
