@@ -326,6 +326,7 @@ async function onClickDeleteSbscrpButton() {
     try {
         const pastSW = await navigator.serviceWorker.getRegistration(NOTIFICATION_SW_FILE);
 
+        console.log(await pastSW.pushManager.getSubscription())
         
         if (pastSW === undefined) {
             alert(`등록된 알림이 존재하지 않습니다.`)
