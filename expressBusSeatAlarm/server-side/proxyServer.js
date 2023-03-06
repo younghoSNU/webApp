@@ -83,7 +83,7 @@ app.post(`/save-subscription`, async (req, res) => {
     console.log(`db 상황`);
     console.log(db);
 
-    db[subscription.keys.endpoint] = {threadId: sbscrpWorkerId};
+    db[subscription.endpoint] = {threadId: sbscrpWorkerId};
 
     console.log(db);
 
