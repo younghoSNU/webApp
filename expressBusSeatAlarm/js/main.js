@@ -355,7 +355,7 @@ async function deleteSbscrpRequest(auth) {
     return new Promise((resolve, reject) => {
         try{
             const deleteSbscrpXhr = new XMLHttpRequest();
-            const location = `/deleteSbscrp`;
+            const location = `/delete-subscription`;
         
             deleteSbscrpXhr.open('POST', SERVER_URL+location, true);
             

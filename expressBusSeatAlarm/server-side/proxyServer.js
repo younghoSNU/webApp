@@ -170,7 +170,7 @@ app.post(`/save-subscription`, async (req, res) => {
 /**
  * 유저가 보낸 특정 subscription정보를 바탕으로 특정 워커(서비스 워커 아님 주의)를 삭제할 겁니다. 
  */
-app.post(`/deleteSbscrp`, async (req, res) => {
+app.post(`/delete-subscription`, async (req, res) => {
     const {endpoint} = req.body;
 
     console.log('body endpoint')
