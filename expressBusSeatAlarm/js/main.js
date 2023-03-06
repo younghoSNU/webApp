@@ -332,12 +332,13 @@ async function onClickDeleteSbscrpButton() {
             alert(`등록된 알림이 존재하지 않습니다.`)
         } else {
             const subscription = await pastSW.pushManager.getSubscription();
+            const auth = subscription.getKey(`auth`).toString();
             console.log(`key`)
-            console.log(subscription.getKey('auth'));
+            console.log(auth);
             //서버에 존재하는 pid를 삭제한다. 
     
             //이전에 등록했던 알림이 존재하고 그럼면 서버에서 이 알림을 삭제한다. 
-            const deleted = await deleteSbscrpRequest(pastSW);
+            const deleted = await deleteSbscrpRequest(auth);
             await pastSW.unregister();
             alert(`등록된 알림을 제거했습니다.\n서비스 나쁘지 않죠?`)
             //좋아요 싫어요 모아서 서버에 저장하기
@@ -349,7 +350,7 @@ async function onClickDeleteSbscrpButton() {
 
 const SERVER_URL = `https://youngho.click`;
 
-async function deleteSbscrpRequest(subscription) {
+async function deleteSbscrpRequest(auth) {
     return new Promise((resolve, reject) => {
         const deleteSbscrpXhr = new XMLHttpRequest();
         const location = `/deleteSbscrp`;
@@ -373,7 +374,7 @@ async function deleteSbscrpRequest(subscription) {
         })
     
     
-        deleteSbscrpXhr.send(subscription);
+        deleteSbscrpXhr.send(auth);
     });
     
 }

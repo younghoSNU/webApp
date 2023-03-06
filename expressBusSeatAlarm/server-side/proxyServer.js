@@ -15,11 +15,14 @@ const PORT = 3000;
 const WORKERDIR = __dirname + "/request2kobusW.js";
 const MESSAGE = `message`;
 const MAIL = `hois1998@snu.ac.kr`;
+const DB_FILE = `./db.txt`;
 
 let dummyDb = {};
 let cnt = 0;
 
-
+//########################################################
+WORKER_LISTS = new Map();
+// ######################################################
 // ######################################TEST##############################
 // 에러 타입을 임시로 사용 중 
 const contentType = {
@@ -72,7 +75,19 @@ app.post(`/save-subscription`, async (req, res) => {
     const sbscrpWorkerId = sbscrpWorker.threadId;
 
     console.log(`워커의 아이디는 ${sbscrpWorkerId}`);
+    //임시로 db #####################################################
+    let db = JSON.parse(fs.readFileSync(DB_FILE).toString().trim());
+    WORKER_LISTS.set(sbscrpWorkerId, sbscrpWorker);
+    // ##############################################################
+    
+    console.log(`db 상황`);
+    console.log(db);
 
+    db[subscription.keys.auth] = {threadId: sbscrpWorkerId};
+
+    console.log(db);
+
+    fs.writeFileSync(DB_FILE, JSON.stringify(db));
     //임시로 데이터베이스와 상호작용함을 나타내기 위해 await을 사용
     let resIdx = await saveSbscrp2DB(subscription);
     
@@ -156,8 +171,28 @@ app.post(`/save-subscription`, async (req, res) => {
  * 유저가 보낸 특정 subscription정보를 바탕으로 특정 워커(서비스 워커 아님 주의)를 삭제할 겁니다. 
  */
 app.post(`/deleteSbscrp`, async (req, res) => {
-    const {subscription} = req.body;
+    const {auth} = req.body;
 
+    console.log('body auth')
+    console.log(auth)
+
+    const db = JSON.parse(fs.readFileSync(DB_FILE).toString().trim());
+
+    if (db.auth) {
+        //쓰레드 아이디로 삭제해줘야 한다.
+        const threadId = db.auth.threadId;
+        let worker = WORKER_LISTS.get(threadId);
+
+        // 선택된 worker 스레드 종료
+        await new Promise(resolve => {
+            selectedWorker.terminate(resolve);
+        });
+
+        res(`잘 삭제함`)
+        
+    } else {
+        res(`db에 ${auth}가 없다.`);
+    }
     //나중에는 여기에 파일만들어서 db처럼 활용할거다. 
 })
 /**
