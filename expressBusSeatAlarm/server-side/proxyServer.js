@@ -21,7 +21,7 @@ let dummyDb = {};
 let cnt = 0;
 
 //########################################################
-WORKER_LISTS = new Map();
+let WORKER_LISTS = new Map();
 // ######################################################
 // ######################################TEST##############################
 // 에러 타입을 임시로 사용 중 
@@ -63,7 +63,7 @@ app.post('/exprm', (req, res) => {
  * itnrData = {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]}
  */
 app.post(`/save-subscription`, async (req, res) => {
-    console.log(`enter /save-subscription`);
+    console.log(`request from /save-subscription is accepted to server!`);
 
     let { subscription, itnrData } = req.body;
 	subscription = JSON.parse(subscription);
@@ -84,7 +84,7 @@ app.post(`/save-subscription`, async (req, res) => {
     console.log(db);
 
     db[subscription.endpoint] = {threadId: sbscrpWorkerId};
-
+    console.log(subscription.endpoint, sbscrpWorkerId)
     console.log(db);
 
     fs.writeFileSync(DB_FILE, JSON.stringify(db));
