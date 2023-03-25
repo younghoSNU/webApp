@@ -283,6 +283,7 @@ async function reqNotificationPermission() {
 
     return;
 }
+
 /**
  * 
  * @param {object} swData {fullDate: `2023/02/13(월)`, dprtNm: `아산온양`, arvlNm: `서울경부`, list: [{idx: 0, dprtTime: 12:30}, {idx: 1, dprtTime: 13:40}]} 
