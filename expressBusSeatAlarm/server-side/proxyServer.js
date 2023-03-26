@@ -171,14 +171,14 @@ app.post(`/save-subscription`, async (req, res) => {
  * 유저가 보낸 특정 subscription정보를 바탕으로 특정 워커(서비스 워커 아님 주의)를 삭제할 겁니다. 
  */
 app.post(`/delete-subscription`, async (req, res) => {
-    const {endpoint} = req.body;
+    const endpoint = req.body;
 
     console.log('body endpoint')
     console.log(endpoint)
 
-    const db = JSON.parse(fs.readFileSync(DB_FILE).toString().trim());
+    const db = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
 
-    if (db.endpoint) {
+    if (db[endpoint]) {
         //쓰레드 아이디로 삭제해줘야 한다.
         const threadId = db.endpoint.threadId;
         let worker = WORKER_LISTS.get(threadId);
@@ -188,13 +188,14 @@ app.post(`/delete-subscription`, async (req, res) => {
             selectedWorker.terminate(resolve);
         });
 
-        res(`잘 삭제함`)
+        res.send(`잘 삭제함`)
         
     } else {
-        res(`db에 ${endpoint}가 없다.`);
+        res.send(`db에 ${endpoint}가 없다.`);
     }
     //나중에는 여기에 파일만들어서 db처럼 활용할거다. 
 });
+
 /**
  * 임시 데이터베이스 접속 함수
  * @param {subscription from pushManager} subscription 
