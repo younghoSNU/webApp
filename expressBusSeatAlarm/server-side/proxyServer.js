@@ -16,7 +16,7 @@ const WORKER_FILE = __dirname + "/request2kobusW.js";
 const MESSAGE = `message`;
 const MAIL = `hois1998@snu.ac.kr`;
 const DB_FILE = __dirname + `/db.json`;
-const SUBSCRIPTION_LOG_FILE = __dirname + `subscription.log`;
+const SUBSCRIPTION_LOG_FILE = __dirname + `/subscription.log`;
 
 let dummyDb = {};
 let cnt = 0;
