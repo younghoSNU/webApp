@@ -211,7 +211,7 @@ app.post(`/delete-subscription`, async (req, res) => {
         }
         //나중에는 여기에 파일만들어서 db처럼 활용할거다. 
     } catch(e) {
-        console.log(e)
+        console.log(`\n\n\n\n\n${e}\n\n\n\n\n\n\n\n\n`)
         res.status(404).send(e);
     }
 });
