@@ -93,9 +93,7 @@ app.post(`/save-subscription`, async (req, res) => {
     let date = tempDate.slice(0,2);
     let day = tempDate.slice(3,4);
 
-    fs.writeFileSync(DB_FILE, JSON.stringify(db));
-
-    const postData = {
+   let postData = {
         dprtNm: itnrData.dprtNm,
         arvlNm: itnrData.arvlNm,
         year,
@@ -107,15 +105,21 @@ app.post(`/save-subscription`, async (req, res) => {
     };
 
     // db
-    db[subscription.endpoint] = {delete: false, threadId: sbscrpWorkerId, ...postData};
+    db[subscription.endpoint] = {threadId: sbscrpWorkerId, ...postData};
+    fs.writeFileSync(DB_FILE, JSON.stringify(db));
 
+    delete postData.resIdx;
+    
+    //유저의 구독을 기록하기 위한 파일
+    //파일은 node.js랑 비동기적인 통신을 한다. 그러면 두 코드가 동시에 파일을 열어 가장 데이터를 추가하고 저장했을 때, 나중에 저장한 코드의 데이터만이 살아남는 문제 즉, 데이터 손실으 문제가 발생한다. 이를 해결하기 위해서는 db를 실제로 이용해야 한다고 생각한다. 
+    fs.appendFileSync(SUBSCRIPTION_LOG_FILE, JSON.stringify(postData));
+    
+    
     //##########################################################
     sbscrpWorker.postMessage(postData);
     //########################################################3
     
-    //유저의 구독을 기록하기 위한 파일
-    //파일은 node.js랑 비동기적인 통신을 한다. 그러면 두 코드가 동시에 파일을 열어 가장 데이터를 추가하고 저장했을 때, 나중에 저장한 코드의 데이터만이 살아남는 문제 즉, 데이터 손실으 문제가 발생한다. 이를 해결하기 위해서는 db를 실제로 이용해야 한다고 생각한다. 
-    fs.appendFileSync(SUBSCRIPTION_LOG_FILE, JSON.stringify(db));
+    
    
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     //구독 성공 msg
@@ -202,7 +206,7 @@ app.post(`/delete-subscription`, async (req, res) => {
             delete db_info.threadId;
             delete db_info.resIdx;
 
-            fs.appendFileSync(SUBSCRIPTION_LOG_FILE, {...db_info, delete: true});
+            fs.appendFileSync(SUBSCRIPTION_LOG_FILE, JSON.stringify({delete: true, ...db_info}));
 
             res.send(`successfully terminated the worker`);
             
