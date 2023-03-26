@@ -365,7 +365,7 @@ async function deleteSbscrpRequest(push_endpoint) {
             
             // 만약에 성공적으로 서버의 해당 워커를 삭제했으면 alert를 보낸다
             deleteSbscrpXhr.addEventListener(`readystatechange`, () => {
-                if (deleteSbscrpXhr.readyState === XMLHttpRequest.Done) {
+                if (deleteSbscrpXhr.readyState === XMLHttpRequest.DONE) {
                     if (deleteSbscrpXhr.status >= 200 && deleteSbscrpXhr.status < 300) {
                         // 성공적으로 응답을 받은 것이다. 그러니 alert로 성공 메시지 보내자.
                         alert(`성공적으로 알림 삭제를 마쳤습니다.`);
