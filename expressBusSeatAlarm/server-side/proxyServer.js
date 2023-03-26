@@ -112,7 +112,7 @@ app.post(`/save-subscription`, async (req, res) => {
     //########################################################3
     
     //유저의 구독을 기록하기 위한 파일
-    fs.appendFileSync(SUBSCRIPTION_LOG_FILE, `${dprtNm}_${arvlNm}_${year}_${month}_${date}_${list}`);
+    fs.appendFileSync(SUBSCRIPTION_LOG_FILE, `${itnrData.dprtNm}_${itnrData.arvlNm}_${year}_${month}_${date}_${itnrData.list}`);
    
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     //구독 성공 msg
