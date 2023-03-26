@@ -106,7 +106,7 @@ app.post(`/save-subscription`, async (req, res) => {
         resIdx
     };
     //##########################################################
-    // sbscrpWorker.postMessage(postData);
+    sbscrpWorker.postMessage(postData);
     //########################################################3
     
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
@@ -171,29 +171,39 @@ app.post(`/save-subscription`, async (req, res) => {
  * 유저가 보낸 특정 subscription정보를 바탕으로 특정 워커(서비스 워커 아님 주의)를 삭제할 겁니다. 
  */
 app.post(`/delete-subscription`, async (req, res) => {
-    const endpoint = req.body;
+    try {
+        const endpoint = req.body;
 
-    console.log('body endpoint')
-    console.log(endpoint)
+        console.log('body endpoint')
+        console.log(endpoint)
+    
+        const db = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
+    
+        if (db[endpoint]) {
+            //쓰레드 아이디로 삭제해줘야 한다.
+            const threadId = db[endpoint].threadId;
+            let selectedWorker = WORKER_LISTS.get(threadId);
+            
+            if (selectedWorker == undefined) {
+                throw new Error(`no worker for threadId: ${threadId}`);
+            }
+            
+            //선택한 워커 종료
+            selectedWorker.terminate();
 
-    const db = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
+            //WORKER_LIST와 db에서 삭제하려는 threadId랑 endpoint를 각각 제거해준다.
+            WORKER_LISTS.delete(threadId);
+            // delete db[endpoint]; 해결해야하는 문제가 있다 동시에 다른 유저가 들어와서 파일에 작성하는데 과거 파일에서 해당 엔드포인트 붙이고 그 수정된 파일을 db에 넣게 되면 막 들어온 유저의 엔드포인트 정보는 사라진다
 
-    if (db[endpoint]) {
-        //쓰레드 아이디로 삭제해줘야 한다.
-        const threadId = db[endpoint].threadId;
-        let selectedWorker = WORKER_LISTS.get(threadId);
-        
-        // 선택된 worker 스레드 종료
-        await new Promise(resolve => {
-            selectedWorker.terminate(resolve);
-        });
-
-        res.send(`잘 삭제함`)
-        
-    } else {
-        res.send(`db에 ${endpoint}가 없다.`);
+            res.send(`successfully terminated the worker`)
+            
+        } else {
+            throw new Error(`no endpoint \n${endpoint}\nin DB`);
+        }
+        //나중에는 여기에 파일만들어서 db처럼 활용할거다. 
+    } catch(e) {
+        res.status(404).send(e);
     }
-    //나중에는 여기에 파일만들어서 db처럼 활용할거다. 
 });
 
 /**
