@@ -78,23 +78,21 @@ app.post(`/save-subscription`, async (req, res) => {
     console.log(`워커의 아이디는 ${sbscrpWorkerId}`);
     //임시로 db #####################################################
     let db = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
+
+    // threadId에 해당하는 실제 워커 인스턴스를 저장한다.
+    console.log(JSON.stringify(sbscrpWorker))
+    console.log(typeof(sbscrpWorker))
     WORKER_LISTS.set(sbscrpWorkerId, sbscrpWorker);
     // ##############################################################
     
     //임시로 데이터베이스와 상호작용함을 나타내기 위해 await을 사용
-    let resIdx = await saveSbscrp2DB(subscription);
+    // to be deleted
+    // let resIdx = await saveSbscrp2DB(subscription);
     
     let [year, month, tempDate] = itnrData.fullDate.split(`/`);
     let date = tempDate.slice(0,2);
     let day = tempDate.slice(3,4);
-    
-    db[subscription.endpoint] = {
-        threadId: sbscrpWorkerId,
-        year,
-        month,
-        date,
-        list: itnrData.list
-    };
+
     fs.writeFileSync(DB_FILE, JSON.stringify(db));
 
     const postData = {
@@ -105,14 +103,19 @@ app.post(`/save-subscription`, async (req, res) => {
         date,
         day,
         list: itnrData.list,
-        resIdx
+        resIdx: null
     };
+
+    // db
+    db[subscription.endpoint] = {delete: false, threadId: sbscrpWorkerId, ...postData};
+
     //##########################################################
     sbscrpWorker.postMessage(postData);
     //########################################################3
     
     //유저의 구독을 기록하기 위한 파일
-    fs.appendFileSync(SUBSCRIPTION_LOG_FILE, `${itnrData.dprtNm}_${itnrData.arvlNm}_${year}_${month}_${date}_${itnrData.list}`);
+    //파일은 node.js랑 비동기적인 통신을 한다. 그러면 두 코드가 동시에 파일을 열어 가장 데이터를 추가하고 저장했을 때, 나중에 저장한 코드의 데이터만이 살아남는 문제 즉, 데이터 손실으 문제가 발생한다. 이를 해결하기 위해서는 db를 실제로 이용해야 한다고 생각한다. 
+    fs.appendFileSync(SUBSCRIPTION_LOG_FILE, JSON.stringify(db));
    
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     //구독 성공 msg
@@ -120,18 +123,15 @@ app.post(`/save-subscription`, async (req, res) => {
     sbscrpWorker.on(`message`, async (msg) => {
         try {  
             console.log(`워커에서 넘어온 메시지\n${JSON.stringify(msg)}`);
-    
-            //이렇게 먼저 케이스 분류하고 케이스에 따라 변수 선언을 하자.
-            // if (msg.success) {
-
-            // } else {
-
-            // }
 
             const {success, type, message} = msg;
             const { foundList, resIdx, time, date, contentMessage} = message;
             //db에서 유저 구독 데이터를 가져온다.
-            const dbSbscrp = dummyDb[String(resIdx)];
+            
+            //to be deleted
+            // const dbSbscrp = dummyDb[String(resIdx)];
+            
+            
             //type을 명시하긴 했지만 라우팅이 달리 돼있어, 여기로 type: 'display'인 경우는 없다.
             console.log(`더미디비에서 가져온 구독정보\n${JSON.stringify(dbSbscrp)}`);
             console.log(`글로벌에서 가져온 구독 정보 ${JSON.stringify(subscription)}`)
@@ -140,7 +140,7 @@ app.post(`/save-subscription`, async (req, res) => {
                 //통고를 보내는 부분이 아니라 모든 구독한 여정이 출발하거나 모든 여정에 통고를 보낸 경우 구독을 끝내는 것이다. 서비스워커 등록도 없앤다.
                 if (type === contentType.NOTIFICATION) {
                     const payload = JSON.stringify({success, message: {foundList, time, date}, type});
-                    await webpush.sendNotification(dbSbscrp, payload);
+                    await webpush.sendNotification(subscription, payload);
                 } else {                    
                     // const payload = JSON.stringify({success, message: msg0, type})
                     // await webpush.sendNotification(dbSbscrp, payload);
@@ -150,11 +150,11 @@ app.post(`/save-subscription`, async (req, res) => {
                 if (type === contentType.NOTIFICATION) {
                     console.log(`contentType이 notification입니다.`)
                     const payload = JSON.stringify({success, type, message: contentMessage});
-                    await webpush.sendNotification(dbSbscrp, payload);
+                    await webpush.sendNotification(subscription, payload);
                 } else if (type === contentType.ALERT) {
                     console.log(`contentType is ALERT 그렇지만 alert불가능이라 통고로`);
                     const payload = JSON.stringify({success, type, message: contentMessage});
-                    await webpush.sendNotification(dbSbscrp, payload);
+                    await webpush.sendNotification(subscription, payload);
                 }
                 // if (type === MESSAGE) {
                 //     const payload = JSON.stringify({success, message: msg0, type})
@@ -184,10 +184,10 @@ app.post(`/delete-subscription`, async (req, res) => {
         console.log(endpoint)
     
         const db = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
-    
-        if (db[endpoint]) {
+        let db_info = db[endpoint]
+        if (db_info) {
             //쓰레드 아이디로 삭제해줘야 한다.
-            const threadId = db[endpoint].threadId;
+            const { threadId } = db_info;
             let selectedWorker = WORKER_LISTS.get(threadId);
             
             if (selectedWorker == undefined) {
@@ -199,9 +199,13 @@ app.post(`/delete-subscription`, async (req, res) => {
 
             //WORKER_LIST와 db에서 삭제하려는 threadId랑 endpoint를 각각 제거해준다.
             WORKER_LISTS.delete(threadId);
-            // delete db[endpoint]; 해결해야하는 문제가 있다 동시에 다른 유저가 들어와서 파일에 작성하는데 과거 파일에서 해당 엔드포인트 붙이고 그 수정된 파일을 db에 넣게 되면 막 들어온 유저의 엔드포인트 정보는 사라진다
 
-            res.send(`successfully terminated the worker`)
+            delete db_info.threadId;
+            delete db_info.resIdx;
+
+            fs.appendFileSync(SUBSCRIPTION_LOG_FILE, {...db_info, delete: true});
+
+            res.send(`successfully terminated the worker`);
             
         } else {
             throw new Error(`no endpoint \n${endpoint}\nin DB`);
