@@ -6,6 +6,8 @@ import { terminalCode } from "./terminalCode.js";
 
 const HIDDEN_CLS_NM = `hidden`;
 const NOTIFICATION_SW_FILE = `/js/notificationSW.js`
+const SERVER_URL = `https://youngho.click`;
+
 
 //document에 property로 제출된 출발날짜, 출발지, 도착지를 넣으면 됨으로 굳이 모듈끼리 import/export가 필요없다
 // import {serverRes} from './kobusRequest.js';
@@ -333,15 +335,16 @@ async function onClickDeleteSbscrpButton() {
             alert(`등록된 알림이 존재하지 않습니다.`)
         } else {
             const subscription = await pastSW.pushManager.getSubscription();
-            const endpoint = subscription.endpoint;
-            console.log(`endpoint`);
-            console.log(endpoint);
+            let endpoint = subscription.endpoint;
+
+            if (typeof(endpoint) != `string`) {
+                endpoint = String(endpoint);
+            }
             //서버에 존재하는 pid를 삭제한다. 
-            console.log(typeof(endpoint))
             //이전에 등록했던 알림이 존재하고 그럼면 서버에서 이 알림을 삭제한다. 
-            const deleted = await deleteSbscrpRequest(JSON.stringify(endpoint));
+            const deleted = await deleteSbscrpRequest(endpoint);
             await pastSW.unregister();
-            alert(`등록된 알림을 제거했습니다.\n서비스 나쁘지 않죠?`)
+            alert(`등록된 알림을 제거했습니다.\n사용해주셔서 고마워요:)`)
             //좋아요 싫어요 모아서 서버에 저장하기
         }
     } catch (e) {
@@ -350,19 +353,17 @@ async function onClickDeleteSbscrpButton() {
     }
 }
 
-const SERVER_URL = `https://youngho.click`;
-
-async function deleteSbscrpRequest(auth) {
+async function deleteSbscrpRequest(push_endpoint) {
     return new Promise((resolve, reject) => {
         try{
             const deleteSbscrpXhr = new XMLHttpRequest();
-            const location = `/save-subscription`;
+            const location = `/delete-subscription`;
         
             deleteSbscrpXhr.open('POST', SERVER_URL+location, true);
             
             deleteSbscrpXhr.setRequestHeader('Content-Type', `text/plain`);
             
-            // 만약에 성공적으로 서버의 해당 워커를 삭제했으면 alter를 보낸다
+            // 만약에 성공적으로 서버의 해당 워커를 삭제했으면 alert를 보낸다
             deleteSbscrpXhr.addEventListener(`readystatechange`, () => {
                 if (deleteSbscrpXhr.readyState === XMLHttpRequest.Done) {
                     if (deleteSbscrpXhr.status >= 200 && deleteSbscrpXhr.status < 300) {
@@ -376,9 +377,7 @@ async function deleteSbscrpRequest(auth) {
                 } 
             })
         
-            console.log(auth);
-            console.log(typeof(auth));
-            deleteSbscrpXhr.send("abc");
+            deleteSbscrpXhr.send(push_endpoint);
         } catch (e) {
             console.log(e)
         }
