@@ -133,7 +133,6 @@ app.post(`/save-subscription`, async (req, res) => {
             
             
             //type을 명시하긴 했지만 라우팅이 달리 돼있어, 여기로 type: 'display'인 경우는 없다.
-            console.log(`더미디비에서 가져온 구독정보\n${JSON.stringify(dbSbscrp)}`);
             console.log(`글로벌에서 가져온 구독 정보 ${JSON.stringify(subscription)}`)
             
             if (success) {
