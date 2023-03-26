@@ -15,8 +15,6 @@ let date5 = new Date(now+PLUS_A_DAY*5);
 let date6 = new Date(now+PLUS_A_DAY*6);
 let dateArr = [date0, date1, date2, date3, date4, date5, date6];
 
-console.log(date0);
-
 let frmDates = '';
 
 for (const [idx, date] of dateArr.entries()) {
@@ -24,9 +22,6 @@ for (const [idx, date] of dateArr.entries()) {
     // ##############################################################
     let SELECTED;
 
-    if (idx === 6) {
-        SELECTED = `selected`;
-    }
     frmDates += `<option value="${formatted}" ${SELECTED}>${formatted}</option>`;
 }
 
