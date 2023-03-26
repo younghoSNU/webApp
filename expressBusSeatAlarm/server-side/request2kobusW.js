@@ -157,17 +157,19 @@ function itineraryRequest2Kobus(postData) {
                     // ##################################TEST#######
                     // 실제 서버의 데이터가 아니라 DEBUG_SBSCRPCNT에 따라 프리세팅된 noZero, zero 등을 리솔브한다.           
                     let result = {error: false, content: {contentMessage: null}};         
-                    // if (glbCount > DEBUG_SBSCRPCNT) {
-                    //     result.content.contentMessage = noZero;
-                    //     console.log(`서버에서 nonZero가져왔`)
-                    //     resolve(result);
-                    //     return;
-                    // } else {
-                    //     result.content.contentMessage = zero;
-                    //     console.log(`서버에서 zero`)
-                    //     resolve(result);
-                    //     return;
-                    // }
+                    if (glbCount > DEBUG_SBSCRPCNT) {
+                        result.content.contentMessage = noZero;
+                        console.log(`서버에서 nonZero가져왔`)
+                        resolve(result);
+                        return;
+                    } else {
+                        result.content.contentMessage = zero;
+                        console.log(`서버에서 zero`)
+                        resolve(result);
+                        return;
+                    }
+
+
                     result.content.contentMessage = itineraryResult;
                     resolve(result);
                     // ##############################################

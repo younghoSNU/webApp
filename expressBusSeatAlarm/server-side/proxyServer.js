@@ -16,6 +16,7 @@ const WORKER_FILE = __dirname + "/request2kobusW.js";
 const MESSAGE = `message`;
 const MAIL = `hois1998@snu.ac.kr`;
 const DB_FILE = __dirname + `/db.json`;
+const SUBSCRIPTION_LOG_FILE = __dirname + `subscription.log`;
 
 let dummyDb = {};
 let cnt = 0;
@@ -80,14 +81,6 @@ app.post(`/save-subscription`, async (req, res) => {
     WORKER_LISTS.set(sbscrpWorkerId, sbscrpWorker);
     // ##############################################################
     
-    console.log(`db 상황`);
-    console.log(db);
-
-    db[subscription.endpoint] = {threadId: sbscrpWorkerId};
-//    console.log(String(subscription.endpoint), sbscrpWorkerId)
-    console.log(db);
-
-    fs.writeFileSync(DB_FILE, JSON.stringify(db));
     //임시로 데이터베이스와 상호작용함을 나타내기 위해 await을 사용
     let resIdx = await saveSbscrp2DB(subscription);
     
@@ -95,6 +88,15 @@ app.post(`/save-subscription`, async (req, res) => {
     let date = tempDate.slice(0,2);
     let day = tempDate.slice(3,4);
     
+    db[subscription.endpoint] = {
+        threadId: sbscrpWorkerId,
+        year,
+        month,
+        date,
+        list: itnrData.list
+    };
+    fs.writeFileSync(DB_FILE, JSON.stringify(db));
+
     const postData = {
         dprtNm: itnrData.dprtNm,
         arvlNm: itnrData.arvlNm,
@@ -109,6 +111,9 @@ app.post(`/save-subscription`, async (req, res) => {
     sbscrpWorker.postMessage(postData);
     //########################################################3
     
+    //유저의 구독을 기록하기 위한 파일
+    fs.appendFileSync(SUBSCRIPTION_LOG_FILE, `${dprtNm}_${arvlNm}_${year}_${month}_${date}_${list}`);
+   
     //msg는 {success: true/false, type: `display`/`notification`, message: content}다. success가 false일 경우 따로 type은 없다.
     //구독 성공 msg
     // {success: true, message: {foundList, resIdx, time: {hours: foundTime.getHours(), minutes: foundTime.getMinutes(), seconds: foundTime.getSeconds()}, date: '1'}, type: `notification`}
@@ -129,6 +134,7 @@ app.post(`/save-subscription`, async (req, res) => {
             const dbSbscrp = dummyDb[String(resIdx)];
             //type을 명시하긴 했지만 라우팅이 달리 돼있어, 여기로 type: 'display'인 경우는 없다.
             console.log(`더미디비에서 가져온 구독정보\n${JSON.stringify(dbSbscrp)}`);
+            console.log(`글로벌에서 가져온 구독 정보 ${JSON.stringify(subscription)}`)
             
             if (success) {
                 //통고를 보내는 부분이 아니라 모든 구독한 여정이 출발하거나 모든 여정에 통고를 보낸 경우 구독을 끝내는 것이다. 서비스워커 등록도 없앤다.
