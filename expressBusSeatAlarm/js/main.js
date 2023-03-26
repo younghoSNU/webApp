@@ -372,6 +372,7 @@ async function deleteSbscrpRequest(push_endpoint) {
                         resolve(true);
                     } else {
                         alert(`상태코드 에러: ${deleteSbscrpXhr.status}\n0: XMLHttpRequest에러\n300번대: 요청에러\n500번대: 응답에러\n지속적인 에러 발생시 hois1998@snu.ac.kr 로 알려주세요!`);
+                        console.log(deleteSbscrpXhr.statusText);
                         reject(true);
                     }
                 } 
