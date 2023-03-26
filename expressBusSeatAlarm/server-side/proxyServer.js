@@ -180,9 +180,9 @@ app.post(`/delete-subscription`, async (req, res) => {
 
     if (db[endpoint]) {
         //쓰레드 아이디로 삭제해줘야 한다.
-        const threadId = db.endpoint.threadId;
-        let worker = WORKER_LISTS.get(threadId);
-
+        const threadId = db[endpoint].threadId;
+        let selectedWorker = WORKER_LISTS.get(threadId);
+        
         // 선택된 worker 스레드 종료
         await new Promise(resolve => {
             selectedWorker.terminate(resolve);
