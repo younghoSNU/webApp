@@ -15,7 +15,7 @@ const PORT = 3000;
 const WORKER_FILE = __dirname + "/request2kobusW.js";
 const MESSAGE = `message`;
 const MAIL = `hois1998@snu.ac.kr`;
-const DB_FILE = __dirname + `/db.txt`;
+const DB_FILE = __dirname + `/db.json`;
 
 let dummyDb = {};
 let cnt = 0;
@@ -76,7 +76,7 @@ app.post(`/save-subscription`, async (req, res) => {
 
     console.log(`워커의 아이디는 ${sbscrpWorkerId}`);
     //임시로 db #####################################################
-    let db = JSON.parse(fs.readFileSync(DB_FILE).toString().trim());
+    let db = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
     WORKER_LISTS.set(sbscrpWorkerId, sbscrpWorker);
     // ##############################################################
     
@@ -84,7 +84,7 @@ app.post(`/save-subscription`, async (req, res) => {
     console.log(db);
 
     db[subscription.endpoint] = {threadId: sbscrpWorkerId};
-    console.log(subscription.endpoint, sbscrpWorkerId)
+//    console.log(String(subscription.endpoint), sbscrpWorkerId)
     console.log(db);
 
     fs.writeFileSync(DB_FILE, JSON.stringify(db));
